@@ -17,6 +17,9 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="p-6 text-xl text-red-500 font-bold">
+    MARKET PAGE LOADED
+  </div>
   <div class="p-6">
     <h1 class="mb-4 text-2xl font-bold">
       Каталог

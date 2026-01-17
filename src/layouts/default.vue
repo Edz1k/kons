@@ -1,12 +1,15 @@
 <template>
-  <main
-    px-4 py-10
-    text="center gray-700 dark:gray-200"
-  >
-    <RouterView />
-    <TheFooter />
-    <div mx-auto mt-5 text-center text-sm opacity-50>
-      [Default Layout]
+  <main>
+    <div class="min-h-screen flex flex-col">
+      <NavbarComponent />
+
+      <main class="my-10 flex-1">
+        <router-view />
+      </main>
+
+      <footer class="border-t p-4 opacity-70">
+        Footer
+      </footer>
     </div>
   </main>
 </template>
