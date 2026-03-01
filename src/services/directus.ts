@@ -9,6 +9,13 @@ export interface Product {
   description?: string
   in_stock: boolean
   images?: { directus_files_id: string }[]
+  price: string
+  category: {
+    id: string
+    title: string
+    slug: string
+  }
+
 }
 
 export function fileUrl(fileId: string) {
@@ -21,12 +28,13 @@ async function getJSON<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`)
   if (!res.ok)
     throw new Error(`Directus ${res.status}: ${await res.text()}`)
+
   return res.json()
 }
 
 export async function fetchProducts(): Promise<Product[]> {
   const q = new URLSearchParams({
-    fields: 'id,title,slug,description,in_stock,images.directus_files_id',
+    fields: '*.*',
     sort: '-id',
   })
   const json = await getJSON<DirectusResponse<Product[]>>(`/items/products?${q.toString()}`)

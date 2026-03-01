@@ -21,10 +21,10 @@ const navLink
 </script>
 
 <template>
-  <footer class="relative overflow-hidden bg-orange-500 text-white">
+  <footer class="relative overflow-hidden rounded-tl-3xl rounded-tr-3xl bg-orange-500 text-white">
     <!-- Огромный фон-текст -->
     <div
-      class="pointer-events-none absolute bottom-[-6vw] left-1/2 select-none whitespace-nowrap text-[22vw] text-white/20 font-extrabold leading-none tracking-tight uppercase -translate-x-1/2 md:text-[18vw]"
+      class="pointer-events-none absolute bottom-[-2vw] left-1/2 w-full select-none whitespace-nowrap text-center text-[22vw] text-white/50 font-extrabold leading-none tracking-tight tracking-wider uppercase -translate-x-1/2 md:text-[18vw]"
       aria-hidden="true"
     >
       BRILLEX

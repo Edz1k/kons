@@ -1,20 +1,45 @@
 <script setup lang="ts">
 import type { Product } from '~/services/directus'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { fetchProductBySlug, fileUrl } from '~/services/directus'
 
-const props = defineProps<{ slug: string }>()
+const route = useRoute()
+const slug = computed(() => {
+  const params = route.params
+  if (!('slug' in params))
+    return ''
+
+  const value = params.slug
+  return String(Array.isArray(value) ? value[0] : value ?? '')
+})
+
 const item = ref<Product | null>(null)
 const error = ref('')
+const loading = ref(true)
 
-onMounted(async () => {
+async function load() {
+  loading.value = true
+  error.value = ''
+  item.value = null
+
   try {
-    item.value = await fetchProductBySlug(props.slug)
+    const res = await fetchProductBySlug(slug.value)
+    if (!res)
+      error.value = 'Товар не найден'
+    else
+      item.value = res
   }
   catch (e: any) {
     error.value = e?.message ?? String(e)
   }
-})
+  finally {
+    loading.value = false
+  }
+}
+
+onMounted(load)
+watch(slug, load) // если меняешь /product/:slug без перезагрузки
 </script>
 
 <template>
@@ -22,7 +47,7 @@ onMounted(async () => {
     <p v-if="error" class="text-red-500">
       {{ error }}
     </p>
-    <div v-if="!item && !error">
+    <div v-else-if="loading">
       Загрузка…
     </div>
 
