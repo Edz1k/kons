@@ -3,13 +3,11 @@
     <div class="min-h-screen flex flex-col">
       <NavbarComponent />
 
-      <main class="my-10 flex-1">
+      <main class="flex-1">
         <router-view />
       </main>
 
-      <footer class="border-t p-4 opacity-70">
-        Footer
-      </footer>
+      <FooterComponent />
     </div>
   </main>
 </template>

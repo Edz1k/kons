@@ -30,10 +30,10 @@ onMounted(async () => {
     </p>
 
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 sm:grid-cols-2">
-      <a
+      <RouterLink
         v-for="p in items"
         :key="p.id"
-        :href="`/product/${p.slug}`"
+        :to="`/product/${p.slug}`"
         class="border rounded-xl p-4 hover:opacity-80"
       >
         <img
@@ -42,9 +42,13 @@ onMounted(async () => {
           class="mb-3 h-48 w-full rounded-lg object-cover"
           alt=""
         >
-        <div class="font-semibold">{{ p.title }}</div>
-        <div class="text-sm opacity-70">{{ p.in_stock ? 'В наличии' : 'Нет в наличии' }}</div>
-      </a>
+        <div class="font-semibold">
+          {{ p.title }}
+        </div>
+        <div class="text-sm opacity-70">
+          {{ p.in_stock ? 'В наличии' : 'Нет в наличии' }}
+        </div>
+      </RouterLink>
     </div>
   </div>
 </template>

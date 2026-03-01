@@ -1,9 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import CartButton from './CartButton.vue'
 
 const isOpen = ref(false)
-const cartCount = ref(3)
 
 function toggleMenu() {
   isOpen.value = !isOpen.value
@@ -26,9 +24,13 @@ const links = [
   <nav class="bg-primary text-white">
     <div class="mx-auto flex items-center justify-between px-6 py-4 container lg:py-5">
       <!-- Logo -->
-      <h1 class="text-2xl font-bold tracking-wide lg:text-3xl">
-        brillex
-      </h1>
+      <RouterLink to="/" class="flex items-center">
+        <img
+          src="/logo.svg"
+          alt="Brillex logo"
+          class="h-20 w-auto scale-150 brightness-0 invert"
+        >
+      </RouterLink>
 
       <!-- Catalog (with arrow rotate + underline on hover) -->
       <RouterLink
@@ -68,36 +70,20 @@ const links = [
       <div class="flex items-center gap-4 lg:gap-6">
         <!-- Contacts (desktop only) -->
         <div class="hidden flex-col text-right text-sm opacity-80 lg:flex">
-          <span class="cursor-default transition hover:opacity-100">+7 (999) 999-99-99</span>
-          <span class="cursor-default transition hover:opacity-100">zakaz@brillex.kz</span>
+          <span class="transition hover:opacity-100">zakaz@brillex.kz</span>
+          <span class="transition hover:opacity-100">+7 (705) 259 88-88</span>
         </div>
 
         <!-- Icons -->
         <div class="flex items-center gap-2 lg:gap-3">
-          <!-- Search -->
-          <button
-            class="h-10 w-10 flex items-center justify-center rounded-full bg-white/10 transition lg:h-11 lg:w-11 xl:h-12 xl:w-12 active:scale-[0.98] hover:scale-[1.03] hover:bg-white/20"
-            aria-label="Поиск"
-          >
-            <span class="i-mdi:magnify text-xl lg:text-2xl" />
-          </button>
-
-          <!-- Cart -->
-          <div
-            class="transition active:scale-[0.98] hover:scale-[1.03]"
-            aria-label="Корзина"
-          >
-            <CartButton :count="cartCount" />
-          </div>
-
           <!-- Burger (mobile only) -->
           <button
             class="h-10 w-10 flex items-center justify-center rounded-full bg-white/10 transition md:hidden lg:h-11 lg:w-11 active:scale-[0.98] hover:scale-[1.03] hover:bg-white/20"
             aria-label="Меню"
             @click="toggleMenu"
           >
-            <span v-if="!isOpen" class="i-ph-list text-2xl" />
-            <span v-else class="i-ph-x text-2xl" />
+            <span v-if="!isOpen" class="i-mdi:menu text-2xl" />
+            <span v-else class="i-mdi:close text-2xl" />
           </button>
         </div>
       </div>
