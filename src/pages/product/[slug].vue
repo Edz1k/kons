@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Product } from '~/services/directus'
+import type { Product } from '~/types/product'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchProductBySlug, fileUrl } from '~/services/directus'

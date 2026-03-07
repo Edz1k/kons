@@ -1,5 +1,6 @@
 packages: []
 
+catalog:
 catalogs:
 
   build:
@@ -48,6 +49,7 @@ catalogs:
     vue-tsc: ^2.2.8
 
   frontend:
+    '@headlessui/vue': ^1.7.23
     '@unhead/vue': ^2.0.2
     '@unocss/reset': ^66.1.0-beta.7
     '@vueuse/core': ^13.0.0

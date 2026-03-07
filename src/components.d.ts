@@ -10,8 +10,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     CartButon: typeof import('./components/CartButon.vue')['default']
     CartButton: typeof import('./components/CartButton.vue')['default']
+    FilterComponent: typeof import('./components/FilterComponent.vue')['default']
     FooterComponent: typeof import('./components/FooterComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
+    ProductCard: typeof import('./components/ProductCard.vue')['default']
     README: typeof import('./components/README.md')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

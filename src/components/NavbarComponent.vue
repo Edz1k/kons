@@ -63,27 +63,27 @@ const links = [
               >
                 <ul class="flex flex-col gap-3 text-base">
                   <li>
-                    <RouterLink to="/market" class="transition hover:text-secondary">
+                    <RouterLink :to="{ path: '/market' }" class="transition hover:text-secondary">
                       Все товары
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/market/tshirts" class="transition hover:text-secondary">
+                    <RouterLink :to="{ path: '/market', query: { category: 't-shirt' } }" class="transition hover:text-secondary">
                       Футболки
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/market/hoodies" class="transition hover:text-secondary">
+                    <RouterLink :to="{ path: '/market', query: { category: 'hoodie' } }" class="transition hover:text-secondary">
                       Худи
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/market/caps" class="transition hover:text-secondary">
+                    <RouterLink :to="{ path: '/market', query: { category: 'caps' } }" class="transition hover:text-secondary">
                       Кепки
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/market/custom" class="transition hover:text-secondary">
+                    <RouterLink :to="{ path: '/market', query: { category: 'custom' } }" class="transition hover:text-secondary">
                       Кастом
                     </RouterLink>
                   </li>
