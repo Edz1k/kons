@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CarouselComponent from '~/components/CarouselComponent.vue'
+
 defineOptions({
   name: 'IndexPage',
 })
@@ -53,6 +55,43 @@ defineOptions({
         </div>
       </div>
     </div>
+  </section>
+  <section>
+    <h2 class="mb-4 text-2xl font-bold">
+      Наши услуги
+    </h2>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="border border-white/10 rounded-xl p-6">
+        <h3 class="mb-2 text-xl font-semibold">
+          Консультация и идеи
+        </h3>
+        <p class="text-sm text-gray-400">
+          Поможем с выбором концепции, материалов и дизайна.
+        </p>
+      </div>
+
+      <div class="border border-white/10 rounded-xl p-6">
+        <h3 class="mb-2 text-xl font-semibold">
+          Производство мерча
+        </h3>
+        <p class="text-sm text-gray-400">
+          Изготовим качественный мерч по вашему дизайну.
+        </p>
+      </div>
+
+      <div class="border border-white/10 rounded-xl p-6">
+        <h3 class="mb-2 text-xl font-semibold">
+          Доставка и логистика
+        </h3>
+        <p class="text-sm text-gray-400">
+          Организуем доставку мерча вашим клиентам.
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class="mx-auto py-12 container">
+    <CarouselComponent />
   </section>
 </template>
 

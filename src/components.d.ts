@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CarouselComponent: typeof import('./components/CarouselComponent.vue')['default']
     CartButon: typeof import('./components/CartButon.vue')['default']
     CartButton: typeof import('./components/CartButton.vue')['default']
     FilterComponent: typeof import('./components/FilterComponent.vue')['default']
