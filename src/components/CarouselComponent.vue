@@ -3,14 +3,15 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 const slides = [
-  '/pictures/hudi.png',
-  '/pictures/chain.png',
-  '/pictures/hudi.png',
+  '/carousel/1.jpg',
+  '/carousel/7.jpg',
+  '/carousel/10.jpg',
+  '/carousel/11.jpg',
 ]
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl w-full">
+  <div class="mx-auto mt-12 w-[80%]">
     <Swiper
       :modules="[Navigation, Pagination, Autoplay]"
       :slides-per-view="1"
@@ -19,7 +20,7 @@ const slides = [
       :autoplay="{ delay: 3000 }"
       navigation
       :pagination="{ clickable: true }"
-      class="rounded-xl"
+      class="h-[600px] w-full"
     >
       <SwiperSlide
         v-for="(slide, index) in slides"
@@ -27,7 +28,7 @@ const slides = [
       >
         <img
           :src="slide"
-          class="h-[400px] w-full rounded-xl object-cover"
+          class="h-[600px] w-full object-cover"
         >
       </SwiperSlide>
     </Swiper>
