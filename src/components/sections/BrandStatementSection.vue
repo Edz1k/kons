@@ -1,5 +1,5 @@
 <template>
-  <section class="relative py-12">
+  <section class="overflow-hidden py-12">
     <div class="mx-auto max-w-7xl px-4 text-center lg:px-8 sm:px-6">
       <h2 class="font-bold leading-[0.95] tracking-tight uppercase">
         <FadeComponent>
@@ -34,6 +34,7 @@
       </h2>
     </div>
 
+    <!-- декоративные картинки -->
     <div class="pointer-events-none relative">
       <FadeComponent>
         <img
@@ -45,9 +46,7 @@
           class="absolute bottom-[-70px] left-0 w-[30%] object-contain"
         >
       </FadeComponent>
-    </div>
 
-    <div class="pointer-events-none relative">
       <FadeComponent>
         <img
           src="/pictures/sumka.png"
