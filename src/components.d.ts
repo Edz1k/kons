@@ -8,17 +8,21 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BrandStatementSection: typeof import('./components/sections/BrandStatementSection.vue')['default']
+    CapabilitiesSection: typeof import('./components/sections/CapabilitiesSection.vue')['default']
     CarouselComponent: typeof import('./components/CarouselComponent.vue')['default']
     CartButon: typeof import('./components/CartButon.vue')['default']
     CartButton: typeof import('./components/CartButton.vue')['default']
-    FadeComponent: typeof import('./components/FadeComponent.vue')['default']
+    FadeComponent: typeof import('./components/AnimationComponent/FadeComponent.vue')['default']
     FilterComponent: typeof import('./components/FilterComponent.vue')['default']
     FooterComponent: typeof import('./components/FooterComponent.vue')['default']
+    HeroSection: typeof import('./components/sections/HeroSection.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
     ProductCard: typeof import('./components/ProductCard.vue')['default']
     README: typeof import('./components/README.md')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StickyFeatureSection: typeof import('./components/sections/StickyFeatureSection.vue')['default']
     TheCounter: typeof import('./components/TheCounter.vue')['default']
     TheFooter: typeof import('./components/TheFooter.vue')['default']
     TheInput: typeof import('./components/TheInput.vue')['default']

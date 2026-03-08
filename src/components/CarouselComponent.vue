@@ -11,7 +11,7 @@ const slides = [
 </script>
 
 <template>
-  <div class="absolute left-[5%] top-[-5%] w-[90%] overflow-hidden rounded-lg">
+  <div class="w-full overflow-hidden rounded-lg">
     <Swiper
       :modules="[Navigation, Pagination, Autoplay]"
       :slides-per-view="1"
@@ -20,7 +20,7 @@ const slides = [
       :autoplay="{ delay: 3000 }"
       navigation
       :pagination="{ clickable: true }"
-      class="h-[600px] w-full"
+      class="aspect-16/9 w-full"
     >
       <SwiperSlide
         v-for="(slide, index) in slides"
@@ -28,7 +28,7 @@ const slides = [
       >
         <img
           :src="slide"
-          class="h-[600px] w-full object-cover"
+          class="h-full w-full object-cover"
         >
       </SwiperSlide>
     </Swiper>
