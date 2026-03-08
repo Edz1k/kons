@@ -11,6 +11,7 @@ declare module 'vue' {
     CarouselComponent: typeof import('./components/CarouselComponent.vue')['default']
     CartButon: typeof import('./components/CartButon.vue')['default']
     CartButton: typeof import('./components/CartButton.vue')['default']
+    FadeComponent: typeof import('./components/FadeComponent.vue')['default']
     FilterComponent: typeof import('./components/FilterComponent.vue')['default']
     FooterComponent: typeof import('./components/FooterComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']

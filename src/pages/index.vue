@@ -29,7 +29,7 @@ defineOptions({
     <div class="relative z-10 mx-auto min-h-[90vh] flex items-center justify-center px-4 container">
       <div class="text-center">
         <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl">
-          <span class="text-orange-500">
+          <span class="text-secondary">
             МЫ СОЗДАЕМ МЕРЧ,
           </span>
           <br>
@@ -48,7 +48,7 @@ defineOptions({
 
         <div class="mt-8">
           <button
-            class="rounded-full bg-orange-500 px-6 py-3 text-base text-white font-medium transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
+            class="rounded-full bg-secondary px-6 py-3 text-base text-white font-medium transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
           >
             Заказать мерч →
           </button>
@@ -56,9 +56,44 @@ defineOptions({
       </div>
     </div>
   </section>
-  <section class="">
+  <section>
     <div class="relative h-[100vh]">
       <CarouselComponent />
+    </div>
+  </section>
+  <section>
+    <div class="mx-auto max-w-7xl px-6 text-center">
+      <h1 class="font-bold leading-[0.95] tracking-tight uppercase">
+        <FadeComponent>
+          <span class="block text-5xl text-black lg:text-8xl md:text-7xl">
+            СДЕЛАЕМ
+          </span>
+        </FadeComponent>
+
+        <FadeComponent>
+          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
+            БРЕНД ОДЕЖДЫ
+          </span>
+        </FadeComponent>
+
+        <FadeComponent>
+          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
+            ВНУТРИ
+          </span>
+        </FadeComponent>
+
+        <FadeComponent>
+          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
+            ВАШЕЙ
+          </span>
+        </FadeComponent>
+
+        <FadeComponent>
+          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
+            КОМПАНИИ
+          </span>
+        </FadeComponent>
+      </h1>
     </div>
   </section>
 </template>

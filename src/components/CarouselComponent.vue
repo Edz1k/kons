@@ -18,7 +18,6 @@ const slides = [
       :space-between="20"
       :loop="true"
       :autoplay="{ delay: 3000 }"
-      :s
       navigation
       :pagination="{ clickable: true }"
       class="h-[600px] w-full"

@@ -16,7 +16,7 @@ export default defineConfig({
   theme: {
     colors: {
       primary: '#0F172A', // основной (navbar, фон)
-      secondary: '#38BDF8', // акцентный (кнопки, ссылки)
+      secondary: '#fe4819', // акцентный (кнопки, ссылки)
       accent: '#22C55E', // успех / highlight
       danger: '#EF4444', // ошибки / badge
       muted: '#94A3B8', // вторичный текст
