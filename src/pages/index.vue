@@ -56,8 +56,10 @@ defineOptions({
       </div>
     </div>
   </section>
-  <section class="mx-auto py-8">
-    <CarouselComponent />
+  <section class="">
+    <div class="relative h-[100vh]">
+      <CarouselComponent />
+    </div>
   </section>
 </template>
 
