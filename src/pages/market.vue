@@ -74,13 +74,11 @@ watch(
     </div>
 
     <div v-else class="grid grid-cols-1 gap-4 lg:grid-cols-3 sm:grid-cols-2">
-      <FadeComponent
-        v-for="(p, index) in filteredItems"
+      <ProductCard
+        v-for="p in filteredItems"
         :key="p.id"
-        :delay="index * 50"
-      >
-        <ProductCard :product="p" />
-      </FadeComponent>
+        :product="p"
+      />
     </div>
   </div>
 </template>

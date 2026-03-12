@@ -17,6 +17,7 @@ declare module 'vue' {
     FilterComponent: typeof import('./components/FilterComponent.vue')['default']
     FooterComponent: typeof import('./components/FooterComponent.vue')['default']
     HeroSection: typeof import('./components/sections/HeroSection.vue')['default']
+    LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
     ProductCard: typeof import('./components/ProductCard.vue')['default']
     README: typeof import('./components/README.md')['default']
