@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { useIntersectionObserver } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref } from 'vue'
 import FilterComponent from '~/components/FilterComponent.vue'
 import ProductCard from '~/components/ProductCard.vue'
+import { useInfiniteScrollTrigger } from '~/composables/market/useInfiniteScrollTrigger'
+import { useMarketCatalog } from '~/composables/market/useMarketProducts'
 import { useProductsStore } from '~/stores/product'
 
-const route = useRoute()
 const productsStore = useProductsStore()
 
 const {
@@ -20,71 +19,21 @@ const {
   initialized,
 } = storeToRefs(productsStore)
 
-const loadMoreTrigger = useTemplateRef<HTMLElement>('loadMoreTrigger')
-const observerEnabled = ref(false)
+const loadMoreTrigger = ref<HTMLElement | null>(null)
 
-const normalizedRouteState = computed(() => ({
-  category: typeof route.query.category === 'string'
-    ? route.query.category
-    : '',
-  sort: typeof route.query.sort === 'string'
-    ? route.query.sort
-    : 'default',
-  search: typeof route.query.search === 'string'
-    ? route.query.search.trim()
-    : '',
-  inStockOnly: route.query.inStock === 'true',
-}))
+const { isReadyForInfiniteScroll } = useMarketCatalog()
 
-async function applyRouteAndReload() {
-  productsStore.syncFromQuery(route.query)
-  await productsStore.resetAndReload()
-}
-
-onMounted(async () => {
-  await productsStore.loadCategories()
-  await applyRouteAndReload()
-
-  observerEnabled.value = true
+useInfiniteScrollTrigger({
+  target: loadMoreTrigger,
+  enabled: isReadyForInfiniteScroll,
+  loading,
+  loadingMore,
+  hasMore,
+  initialized,
+  itemsCount: computed(() => items.value.length),
+  onLoadMore: () => productsStore.loadNextPage(),
+  rootMargin: '300px',
 })
-
-watch(
-  normalizedRouteState,
-  async () => {
-    if (!initialized.value)
-      return
-
-    await applyRouteAndReload()
-  },
-)
-
-useIntersectionObserver(
-  loadMoreTrigger,
-  async ([entry]) => {
-    if (!observerEnabled.value)
-      return
-
-    if (!entry?.isIntersecting)
-      return
-
-    if (!initialized.value)
-      return
-
-    if (loading.value || loadingMore.value)
-      return
-
-    if (!hasMore.value)
-      return
-
-    if (!items.value.length)
-      return
-
-    await productsStore.loadNextPage()
-  },
-  {
-    rootMargin: '300px',
-  },
-)
 </script>
 
 <template>

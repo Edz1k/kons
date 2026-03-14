@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ref } from 'vue'
-import { useAmocrm } from '~/services/useAmocrm'
+import { useAmocrm } from '~/composables/useAmocrm'
 
 const { sendForm } = useAmocrm()
 
