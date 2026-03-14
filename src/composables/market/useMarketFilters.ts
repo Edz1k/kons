@@ -2,7 +2,6 @@ import type {
   LocationQueryValue,
   LocationQueryValueRaw,
 } from 'vue-router'
-import { watchDebounced } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -115,18 +114,11 @@ export function useMarketFilters() {
     },
   )
 
-  watchDebounced(
-    localSearch,
-    (value) => {
-      replaceQuery({
-        search: value.trim() || undefined,
-      })
-    },
-    {
-      debounce: 700,
-      maxWait: 1200,
-    },
-  )
+  function submitSearch() {
+    replaceQuery({
+      search: localSearch.value.trim() || undefined,
+    })
+  }
 
   const inStockOnlyModel = computed<boolean>({
     get() {
@@ -183,5 +175,6 @@ export function useMarketFilters() {
     selectedCategoryObject,
     selectedSortObject,
     resetAll,
+    submitSearch,
   }
 }

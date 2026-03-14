@@ -14,6 +14,7 @@ const {
   inStockOnlyModel,
   selectedCategoryObject,
   selectedSortObject,
+  submitSearch,
   resetAll,
 } = useMarketFilters()
 </script>
@@ -22,10 +23,12 @@ const {
   <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
     <input
       v-model="localSearch"
-      type="text"
-      placeholder="Поиск по названию..."
-      class="min-w-[220px] border border-white/10 rounded-xl bg-white/5 px-4 py-2 outline-none"
+      placeholder="Поиск..."
+      @keyup.enter="submitSearch"
     >
+    <button @click="submitSearch">
+      Найти
+    </button>
 
     <Listbox v-model="selectedCategoryObject">
       <div class="relative min-w-[220px]">

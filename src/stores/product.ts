@@ -284,8 +284,6 @@ export const useProductsStore = defineStore('products', () => {
   }
 
   const loadedCount = computed(() => items.value.length)
-  const currentCatalogKey = computed(() => getCatalogKey())
-  const cacheSize = computed(() => Object.keys(catalogCache.value).length)
 
   return {
     items,
@@ -307,9 +305,6 @@ export const useProductsStore = defineStore('products', () => {
     total,
     hasMore,
     loadedCount,
-
-    currentCatalogKey,
-    cacheSize,
 
     loadProducts,
     loadNextPage,

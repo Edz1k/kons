@@ -68,7 +68,7 @@ const links = [
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink :to="{ path: '/market', query: { category: 't-shirt' } }" class="transition hover:text-secondary">
+                    <RouterLink :to="{ path: '/market', query: { category: 'tshirt' } }" class="transition hover:text-secondary">
                       Футболки
                     </RouterLink>
                   </li>
