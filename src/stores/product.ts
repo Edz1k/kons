@@ -32,8 +32,9 @@ export const useProductsStore = defineStore('products', () => {
     const unique = new Map<string, string>()
 
     for (const item of items.value) {
-      if (item.category?.slug && item.category?.title)
+      if (item.category?.slug && item.category?.title) {
         unique.set(item.category.slug, item.category.title)
+      }
     }
 
     return Array.from(unique, ([slug, title]) => ({
@@ -46,12 +47,14 @@ export const useProductsStore = defineStore('products', () => {
     let result = [...items.value]
 
     result = result.filter((product) => {
-      const matchesSearch = search.value
-        ? product.title.toLowerCase().includes(search.value.toLowerCase())
+      const normalizedSearch = search.value.trim().toLowerCase()
+
+      const matchesSearch = normalizedSearch
+        ? product.title.toLowerCase().includes(normalizedSearch)
         : true
 
       const matchesStock = inStockOnly.value
-        ? product.in_stock
+        ? product.stock_quantity > 0
         : true
 
       const matchesCategory = selectedCategory.value
@@ -135,7 +138,6 @@ export const useProductsStore = defineStore('products', () => {
     setSearch,
     setInStockOnly,
     syncFromQuery,
-
     resetFilters,
   }
 })

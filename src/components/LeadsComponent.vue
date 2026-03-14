@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ref } from 'vue'
+import { useAmocrm } from '~/services/useAmocrm'
+
+const { sendForm } = useAmocrm()
 
 const isOpen = ref(false)
 
@@ -21,7 +24,6 @@ const name = ref('')
 const phone = ref('')
 const loading = ref(false)
 const success = ref(false)
-const source = `${window.location.hostname}-modal`
 
 async function submitForm() {
   if (!name.value || phone.value.length < 10)
@@ -29,16 +31,15 @@ async function submitForm() {
 
   loading.value = true
 
-  const formData = new FormData()
-  formData.append('name', name.value)
-  formData.append('phone', phone.value)
-  formData.append('source', source)
-
   try {
-    await fetch('https://wdg.biz-crm.ru/inserv/in.php?token=ddcb6925f647cd7e65a12af2bec0dea1', {
-      method: 'POST',
-      body: formData,
-      mode: 'no-cors',
+    const source = typeof window !== 'undefined'
+      ? `${window.location.hostname}${window.location.pathname}-modal`
+      : 'modal'
+
+    await sendForm({
+      name: name.value,
+      phone: phone.value,
+      source,
     })
 
     success.value = true
@@ -48,15 +49,15 @@ async function submitForm() {
   catch (e) {
     console.error(e)
   }
-
-  loading.value = false
+  finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
   <TransitionRoot appear :show="isOpen" as="template">
     <Dialog as="div" class="relative z-50" @close="closeModal">
-      <!-- overlay -->
       <TransitionChild
         enter="duration-200 ease-out"
         enter-from="opacity-0"
@@ -68,7 +69,6 @@ async function submitForm() {
         <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" />
       </TransitionChild>
 
-      <!-- modal -->
       <div class="fixed inset-0 flex items-center justify-center p-4">
         <TransitionChild
           enter="duration-200 ease-out"
@@ -78,18 +78,18 @@ async function submitForm() {
           leave-from="scale-100 opacity-100"
           leave-to="scale-95 opacity-0"
         >
-          <DialogPanel
-            class="max-w-md w-full rounded-2xl bg-white p-6 shadow-xl"
-          >
-            <DialogTitle class="text-xl font-semibold">
-              Оставьте заявку
-            </DialogTitle>
+          <DialogPanel class="max-w-md w-full rounded-2xl bg-white p-6 shadow-xl">
+            <div class="flex items-center justify-between">
+              <DialogTitle class="text-xl font-semibold">
+                Оставьте заявку
+              </DialogTitle>
+              <div class="i-mdi:close opacity-75 transition transition-all hover:text-red-500" @click="closeModal" />
+            </div>
 
             <p class="mt-1 text-sm text-black/60">
               Мы свяжемся с вами в ближайшее время
             </p>
 
-            <!-- форма -->
             <form class="mt-6 flex flex-col gap-4" @submit.prevent="submitForm">
               <input
                 v-model="name"
@@ -108,7 +108,7 @@ async function submitForm() {
 
               <button
                 type="submit"
-                class="rounded-xl bg-black py-3 text-white transition hover:bg-black/90"
+                class="rounded-xl bg-black py-3 text-white transition disabled:cursor-not-allowed hover:bg-black/90 disabled:opacity-60"
                 :disabled="loading"
               >
                 {{ loading ? 'Отправка...' : 'Отправить заявку' }}

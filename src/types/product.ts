@@ -17,8 +17,9 @@ export interface Product {
   title: string
   slug: string
   description?: string
-  in_stock: boolean
   images?: ProductImage[]
   price: string
   category: Category
+  sku: string
+  stock_quantity: number
 }

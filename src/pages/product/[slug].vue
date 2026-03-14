@@ -23,6 +23,7 @@ const slug = computed(() => {
 const item = ref<Product | null>(null)
 const loading = ref(true)
 const error = ref('')
+const modalRef = ref()
 
 async function load() {
   loading.value = true
@@ -124,19 +125,10 @@ watch(slug, load)
         <!-- Правая колонка -->
         <div>
           <div class="border-b border-black/10 pb-6">
-            <div class="mb-3 flex items-center justify-between gap-4">
+            <div class="mb-3">
               <p class="text-xs text-black/45 tracking-[0.3em] uppercase">
                 Brillex
               </p>
-
-              <div
-                class="rounded-full px-3 py-1 text-xs font-medium"
-                :class="item.in_stock
-                  ? 'bg-black text-white'
-                  : 'bg-black/8 text-black/55'"
-              >
-                {{ item.in_stock ? 'В наличии' : 'Нет в наличии' }}
-              </div>
             </div>
 
             <h1 class="text-3xl font-bold leading-tight lg:text-5xl md:text-4xl">
@@ -145,6 +137,25 @@ watch(slug, load)
 
             <div class="mt-5 text-2xl font-semibold md:text-3xl">
               {{ item.price }} ₸
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <div
+                v-if="item.sku"
+                class="rounded-full bg-black/[0.05] px-3 py-2 text-sm text-black/70"
+              >
+                Артикул: <span class="text-black font-medium">{{ item.sku }}</span>
+              </div>
+
+              <div
+                class="rounded-full px-3 py-2 text-sm"
+                :class="item.stock_quantity > 0
+                  ? 'bg-green-500/10 text-green-700'
+                  : 'bg-red-500/10 text-red-600'"
+              >
+                {{ item.stock_quantity > 0
+                  ? `Остаток: ${item.stock_quantity} шт.`
+                  : 'Нет в наличии' }}
+              </div>
             </div>
 
             <div
@@ -165,7 +176,7 @@ watch(slug, load)
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
               <span class="text-sm text-black/50">Статус</span>
               <span class="text-right text-sm font-medium">
-                {{ item.in_stock ? 'Доступен к заказу' : 'Временно отсутствует' }}
+                {{ item.stock_quantity > 0 ? 'Доступен к заказу' : 'Временно отсутствует' }}
               </span>
             </div>
 
@@ -177,6 +188,15 @@ watch(slug, load)
               <span class="text-right text-sm font-medium">
                 {{ item.category.title }}
               </span>
+            </div>
+            <div>
+              <button
+                class="mt-4 w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
+                :disabled="item.stock_quantity <= 0"
+                @click="modalRef?.openModal()"
+              >
+                {{ item.stock_quantity > 0 ? 'Оставить заявку' : 'Нет в наличии' }}
+              </button>
             </div>
           </div>
 
@@ -198,5 +218,6 @@ watch(slug, load)
         </div>
       </div>
     </div>
+    <LeadsComponent ref="modalRef" />
   </section>
 </template>

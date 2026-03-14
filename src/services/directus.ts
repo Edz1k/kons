@@ -21,7 +21,7 @@ async function getJSON<T>(path: string): Promise<T> {
 
 export async function fetchProducts(): Promise<Product[]> {
   const q = new URLSearchParams({
-    fields: 'id,title,slug,description,in_stock,price,images.directus_files_id,category.id,category.title,category.slug',
+    fields: 'id,title,slug,description,price,images.directus_files_id,category.id,category.title,category.slug,sku,stock_quantity',
     sort: '-id',
   })
 
@@ -31,7 +31,7 @@ export async function fetchProducts(): Promise<Product[]> {
 
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
   const q = new URLSearchParams({
-    'fields': 'id,title,slug,description,in_stock,price,images.directus_files_id,category.id,category.title,category.slug',
+    'fields': 'id,title,slug,description,price,images.directus_files_id,category.id,category.title,category.slug,sku,stock_quantity',
     'filter[slug][_eq]': slug,
     'limit': '1',
   })

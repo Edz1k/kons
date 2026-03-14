@@ -15,7 +15,7 @@ const imageUrl = computed(() =>
   imageId.value ? fileUrl(imageId.value) : null,
 )
 
-const isInStock = computed(() => props.product.in_stock)
+const isInStock = computed(() => props.product.stock_quantity > 0)
 
 const stockClasses = computed(() =>
   isInStock.value
