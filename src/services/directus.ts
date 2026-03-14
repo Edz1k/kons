@@ -49,9 +49,6 @@ async function getJSON<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${BASE}${path}`, {
     method: 'GET',
     signal,
-    headers: {
-      'Content-Type': 'application/json',
-    },
   })
 
   if (!response.ok) {

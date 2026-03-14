@@ -27,7 +27,7 @@ export function useMarketCatalog() {
 
   async function applyRouteAndReload() {
     productsStore.syncFromQuery(route.query)
-    await productsStore.resetAndReload()
+    await productsStore.restoreOrReload()
   }
 
   async function initMarketCatalog() {
@@ -67,6 +67,5 @@ export function useMarketCatalog() {
 
   return {
     isReadyForInfiniteScroll,
-    initMarketCatalog,
   }
 }

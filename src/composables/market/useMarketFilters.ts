@@ -123,8 +123,8 @@ export function useMarketFilters() {
       })
     },
     {
-      debounce: 400,
-      maxWait: 800,
+      debounce: 700,
+      maxWait: 1200,
     },
   )
 

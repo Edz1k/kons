@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
-import FilterComponent from '~/components/FilterComponent.vue'
-import ProductCard from '~/components/ProductCard.vue'
 import { useInfiniteScrollTrigger } from '~/composables/market/useInfiniteScrollTrigger'
 import { useMarketCatalog } from '~/composables/market/useMarketProducts'
 import { useProductsStore } from '~/stores/product'

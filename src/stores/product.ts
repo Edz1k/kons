@@ -4,7 +4,24 @@ import { computed, ref } from 'vue'
 import { fetchCategories, fetchProducts } from '~/services/directus'
 
 const PAGE_SIZE = 12
+const MAX_CACHE_SIZE = 10
 const ALLOWED_SORTS = new Set(['default', 'price-asc', 'price-desc'])
+
+type SortValue = 'default' | 'price-asc' | 'price-desc'
+
+interface CatalogSnapshot {
+  items: Product[]
+  page: number
+  total: number
+  hasMore: boolean
+}
+
+interface CatalogFiltersSnapshot {
+  search: string
+  inStockOnly: boolean
+  selectedCategory: string
+  sortBy: SortValue
+}
 
 export const useProductsStore = defineStore('products', () => {
   const items = ref<Product[]>([])
@@ -19,12 +36,14 @@ export const useProductsStore = defineStore('products', () => {
   const search = ref('')
   const inStockOnly = ref(false)
   const selectedCategory = ref('')
-  const sortBy = ref<'default' | 'price-asc' | 'price-desc'>('default')
+  const sortBy = ref<SortValue>('default')
 
   const page = ref(1)
   const limit = ref(PAGE_SIZE)
   const total = ref(0)
   const hasMore = ref(true)
+
+  const catalogCache = ref<Record<string, CatalogSnapshot>>({})
 
   let activeRequestId = 0
 
@@ -36,12 +55,12 @@ export const useProductsStore = defineStore('products', () => {
     return typeof value === 'string' ? value.trim() : ''
   }
 
-  function normalizeSort(value: unknown): 'default' | 'price-asc' | 'price-desc' {
+  function normalizeSort(value: unknown): SortValue {
     if (typeof value !== 'string')
       return 'default'
 
     return ALLOWED_SORTS.has(value)
-      ? (value as 'default' | 'price-asc' | 'price-desc')
+      ? (value as SortValue)
       : 'default'
   }
 
@@ -49,11 +68,83 @@ export const useProductsStore = defineStore('products', () => {
     return value === true || value === 'true'
   }
 
+  function getCurrentFiltersSnapshot(): CatalogFiltersSnapshot {
+    return {
+      search: search.value,
+      inStockOnly: inStockOnly.value,
+      selectedCategory: selectedCategory.value,
+      sortBy: sortBy.value,
+    }
+  }
+
+  function getCatalogKey(filters: CatalogFiltersSnapshot = getCurrentFiltersSnapshot()): string {
+    return JSON.stringify(filters)
+  }
+
   function resetPaginationState() {
     page.value = 1
     total.value = 0
     hasMore.value = true
     items.value = []
+  }
+
+  function applySnapshot(snapshot: CatalogSnapshot) {
+    items.value = snapshot.items
+    page.value = snapshot.page
+    total.value = snapshot.total
+    hasMore.value = snapshot.hasMore
+  }
+
+  function createCurrentSnapshot(): CatalogSnapshot {
+    return {
+      items: [...items.value],
+      page: page.value,
+      total: total.value,
+      hasMore: hasMore.value,
+    }
+  }
+
+  function saveCurrentStateToCache() {
+    const key = getCatalogKey()
+
+    // если ключ уже есть — удаляем
+    if (catalogCache.value[key]) {
+      delete catalogCache.value[key]
+    }
+
+    // добавляем заново (становится самым "новым")
+    catalogCache.value[key] = createCurrentSnapshot()
+
+    const keys = Object.keys(catalogCache.value)
+
+    if (keys.length > MAX_CACHE_SIZE) {
+      const oldestKey = keys[0]
+      delete catalogCache.value[oldestKey]
+    }
+  }
+
+  function restoreFromCache(): boolean {
+    const key = getCatalogKey()
+    const snapshot = catalogCache.value[key]
+
+    if (!snapshot)
+      return false
+
+    applySnapshot({
+      items: [...snapshot.items],
+      page: snapshot.page,
+      total: snapshot.total,
+      hasMore: snapshot.hasMore,
+    })
+
+    initialized.value = true
+    error.value = ''
+
+    return true
+  }
+
+  function clearCatalogCache() {
+    catalogCache.value = {}
   }
 
   async function loadProducts(reset = false) {
@@ -101,6 +192,8 @@ export const useProductsStore = defineStore('products', () => {
         page.value += 1
 
       initialized.value = true
+
+      saveCurrentStateToCache()
     }
     catch (e: unknown) {
       if (requestId !== activeRequestId)
@@ -125,6 +218,15 @@ export const useProductsStore = defineStore('products', () => {
 
   async function resetAndReload() {
     await loadProducts(true)
+  }
+
+  async function restoreOrReload() {
+    const restored = restoreFromCache()
+
+    if (restored)
+      return
+
+    await resetAndReload()
   }
 
   async function loadCategories() {
@@ -182,6 +284,8 @@ export const useProductsStore = defineStore('products', () => {
   }
 
   const loadedCount = computed(() => items.value.length)
+  const currentCatalogKey = computed(() => getCatalogKey())
+  const cacheSize = computed(() => Object.keys(catalogCache.value).length)
 
   return {
     items,
@@ -204,9 +308,13 @@ export const useProductsStore = defineStore('products', () => {
     hasMore,
     loadedCount,
 
+    currentCatalogKey,
+    cacheSize,
+
     loadProducts,
     loadNextPage,
     resetAndReload,
+    restoreOrReload,
     loadCategories,
 
     setSearch,
@@ -216,5 +324,9 @@ export const useProductsStore = defineStore('products', () => {
     setSort,
     syncFromQuery,
     resetFilters,
+
+    restoreFromCache,
+    saveCurrentStateToCache,
+    clearCatalogCache,
   }
 })
