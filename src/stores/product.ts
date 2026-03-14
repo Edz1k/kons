@@ -166,7 +166,6 @@ export const useProductsStore = defineStore('products', () => {
       loadingMore.value = true
 
     error.value = ''
-
     try {
       const response = await fetchProducts({
         page: page.value,

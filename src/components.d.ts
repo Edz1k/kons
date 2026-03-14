@@ -20,6 +20,7 @@ declare module 'vue' {
     LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
     ProductCard: typeof import('./components/market/ProductCard.vue')['default']
+    ProductSkeleton: typeof import('./components/market/ProductSkeleton.vue')['default']
     README: typeof import('./components/README.md')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
