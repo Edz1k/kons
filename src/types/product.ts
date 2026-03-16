@@ -22,6 +22,22 @@ export interface ProductImage {
   directus_files_id: string
 }
 
+export interface Color {
+  id: number
+  name: string
+  slug: string
+  hex: string
+}
+
+export interface ProductVariant {
+  id: number
+  sku: string
+  stock: number
+  is_default: boolean
+  image?: string | null
+  color: Color
+}
+
 export interface Product {
   id: number
   title: string
@@ -30,6 +46,5 @@ export interface Product {
   images?: ProductImage[]
   price: string
   category: Category
-  sku: string
-  stock_quantity: number
+  product_variants?: ProductVariant[]
 }

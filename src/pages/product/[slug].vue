@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Product } from '~/types/product'
+import type { Product, ProductVariant } from '~/types/product'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchProductBySlug, fileUrl } from '~/services/directus'
@@ -21,14 +21,55 @@ const slug = computed(() => {
 })
 
 const item = ref<Product | null>(null)
+const selectedVariant = ref<ProductVariant | null>(null)
 const loading = ref(true)
 const error = ref('')
 const modalRef = ref()
+
+const variants = computed<ProductVariant[]>(() => {
+  return item.value?.product_variants ?? []
+})
+
+function getInitialVariant(productVariants: ProductVariant[]): ProductVariant | null {
+  if (!productVariants.length)
+    return null
+
+  const defaultVariant = productVariants.find(variant => variant.is_default)
+
+  if (defaultVariant && defaultVariant.stock > 0)
+    return defaultVariant
+
+  const firstInStockVariant = productVariants.find(variant => variant.stock > 0)
+
+  if (firstInStockVariant)
+    return firstInStockVariant
+
+  return defaultVariant ?? productVariants[0] ?? null
+}
+
+const currentVariant = computed<ProductVariant | null>(() => {
+  return selectedVariant.value ?? getInitialVariant(variants.value)
+})
+
+const currentImageId = computed<string | null>(() => {
+  return currentVariant.value?.image
+    ?? item.value?.images?.[0]?.directus_files_id
+    ?? null
+})
+
+const currentSku = computed(() => currentVariant.value?.sku ?? '')
+const currentStock = computed(() => currentVariant.value?.stock ?? 0)
+const isInStock = computed(() => currentStock.value > 0)
+
+function selectVariant(variant: ProductVariant) {
+  selectedVariant.value = variant
+}
 
 async function load() {
   loading.value = true
   error.value = ''
   item.value = null
+  selectedVariant.value = null
 
   try {
     if (!slug.value) {
@@ -44,6 +85,7 @@ async function load() {
     }
 
     item.value = product
+    selectedVariant.value = getInitialVariant(product.product_variants ?? [])
   }
   catch (e: any) {
     error.value = e?.message ?? 'Ошибка загрузки товара'
@@ -60,7 +102,6 @@ watch(slug, load)
 <template>
   <section class="min-h-screen bg-white px-4 py-8 text-black lg:px-8 sm:px-6">
     <div class="mx-auto max-w-7xl">
-      <!-- Хлебные крошки -->
       <div class="mb-8 flex items-center gap-2 text-sm text-black/50">
         <RouterLink
           to="/market"
@@ -74,14 +115,12 @@ watch(slug, load)
         </span>
       </div>
 
-      <!-- loading -->
       <div v-if="loading" class="min-h-[60vh] flex items-center justify-center">
         <div class="text-sm text-black/40 tracking-[0.25em] uppercase">
           Загрузка товара...
         </div>
       </div>
 
-      <!-- error -->
       <div
         v-else-if="error"
         class="min-h-[60vh] flex flex-col items-center justify-center text-center"
@@ -98,17 +137,15 @@ watch(slug, load)
         </RouterLink>
       </div>
 
-      <!-- content -->
       <div
         v-else-if="item"
         class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14"
       >
-        <!-- Левая колонка -->
         <div>
           <div class="overflow-hidden rounded-[28px] bg-[#f5f5f5]">
             <img
-              v-if="item.images?.[0]?.directus_files_id"
-              :src="fileUrl(item.images[0].directus_files_id)"
+              v-if="currentImageId"
+              :src="fileUrl(currentImageId)"
               :alt="item.title"
               class="h-[420px] w-full object-cover lg:h-[720px] md:h-[560px]"
             >
@@ -122,7 +159,6 @@ watch(slug, load)
           </div>
         </div>
 
-        <!-- Правая колонка -->
         <div>
           <div class="border-b border-black/10 pb-6">
             <div class="mb-3">
@@ -138,22 +174,23 @@ watch(slug, load)
             <div class="mt-5 text-2xl font-semibold md:text-3xl">
               {{ item.price }} ₸
             </div>
+
             <div class="mt-4 flex flex-wrap gap-2">
               <div
-                v-if="item.sku"
+                v-if="currentSku"
                 class="rounded-full bg-black/[0.05] px-3 py-2 text-sm text-black/70"
               >
-                Артикул: <span class="text-black font-medium">{{ item.sku }}</span>
+                Артикул: <span class="text-black font-medium">{{ currentSku }}</span>
               </div>
 
               <div
                 class="rounded-full px-3 py-2 text-sm"
-                :class="item.stock_quantity > 0
+                :class="isInStock
                   ? 'bg-green-500/10 text-green-700'
                   : 'bg-red-500/10 text-red-600'"
               >
-                {{ item.stock_quantity > 0
-                  ? `Остаток: ${item.stock_quantity} шт.`
+                {{ isInStock
+                  ? `Остаток: ${currentStock} шт.`
                   : 'Нет в наличии' }}
               </div>
             </div>
@@ -164,9 +201,31 @@ watch(slug, load)
             >
               Категория: {{ item.category.title }}
             </div>
+
+            <div
+              v-if="variants.length"
+              class="mt-6"
+            >
+              <p class="mb-3 text-sm text-black/55">
+                Цвет
+              </p>
+
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="variant in variants"
+                  :key="variant.id"
+                  type="button"
+                  class="h-8 w-8 border rounded-full transition"
+                  :style="{ background: variant.color.hex }"
+                  :class="currentVariant?.id === variant.id
+                    ? 'border-black scale-110'
+                    : 'border-black/20'"
+                  @click="selectVariant(variant)"
+                />
+              </div>
+            </div>
           </div>
 
-          <!-- Характеристики -->
           <div class="grid gap-3 border-b border-black/10 py-6">
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
               <span class="text-sm text-black/50">Бренд</span>
@@ -176,7 +235,17 @@ watch(slug, load)
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
               <span class="text-sm text-black/50">Статус</span>
               <span class="text-right text-sm font-medium">
-                {{ item.stock_quantity > 0 ? 'Доступен к заказу' : 'Временно отсутствует' }}
+                {{ isInStock ? 'Доступен к заказу' : 'Временно отсутствует' }}
+              </span>
+            </div>
+
+            <div
+              v-if="currentVariant?.color?.name"
+              class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4"
+            >
+              <span class="text-sm text-black/50">Выбранный цвет</span>
+              <span class="text-right text-sm font-medium">
+                {{ currentVariant.color.name }}
               </span>
             </div>
 
@@ -189,18 +258,18 @@ watch(slug, load)
                 {{ item.category.title }}
               </span>
             </div>
+
             <div>
               <button
                 class="mt-4 w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
-                :disabled="item.stock_quantity <= 0"
+                :disabled="!isInStock"
                 @click="modalRef?.openModal()"
               >
-                {{ item.stock_quantity > 0 ? 'Оставить заявку' : 'Нет в наличии' }}
+                {{ isInStock ? 'Оставить заявку' : 'Нет в наличии' }}
               </button>
             </div>
           </div>
 
-          <!-- Описание -->
           <div class="pt-6">
             <h2 class="mb-4 text-lg font-semibold md:text-xl">
               Описание
@@ -218,6 +287,7 @@ watch(slug, load)
         </div>
       </div>
     </div>
+
     <LeadsComponent ref="modalRef" />
   </section>
 </template>

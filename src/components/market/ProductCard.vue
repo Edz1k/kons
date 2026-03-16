@@ -9,13 +9,41 @@ const props = defineProps<{
 
 const productLink = computed(() => `/product/${props.product.slug}`)
 
-const imageId = computed(() => props.product.images?.[0]?.directus_files_id)
+const variants = computed(() => props.product.product_variants ?? [])
+
+const activeVariant = computed(() => {
+  if (!variants.value.length)
+    return null
+
+  const defaultVariant = variants.value.find(variant => variant.is_default)
+
+  if (defaultVariant && defaultVariant.stock > 0)
+    return defaultVariant
+
+  const firstInStockVariant = variants.value.find(variant => variant.stock > 0)
+
+  if (firstInStockVariant)
+    return firstInStockVariant
+
+  return defaultVariant ?? variants.value[0] ?? null
+})
+
+const imageId = computed(() =>
+  activeVariant.value?.image
+  ?? props.product.images?.[0]?.directus_files_id
+  ?? null,
+)
 
 const imageUrl = computed(() =>
   imageId.value ? fileUrl(imageId.value) : null,
 )
 
-const isInStock = computed(() => props.product.stock_quantity > 0)
+const isInStock = computed(() => {
+  if (!variants.value.length)
+    return false
+
+  return variants.value.some(variant => variant.stock > 0)
+})
 
 const stockClasses = computed(() =>
   isInStock.value
@@ -45,12 +73,10 @@ function formatPrice(v?: string | number) {
     :to="productLink"
     class="group relative overflow-hidden border border-white/10 rounded-2xl bg-white/5 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-2xl hover:-translate-y-1"
   >
-    <!-- hover gradient -->
     <div class="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
       <div class="absolute inset-0 from-black/30 via-transparent to-transparent bg-gradient-to-t" />
     </div>
 
-    <!-- stock badge -->
     <div class="absolute left-3 top-3 z-10">
       <span
         class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold backdrop-blur-md"
@@ -64,7 +90,6 @@ function formatPrice(v?: string | number) {
       </span>
     </div>
 
-    <!-- image -->
     <div class="relative aspect-square w-full overflow-hidden">
       <img
         v-if="imageUrl"
@@ -89,7 +114,6 @@ function formatPrice(v?: string | number) {
       </div>
     </div>
 
-    <!-- content -->
     <div class="p-4">
       <div class="flex items-start justify-between gap-3">
         <h3 class="line-clamp-2 text-lg font-semibold leading-snug">
@@ -103,10 +127,7 @@ function formatPrice(v?: string | number) {
 
       <div class="mt-2 flex items-center justify-between">
         <div class="text-sm opacity-70">
-          Артикул:
-          <span class="opacity-90">
-            {{ product.slug }}
-          </span>
+          {{ product.category?.title || 'Brillex' }}
         </div>
 
         <div

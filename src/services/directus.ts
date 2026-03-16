@@ -16,8 +16,15 @@ const PRODUCT_FIELDS = [
   'category.id',
   'category.title',
   'category.slug',
-  'sku',
-  'stock_quantity',
+  'product_variants.id',
+  'product_variants.sku',
+  'product_variants.stock',
+  'product_variants.is_default',
+  'product_variants.image',
+  'product_variants.color.id',
+  'product_variants.color.name',
+  'product_variants.color.slug',
+  'product_variants.color.hex',
 ].join(',')
 
 export interface FetchProductsParams {
@@ -70,6 +77,24 @@ function mapSort(sortBy: FetchProductsParams['sortBy']) {
   }
 }
 
+function hasStock(product: Product): boolean {
+  return (product.product_variants ?? []).some(variant => variant.stock > 0)
+}
+
+function matchesSearch(product: Product, search: string): boolean {
+  const normalized = search.trim().toLowerCase()
+
+  if (!normalized)
+    return true
+
+  const inTitle = product.title.toLowerCase().includes(normalized)
+  const inVariants = (product.product_variants ?? []).some(variant =>
+    variant.sku.toLowerCase().includes(normalized),
+  )
+
+  return inTitle || inVariants
+}
+
 export async function fetchProducts(
   params: FetchProductsParams = {},
 ): Promise<FetchProductsResult> {
@@ -91,26 +116,25 @@ export async function fetchProducts(
     meta: 'filter_count',
   })
 
-  const normalizedSearch = search.trim()
-
-  if (normalizedSearch) {
-    query.set('filter[_or][0][title][_icontains]', normalizedSearch)
-    query.set('filter[_or][1][sku][_icontains]', normalizedSearch)
-  }
-
   if (category)
     query.set('filter[category][slug][_eq]', category)
-
-  if (inStockOnly)
-    query.set('filter[stock_quantity][_gt]', '0')
 
   const json = await getJSON<DirectusListResponse<Product[]>>(
     `/items/products?${query.toString()}`,
     signal,
   )
 
-  const items = json.data ?? []
-  const total = json.meta?.filter_count ?? items.length
+  let items = json.data ?? []
+
+  const normalizedSearch = search.trim()
+
+  if (normalizedSearch)
+    items = items.filter(product => matchesSearch(product, normalizedSearch))
+
+  if (inStockOnly)
+    items = items.filter(product => hasStock(product))
+
+  const total = items.length
   const hasMore = page * limit < total
 
   return {
