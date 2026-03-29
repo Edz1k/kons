@@ -44,7 +44,7 @@ export interface Product {
   slug: string
   description?: string
   images?: ProductImage[]
-  price: string
+  price: number
   category: Category
   product_variants?: ProductVariant[]
 }
