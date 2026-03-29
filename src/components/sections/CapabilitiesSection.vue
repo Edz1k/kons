@@ -52,7 +52,7 @@ function toggleItem(id: number) {
 </script>
 
 <template>
-  <section class="py-10 md:py-16">
+  <section id="services" class="py-10 md:py-16">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <!-- Заголовок -->
       <div class="grid mb-8 gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-start">

@@ -16,7 +16,18 @@ export const createApp = ViteSSG(
   {
     routes: setupLayouts(routes),
     base: import.meta.env.BASE_URL,
-    scrollBehavior() {
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition)
+        return savedPosition
+
+      if (to.hash) {
+        return {
+          el: to.hash,
+          behavior: 'smooth',
+          top: 100,
+        }
+      }
+
       return { top: 0 }
     },
   },

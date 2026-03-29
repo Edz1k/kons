@@ -263,7 +263,12 @@ watch(slug, load)
               <button
                 class="mt-4 w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
                 :disabled="!isInStock"
-                @click="modalRef?.openModal()"
+                @click="modalRef?.openModal({
+                  productTitle: item.title,
+                  variantName: currentVariant?.color?.name ?? '',
+                  sku: currentSku,
+                  maxQuantity: currentStock,
+                })"
               >
                 {{ isInStock ? 'Оставить заявку' : 'Нет в наличии' }}
               </button>

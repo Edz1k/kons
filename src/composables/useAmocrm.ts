@@ -1,9 +1,20 @@
+export interface AmoFormPayload {
+  name: string
+  phone: string
+  source: string
+  product_title?: string
+  variant_name?: string
+  sku?: string
+  quantity?: string
+}
+
 export function useAmocrm() {
-  async function sendForm(data: Record<string, string>) {
+  async function sendForm(data: AmoFormPayload) {
     const formData = new FormData()
 
     Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value)
+      if (value !== undefined && value !== null && value !== '')
+        formData.append(key, String(value))
     })
 
     await fetch(
