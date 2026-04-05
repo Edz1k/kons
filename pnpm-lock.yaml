@@ -134,6 +134,9 @@ catalogs:
     '@vueuse/core':
       specifier: ^13.0.0
       version: 13.0.0
+    maska:
+      specifier: ^3.2.0
+      version: 3.2.0
     nprogress:
       specifier: ^0.2.0
       version: 0.2.0
@@ -182,7 +185,7 @@ importers:
         specifier: catalog:frontend
         version: 13.0.0(vue@3.5.13(typescript@5.8.2))
       maska:
-        specifier: ^3.2.0
+        specifier: catalog:frontend
         version: 3.2.0
       nprogress:
         specifier: catalog:frontend
