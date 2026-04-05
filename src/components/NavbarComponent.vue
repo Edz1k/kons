@@ -28,8 +28,19 @@ function closeMenu() {
   isCatalogOpen.value = false
 }
 
-function toggleCatalog() {
-  isCatalogOpen.value = !isCatalogOpen.value
+async function ensureCategoriesLoaded() {
+  if (categories.value.length || loadingCategories.value)
+    return
+
+  await productsStore.loadCategories()
+}
+
+async function toggleCatalog() {
+  const nextState = !isCatalogOpen.value
+  isCatalogOpen.value = nextState
+
+  if (nextState)
+    await ensureCategoriesLoaded()
 }
 
 function categoryLink(slug: string) {
@@ -40,7 +51,16 @@ function categoryLink(slug: string) {
 }
 
 onMounted(() => {
-  productsStore.loadCategories()
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(() => {
+      ensureCategoriesLoaded()
+    }, { timeout: 2000 })
+  }
+  else {
+    setTimeout(() => {
+      ensureCategoriesLoaded()
+    }, 1200)
+  }
 })
 </script>
 
