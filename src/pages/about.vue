@@ -82,11 +82,12 @@ const steps = [
 
             <div class="mt-10 flex flex-wrap items-center justify-center gap-5 md:mt-14">
               <div class="flex flex-wrap items-center gap-4">
-                <button
-                  class="rounded-full bg-secondary px-6 py-3 text-base text-white font-medium transition duration-300 hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
+                <RouterLink
+                  to="/market"
+                  class="inline-block rounded-full bg-secondary px-6 py-3 text-base text-white font-medium transition duration-300 hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
                 >
                   Заказать мерч →
-                </button>
+                </RouterLink>
 
                 <a
                   href="/portfolio"

@@ -10,7 +10,6 @@ const productsStore = useProductsStore()
 const { categories, loadingCategories } = storeToRefs(productsStore)
 
 const links = [
-  { label: 'Идея для мерча', to: '/ideas' },
   { label: 'Портфолио', to: '/portfolio' },
   { label: 'Услуги', to: { path: '/', hash: '#services' } },
   { label: 'О нас', to: '/about' },

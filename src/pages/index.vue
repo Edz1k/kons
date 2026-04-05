@@ -45,11 +45,12 @@ defineOptions({
         </p>
 
         <div class="mt-8">
-          <button
+          <RouterLink
+            to="/contacts"
             class="rounded-full bg-secondary px-6 py-3 text-base text-white font-medium transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
           >
             Заказать мерч →
-          </button>
+          </RouterLink>
         </div>
       </div>
     </div>
