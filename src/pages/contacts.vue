@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const phone = '+7 (775) 144-20-23'
+const phone = '+7 (705) 259-88-88'
 const cleanPhone = phone.replace(/\D/g, '')
 
 const whatsappLink = `https://wa.me/${cleanPhone}`

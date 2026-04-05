@@ -38,7 +38,7 @@
     <div class="pointer-events-none relative">
       <FadeComponent>
         <img
-          src="/pictures/crocs.png"
+          src="/pictures/crocs.webp"
           alt=""
           aria-hidden="true"
           loading="lazy"
@@ -49,7 +49,7 @@
 
       <FadeComponent>
         <img
-          src="/pictures/sumka.png"
+          src="/pictures/sumka.webp"
           alt=""
           aria-hidden="true"
           loading="lazy"

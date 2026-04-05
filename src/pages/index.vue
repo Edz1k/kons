@@ -10,14 +10,14 @@ defineOptions({
     <div class="pointer-events-none absolute inset-0">
       <!-- hudi -->
       <img
-        src="/pictures/hudi.png"
+        src="/pictures/hudi.webp"
         alt=""
         class="absolute bottom-[-50px] left-[-40px] w-[180px] lg:bottom-[-120px] lg:left-[-80px] md:bottom-[-90px] md:left-[-60px] sm:bottom-[-50px] sm:left-[-30px] lg:w-[360px] md:w-[280px] sm:w-[220px]"
       >
 
       <!-- chain -->
       <img
-        src="/pictures/chain.png"
+        src="/pictures/chain.webp"
         alt=""
         class="absolute left-[-20px] top-[10px] w-[140px] lg:left-[-40px] lg:top-[0px] md:left-[-30px] md:top-[10px] sm:left-[-10px] sm:top-[0px] lg:w-[320px] md:w-[240px] sm:w-[180px]"
       >

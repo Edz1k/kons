@@ -1,27 +1,27 @@
 <script setup lang="ts">
 const photos = [
   {
-    src: '/pictures/disclo/Group_124.jpg.webp',
+    src: '/pictures/disclo/Group1.webp',
     alt: 'card 1',
     class: 'left-0 top-10 w-[58%] rotate-[-4deg] z-10',
   },
   {
-    src: '/pictures/disclo/Group_124.jpg.webp',
+    src: '/pictures/disclo/Group2.webp',
     alt: 'card 2',
     class: 'right-0 top-0 w-[42%] rotate-[6deg] z-20',
   },
   {
-    src: '/pictures/disclo/Group_124.jpg.webp',
+    src: '/pictures/disclo/Group3.webp',
     alt: 'card 3',
     class: 'left-[18%] top-[420px] w-[60%] rotate-[10deg] z-30',
   },
   {
-    src: '/pictures/disclo/Group_124.jpg.webp',
+    src: '/pictures/disclo/Group4.webp',
     alt: 'card 4',
     class: 'left-0 top-[980px] w-[46%] rotate-[-8deg] z-10',
   },
   {
-    src: '/pictures/disclo/Group_124.jpg.webp',
+    src: '/pictures/disclo/Group5.webp',
     alt: 'card 5',
     class: 'right-[4%] top-[1180px] w-[52%] rotate-[8deg] z-20',
   },

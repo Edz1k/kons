@@ -6,7 +6,7 @@ const portfolioItems = [
     subtitle: 'Чистый силуэт и уверенная простота',
     description:
       'Футболки Brillex созданы для тех, кто ценит минимализм, комфорт и универсальность. Они легко становятся основой повседневного образа и сохраняют характер бренда в каждой детали.',
-    image: '/image.png',
+    image: '/image.webp',
     align: 'left',
   },
   {
@@ -15,7 +15,7 @@ const portfolioItems = [
     subtitle: 'Свобода, ритм города и комфорт',
     description:
       'Худи и базовые элементы коллекции объединяют удобство и современную уличную эстетику. Это вещи, которые органично вписываются в ритм города и подчеркивают индивидуальность.',
-    image: '/image.png',
+    image: '/image.webp',
     align: 'right',
   },
   {
@@ -24,7 +24,7 @@ const portfolioItems = [
     subtitle: 'Образ формируется в мелочах',
     description:
       'Аксессуары и дополнительные элементы не перегружают стиль, а делают его цельным. В Brillex мы уделяем внимание тем деталям, которые создают ощущение завершенности и вкуса.',
-    image: '/image.png',
+    image: '/image.webp',
     align: 'left',
   },
 ]
@@ -100,7 +100,7 @@ const values = [
         <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
           <div class="group overflow-hidden rounded-3xl bg-gray-50">
             <img
-              src="/image.png"
+              src="/image.webp"
               alt="Brillex portfolio image 1"
               class="h-[340px] w-full object-cover transition duration-700 md:h-[420px] group-hover:scale-105"
             >
@@ -108,7 +108,7 @@ const values = [
 
           <div class="group overflow-hidden rounded-3xl bg-gray-50 md:mt-10">
             <img
-              src="/image.png "
+              src="/image.webp "
               alt="Brillex portfolio image 2"
               class="h-[340px] w-full object-cover transition duration-700 md:h-[420px] group-hover:scale-105"
             >
@@ -116,7 +116,7 @@ const values = [
 
           <div class="group overflow-hidden rounded-3xl bg-gray-50">
             <img
-              src="/image.png"
+              src="/image.webp"
               alt="Brillex portfolio image 3"
               class="h-[340px] w-full object-cover transition duration-700 md:h-[420px] group-hover:scale-105"
             >

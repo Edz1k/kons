@@ -99,7 +99,7 @@ async function submitForm() {
         <!-- Левая карточка с одной картинкой -->
         <div class="relative min-h-[320px] overflow-hidden rounded-[28px] bg-slate-900 sm:min-h-[420px] xl:min-h-full">
           <img
-            src="/image.png"
+            src="/image.webp"
             alt="Brillex contact preview"
             class="absolute inset-0 h-full w-full object-cover"
           >

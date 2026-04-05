@@ -3,10 +3,10 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 const slides = [
-  '/carousel/1.jpg',
-  '/carousel/7.jpg',
-  '/carousel/10.jpg',
-  '/carousel/11.jpg',
+  '/carousel/1.webp',
+  '/carousel/7.webp',
+  '/carousel/10.webp',
+  '/carousel/11.webp',
 ]
 </script>
 

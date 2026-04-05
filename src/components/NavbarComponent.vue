@@ -52,7 +52,7 @@ onMounted(() => {
       <!-- Logo -->
       <RouterLink to="/" class="flex items-center" @click="closeMenu">
         <img
-          src="/logo.svg"
+          src="/logo.webp"
           alt="Brillex logo"
           class="h-20 w-auto scale-150 object-contain brightness-0 invert"
         >
