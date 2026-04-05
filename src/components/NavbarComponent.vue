@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useProductsStore } from '~/stores/product'
 
 const isOpen = ref(false)
@@ -28,19 +28,12 @@ function closeMenu() {
   isCatalogOpen.value = false
 }
 
-async function ensureCategoriesLoaded() {
-  if (categories.value.length || loadingCategories.value)
-    return
+function toggleCatalog() {
+  isCatalogOpen.value = !isCatalogOpen.value
 
-  await productsStore.loadCategories()
-}
-
-async function toggleCatalog() {
-  const nextState = !isCatalogOpen.value
-  isCatalogOpen.value = nextState
-
-  if (nextState)
-    await ensureCategoriesLoaded()
+  if (isCatalogOpen.value) {
+    productsStore.loadCategories()
+  }
 }
 
 function categoryLink(slug: string) {
@@ -49,19 +42,6 @@ function categoryLink(slug: string) {
     query: { category: slug },
   }
 }
-
-onMounted(() => {
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(() => {
-      ensureCategoriesLoaded()
-    }, { timeout: 2000 })
-  }
-  else {
-    setTimeout(() => {
-      ensureCategoriesLoaded()
-    }, 1200)
-  }
-})
 </script>
 
 <template>
