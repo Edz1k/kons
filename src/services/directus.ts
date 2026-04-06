@@ -21,6 +21,7 @@ const PRODUCT_FIELDS = [
   'product_variants.stock',
   'product_variants.is_default',
   'product_variants.images.directus_files_id',
+  'product_variants.external_images_urls',
   'product_variants.color.id',
   'product_variants.color.name',
   'product_variants.color.slug',

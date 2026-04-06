@@ -28,18 +28,26 @@ const activeVariant = computed(() => {
   return defaultVariant ?? variants.value[0] ?? null
 })
 
-const imageId = computed(() => {
-  const variantImage = activeVariant.value?.images?.[0]?.directus_files_id
+const imageUrl = computed(() => {
+  const variant = activeVariant.value
 
-  if (variantImage)
-    return variantImage
+  // 1. Directus картинки
+  const directusImage = variant?.images?.[0]?.directus_files_id
+  if (directusImage)
+    return fileUrl(directusImage)
 
-  return props.product.images?.[0]?.directus_files_id ?? null
+  // 2. Партнёрские картинки
+  const externalImage = variant?.external_images_urls?.[0]
+  if (externalImage)
+    return externalImage
+
+  // 3. fallback на товар
+  const productImage = props.product.images?.[0]?.directus_files_id
+  if (productImage)
+    return fileUrl(productImage)
+
+  return null
 })
-
-const imageUrl = computed(() =>
-  imageId.value ? fileUrl(imageId.value) : null,
-)
 
 const isInStock = computed(() => {
   if (!variants.value.length)

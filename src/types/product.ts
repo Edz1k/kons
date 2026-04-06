@@ -31,20 +31,50 @@ export interface Color {
 
 export interface ProductVariant {
   id: number
+
   sku: string
+  external_id?: string
+  external_sku?: string
+
   stock: number
+  full_stock?: number
+
   is_default: boolean
+
+  // твои картинки (Directus)
   images?: ProductImage[]
-  color: Color
+
+  // 🔥 партнёрские картинки
+  external_images_urls?: string[]
+
+  color?: Color
+
+  size_range?: string
+  variation_description?: string
+
+  price?: number
 }
 
 export interface Product {
   id: number
+
   title: string
   slug: string
   description?: string
-  images?: ProductImage[]
+
   price: number
-  category: Category
+
+  category?: Category
+
   product_variants?: ProductVariant[]
+
+  // твои картинки
+  images?: ProductImage[]
+
+  // 🔥 партнёрские поля
+  external_id?: string
+  source_type?: string
+  external_url?: string
+
+  last_synced_at?: string
 }
