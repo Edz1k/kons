@@ -22,6 +22,8 @@ const slug = computed(() => {
 
 const item = ref<Product | null>(null)
 const selectedVariant = ref<ProductVariant | null>(null)
+const selectedImageId = ref<string | null>(null)
+
 const loading = ref(true)
 const error = ref('')
 const modalRef = ref()
@@ -51,18 +53,39 @@ const currentVariant = computed<ProductVariant | null>(() => {
   return selectedVariant.value ?? getInitialVariant(variants.value)
 })
 
+const currentImages = computed<string[]>(() => {
+  const variantImages = currentVariant.value?.images
+    ?.map(image => image.directus_files_id)
+    .filter(Boolean) ?? []
+
+  if (variantImages.length)
+    return variantImages
+
+  return item.value?.images
+    ?.map(image => image.directus_files_id)
+    .filter(Boolean) ?? []
+})
+
 const currentImageId = computed<string | null>(() => {
-  return currentVariant.value?.image
-    ?? item.value?.images?.[0]?.directus_files_id
-    ?? null
+  if (selectedImageId.value && currentImages.value.includes(selectedImageId.value))
+    return selectedImageId.value
+
+  return currentImages.value[0] ?? null
 })
 
 const currentSku = computed(() => currentVariant.value?.sku ?? '')
 const currentStock = computed(() => currentVariant.value?.stock ?? 0)
 const isInStock = computed(() => currentStock.value > 0)
 
+function setInitialImage() {
+  selectedImageId.value = currentImages.value[0] ?? null
+}
+
 function selectVariant(variant: ProductVariant) {
   selectedVariant.value = variant
+  selectedImageId.value = variant.images?.[0]?.directus_files_id
+    ?? item.value?.images?.[0]?.directus_files_id
+    ?? null
 }
 
 async function load() {
@@ -70,6 +93,7 @@ async function load() {
   error.value = ''
   item.value = null
   selectedVariant.value = null
+  selectedImageId.value = null
 
   try {
     if (!slug.value) {
@@ -86,6 +110,9 @@ async function load() {
 
     item.value = product
     selectedVariant.value = getInitialVariant(product.product_variants ?? [])
+    selectedImageId.value = selectedVariant.value?.images?.[0]?.directus_files_id
+      ?? product.images?.[0]?.directus_files_id
+      ?? null
   }
   catch (e: any) {
     error.value = e?.message ?? 'Ошибка загрузки товара'
@@ -94,6 +121,11 @@ async function load() {
     loading.value = false
   }
 }
+
+watch(currentVariant, () => {
+  if (!currentImages.value.includes(selectedImageId.value ?? ''))
+    setInitialImage()
+})
 
 onMounted(load)
 watch(slug, load)
@@ -157,6 +189,28 @@ watch(slug, load)
               Нет изображения
             </div>
           </div>
+
+          <div
+            v-if="currentImages.length > 1"
+            class="grid grid-cols-4 mt-4 gap-3 sm:grid-cols-5"
+          >
+            <button
+              v-for="imageId in currentImages"
+              :key="imageId"
+              type="button"
+              class="overflow-hidden border rounded-2xl bg-[#f5f5f5] transition"
+              :class="currentImageId === imageId
+                ? 'border-black'
+                : 'border-black/10 hover:border-black/30'"
+              @click="selectedImageId = imageId"
+            >
+              <img
+                :src="fileUrl(imageId)"
+                :alt="item.title"
+                class="h-24 w-full object-cover"
+              >
+            </button>
+          </div>
         </div>
 
         <div>
@@ -216,7 +270,7 @@ watch(slug, load)
                   :key="variant.id"
                   type="button"
                   class="h-8 w-8 border rounded-full transition"
-                  :style="{ background: variant.color.hex }"
+                  :style="{ background: variant.color?.hex || '#ccc' }"
                   :class="currentVariant?.id === variant.id
                     ? 'border-black scale-110'
                     : 'border-black/20'"

@@ -34,7 +34,7 @@ export interface ProductVariant {
   sku: string
   stock: number
   is_default: boolean
-  image?: string | null
+  images?: ProductImage[]
   color: Color
 }
 

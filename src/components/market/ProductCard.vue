@@ -28,11 +28,14 @@ const activeVariant = computed(() => {
   return defaultVariant ?? variants.value[0] ?? null
 })
 
-const imageId = computed(() =>
-  activeVariant.value?.image
-  ?? props.product.images?.[0]?.directus_files_id
-  ?? null,
-)
+const imageId = computed(() => {
+  const variantImage = activeVariant.value?.images?.[0]?.directus_files_id
+
+  if (variantImage)
+    return variantImage
+
+  return props.product.images?.[0]?.directus_files_id ?? null
+})
 
 const imageUrl = computed(() =>
   imageId.value ? fileUrl(imageId.value) : null,
