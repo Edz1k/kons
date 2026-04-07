@@ -129,13 +129,6 @@ const currentPrice = computed(() => {
   return Number(item.value?.price ?? 0)
 })
 
-const currentBrand = computed(() => {
-  if (!item.value?.is_partner)
-    return 'Brillex'
-
-  return item.value?.source_type?.toUpperCase() || 'Партнёрский товар'
-})
-
 function getColorStyle(variant: ProductVariant) {
   if (variant.color?.hex)
     return { background: variant.color.hex }
@@ -310,12 +303,6 @@ watch(slug, load)
 
         <div>
           <div class="border-b border-black/10 pb-6">
-            <div class="mb-3">
-              <p class="text-xs text-black/45 tracking-[0.3em] uppercase">
-                {{ item.is_partner ? 'Partner catalog' : 'Brillex' }}
-              </p>
-            </div>
-
             <h1 class="text-3xl font-bold leading-tight lg:text-5xl md:text-4xl">
               {{ item.title }}
             </h1>
@@ -386,7 +373,7 @@ watch(slug, load)
           <div class="grid gap-3 border-b border-black/10 py-6">
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
               <span class="text-sm text-black/50">Бренд</span>
-              <span class="text-right text-sm font-medium">{{ currentBrand }}</span>
+              <span class="text-right text-sm font-medium">Brillex</span>
             </div>
 
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
@@ -439,7 +426,7 @@ watch(slug, load)
 
             <div
               v-if="item.description"
-              class="max-w-none prose prose-headings:font-semibold prose-p:leading-7"
+              class="max-w-none whitespace-normal break-words prose prose-headings:font-semibold prose-p:leading-7"
               v-html="item.description"
             />
             <p v-else class="text-black/50 leading-7">
