@@ -22,15 +22,13 @@ const slug = computed(() => {
 
 const item = ref<Product | null>(null)
 const selectedVariant = ref<ProductVariant | null>(null)
-const selectedImageId = ref<string | null>(null)
+const selectedImage = ref<string | null>(null)
 
 const loading = ref(true)
 const error = ref('')
 const modalRef = ref()
 
-const variants = computed<ProductVariant[]>(() => {
-  return item.value?.product_variants ?? []
-})
+const variants = computed<ProductVariant[]>(() => item.value?.product_variants ?? [])
 
 function getInitialVariant(productVariants: ProductVariant[]): ProductVariant | null {
   if (!productVariants.length)
@@ -53,39 +51,132 @@ const currentVariant = computed<ProductVariant | null>(() => {
   return selectedVariant.value ?? getInitialVariant(variants.value)
 })
 
-const currentImages = computed<string[]>(() => {
-  const variantImages = currentVariant.value?.images
+function getVariantImages(variant: ProductVariant | null): string[] {
+  if (!variant)
+    return []
+
+  const directusImages = variant.images
     ?.map(image => image.directus_files_id)
-    .filter(Boolean) ?? []
+    .filter(Boolean)
+    .map(id => fileUrl(id)) ?? []
+
+  if (directusImages.length)
+    return directusImages
+
+  const externalImages = variant.external_images_urls?.filter(Boolean) ?? []
+
+  if (externalImages.length)
+    return externalImages
+
+  return []
+}
+
+function getProductImages(product: Product | null): string[] {
+  if (!product)
+    return []
+
+  const directusImages = product.images
+    ?.map(image => image.directus_files_id)
+    .filter(Boolean)
+    .map(id => fileUrl(id)) ?? []
+
+  if (directusImages.length)
+    return directusImages
+
+  if (product.preview_image)
+    return [product.preview_image]
+
+  return []
+}
+
+const currentImages = computed<string[]>(() => {
+  const variantImages = getVariantImages(currentVariant.value)
 
   if (variantImages.length)
     return variantImages
 
-  return item.value?.images
-    ?.map(image => image.directus_files_id)
-    .filter(Boolean) ?? []
+  return getProductImages(item.value)
 })
 
-const currentImageId = computed<string | null>(() => {
-  if (selectedImageId.value && currentImages.value.includes(selectedImageId.value))
-    return selectedImageId.value
+const currentImageUrl = computed<string | null>(() => {
+  if (selectedImage.value && currentImages.value.includes(selectedImage.value))
+    return selectedImage.value
 
   return currentImages.value[0] ?? null
 })
 
-const currentSku = computed(() => currentVariant.value?.sku ?? '')
-const currentStock = computed(() => currentVariant.value?.stock ?? 0)
+const currentSku = computed(() => {
+  return currentVariant.value?.sku
+    ?? item.value?.external_id
+    ?? ''
+})
+
+const currentStock = computed(() => {
+  if (typeof currentVariant.value?.stock === 'number')
+    return currentVariant.value.stock
+
+  return item.value?.in_stock ? 1 : 0
+})
+
 const isInStock = computed(() => currentStock.value > 0)
 
+const currentPrice = computed(() => {
+  const variantPrice = currentVariant.value?.price
+
+  if (typeof variantPrice === 'number' && !Number.isNaN(variantPrice))
+    return variantPrice
+
+  return Number(item.value?.price ?? 0)
+})
+
+const currentBrand = computed(() => {
+  if (!item.value?.is_partner)
+    return 'Brillex'
+
+  return item.value?.source_type?.toUpperCase() || 'Партнёрский товар'
+})
+
+function getColorStyle(variant: ProductVariant) {
+  if (variant.color?.hex)
+    return { background: variant.color.hex }
+
+  return { background: '#ccc' }
+}
+
+function getVariantLabel(variant: ProductVariant) {
+  return variant.color?.name
+    ?? variant.sku
+    ?? 'Вариант'
+}
+
 function setInitialImage() {
-  selectedImageId.value = currentImages.value[0] ?? null
+  selectedImage.value = currentImages.value[0] ?? null
 }
 
 function selectVariant(variant: ProductVariant) {
   selectedVariant.value = variant
-  selectedImageId.value = variant.images?.[0]?.directus_files_id
-    ?? item.value?.images?.[0]?.directus_files_id
-    ?? null
+
+  const variantImages = getVariantImages(variant)
+
+  if (variantImages.length) {
+    selectedImage.value = variantImages[0]
+    return
+  }
+
+  const productImages = getProductImages(item.value)
+  selectedImage.value = productImages[0] ?? null
+}
+
+function formatPrice(value?: number | string) {
+  if (value === undefined || value === null || value === '')
+    return ''
+
+  const numericValue = typeof value === 'string' ? Number(value) : value
+
+  if (Number.isNaN(numericValue))
+    return String(value)
+
+  return new Intl.NumberFormat('ru-RU').format(numericValue)
 }
 
 async function load() {
@@ -93,7 +184,7 @@ async function load() {
   error.value = ''
   item.value = null
   selectedVariant.value = null
-  selectedImageId.value = null
+  selectedImage.value = null
 
   try {
     if (!slug.value) {
@@ -110,9 +201,13 @@ async function load() {
 
     item.value = product
     selectedVariant.value = getInitialVariant(product.product_variants ?? [])
-    selectedImageId.value = selectedVariant.value?.images?.[0]?.directus_files_id
-      ?? product.images?.[0]?.directus_files_id
-      ?? null
+
+    const initialVariantImages = getVariantImages(selectedVariant.value)
+
+    if (initialVariantImages.length)
+      selectedImage.value = initialVariantImages[0]
+    else
+      selectedImage.value = getProductImages(product)[0] ?? null
   }
   catch (e: any) {
     error.value = e?.message ?? 'Ошибка загрузки товара'
@@ -123,7 +218,7 @@ async function load() {
 }
 
 watch(currentVariant, () => {
-  if (!currentImages.value.includes(selectedImageId.value ?? ''))
+  if (!currentImages.value.includes(selectedImage.value ?? ''))
     setInitialImage()
 })
 
@@ -176,8 +271,8 @@ watch(slug, load)
         <div>
           <div class="overflow-hidden rounded-[28px] bg-[#f5f5f5]">
             <img
-              v-if="currentImageId"
-              :src="fileUrl(currentImageId)"
+              v-if="currentImageUrl"
+              :src="currentImageUrl"
               :alt="item.title"
               class="h-[420px] w-full object-cover lg:h-[720px] md:h-[560px]"
             >
@@ -195,17 +290,17 @@ watch(slug, load)
             class="grid grid-cols-4 mt-4 gap-3 sm:grid-cols-5"
           >
             <button
-              v-for="imageId in currentImages"
-              :key="imageId"
+              v-for="imageUrl in currentImages"
+              :key="imageUrl"
               type="button"
               class="overflow-hidden border rounded-2xl bg-[#f5f5f5] transition"
-              :class="currentImageId === imageId
+              :class="currentImageUrl === imageUrl
                 ? 'border-black'
                 : 'border-black/10 hover:border-black/30'"
-              @click="selectedImageId = imageId"
+              @click="selectedImage = imageUrl"
             >
               <img
-                :src="fileUrl(imageId)"
+                :src="imageUrl"
                 :alt="item.title"
                 class="h-24 w-full object-cover"
               >
@@ -217,7 +312,7 @@ watch(slug, load)
           <div class="border-b border-black/10 pb-6">
             <div class="mb-3">
               <p class="text-xs text-black/45 tracking-[0.3em] uppercase">
-                Brillex
+                {{ item.is_partner ? 'Partner catalog' : 'Brillex' }}
               </p>
             </div>
 
@@ -226,7 +321,7 @@ watch(slug, load)
             </h1>
 
             <div class="mt-5 text-2xl font-semibold md:text-3xl">
-              {{ item.price }} ₸
+              {{ formatPrice(currentPrice) }} ₸
             </div>
 
             <div class="mt-4 flex flex-wrap gap-2">
@@ -269,13 +364,21 @@ watch(slug, load)
                   v-for="variant in variants"
                   :key="variant.id"
                   type="button"
-                  class="h-8 w-8 border rounded-full transition"
-                  :style="{ background: variant.color?.hex || '#ccc' }"
+                  class="group relative h-8 min-w-8 border rounded-full px-2 transition"
+                  :style="getColorStyle(variant)"
                   :class="currentVariant?.id === variant.id
                     ? 'border-black scale-110'
                     : 'border-black/20'"
+                  :title="getVariantLabel(variant)"
                   @click="selectVariant(variant)"
-                />
+                >
+                  <span
+                    v-if="!variant.color?.hex"
+                    class="absolute left-1/2 top-full z-10 mt-2 hidden whitespace-nowrap rounded-lg bg-black px-2 py-1 text-xs text-white group-hover:block -translate-x-1/2"
+                  >
+                    {{ getVariantLabel(variant) }}
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -283,7 +386,7 @@ watch(slug, load)
           <div class="grid gap-3 border-b border-black/10 py-6">
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
               <span class="text-sm text-black/50">Бренд</span>
-              <span class="text-right text-sm font-medium">Brillex</span>
+              <span class="text-right text-sm font-medium">{{ currentBrand }}</span>
             </div>
 
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">

@@ -13,7 +13,7 @@ export interface DirectusListResponse<T> {
 }
 
 export interface Category {
-  id: string
+  id: string | number
   title: string
   slug: string
 }
@@ -23,40 +23,33 @@ export interface ProductImage {
 }
 
 export interface Color {
-  id: number
+  id: number | string
   name: string
   slug: string
   hex: string
 }
 
 export interface ProductVariant {
-  id: number
+  id: number | string
 
-  sku: string
-  external_id?: string
-  external_sku?: string
-
+  sku?: string
   stock: number
-  full_stock?: number
-
   is_default: boolean
 
-  // твои картинки (Directus)
   images?: ProductImage[]
-
-  // 🔥 партнёрские картинки
-  external_images_urls?: string[]
-
   color?: Color
 
-  size_range?: string
-  variation_description?: string
-
+  external_images_urls?: string[]
+  external_id?: string
+  external_sku?: string
+  full_stock?: number
   price?: number
+  variation_description?: string
+  size_range?: string
 }
 
 export interface Product {
-  id: number
+  id: number | string
 
   title: string
   slug: string
@@ -67,14 +60,12 @@ export interface Product {
   category?: Category
 
   product_variants?: ProductVariant[]
-
-  // твои картинки
   images?: ProductImage[]
 
-  // 🔥 партнёрские поля
   external_id?: string
   source_type?: string
   external_url?: string
-
-  last_synced_at?: string
+  preview_image?: string
+  in_stock?: boolean
+  is_partner?: boolean
 }

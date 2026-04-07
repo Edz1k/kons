@@ -21,6 +21,7 @@ declare module 'vue' {
     HeroSection: typeof import('./components/sections/HeroSection.vue')['default']
     LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
+    PartnerProductCard: typeof import('./components/market/PartnerProductCard.vue')['default']
     ProductCard: typeof import('./components/market/ProductCard.vue')['default']
     ProductSkeleton: typeof import('./components/market/ProductSkeleton.vue')['default']
     README: typeof import('./components/README.md')['default']

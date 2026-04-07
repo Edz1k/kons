@@ -1,7 +1,9 @@
 import type {
   Category,
+  Color,
   DirectusListResponse,
   Product,
+  ProductVariant,
 } from '~/types/product'
 
 const BASE = import.meta.env.VITE_DIRECTUS_URL as string
@@ -21,12 +23,67 @@ const PRODUCT_FIELDS = [
   'product_variants.stock',
   'product_variants.is_default',
   'product_variants.images.directus_files_id',
-  'product_variants.external_images_urls',
   'product_variants.color.id',
   'product_variants.color.name',
   'product_variants.color.slug',
   'product_variants.color.hex',
 ].join(',')
+
+const PARTNER_PRODUCT_FIELDS = [
+  'id',
+  'title',
+  'slug',
+  'description',
+  'category.id',
+  'category.title',
+  'category.slug',
+  'external_id',
+  'source_type',
+  'price_from',
+  'in_stock',
+  'preview_image',
+  'payload',
+].join(',')
+
+interface PartnerPayloadVariant {
+  sku?: string
+  external_id?: string
+  external_sku?: string
+  stock?: number
+  full_stock?: number
+  price?: number
+  color?: string
+  size?: string
+  images?: string[]
+  variation_description?: string
+  brand?: string
+  url?: string
+  notes?: string
+  modified?: string
+}
+
+interface PartnerPayload {
+  title?: string
+  slug?: string
+  description?: string
+  external_id?: string
+  source_type?: string
+  variants?: PartnerPayloadVariant[]
+}
+
+interface PartnerProductRaw {
+  id: number
+  title: string
+  slug: string
+  description?: string
+  category?: Category
+  external_id?: string
+  source_type?: string
+  price_from?: number
+  in_stock?: boolean
+  preview_image?: string
+  payload?: PartnerPayload
+}
 
 export interface FetchProductsParams {
   page?: number
@@ -78,8 +135,56 @@ function mapSort(sortBy: FetchProductsParams['sortBy']) {
   }
 }
 
-function hasStock(product: Product): boolean {
-  return (product.product_variants ?? []).some(variant => variant.stock > 0)
+function createPartnerColor(colorName?: string): Color | undefined {
+  if (!colorName)
+    return undefined
+
+  return {
+    id: `partner-color-${colorName.toLowerCase().replace(/\s+/g, '-')}`,
+    name: colorName,
+    slug: colorName.toLowerCase().replace(/\s+/g, '-'),
+    hex: '#cccccc',
+  }
+}
+
+function normalizePartnerVariant(
+  variant: PartnerPayloadVariant,
+  index: number,
+): ProductVariant {
+  return {
+    id: `partner-variant-${variant.external_id ?? variant.external_sku ?? variant.sku ?? index}`,
+    sku: variant.sku ?? variant.external_sku ?? '',
+    stock: Number(variant.stock ?? 0),
+    is_default: index === 0,
+    external_images_urls: variant.images ?? [],
+    external_id: variant.external_id,
+    external_sku: variant.external_sku,
+    full_stock: variant.full_stock,
+    price: typeof variant.price === 'number' ? variant.price : Number(variant.price ?? 0),
+    variation_description: variant.variation_description,
+    size_range: variant.size,
+    color: createPartnerColor(variant.color),
+  }
+}
+
+function normalizePartnerProduct(raw: PartnerProductRaw): Product {
+  const variants = (raw.payload?.variants ?? []).map(normalizePartnerVariant)
+
+  return {
+    id: `partner-${raw.id}`,
+    title: raw.title,
+    slug: raw.slug,
+    description: raw.description ?? raw.payload?.description ?? '',
+    price: Number(raw.price_from ?? variants[0]?.price ?? 0),
+    category: raw.category,
+    product_variants: variants,
+    images: [],
+    external_id: raw.external_id,
+    source_type: raw.source_type,
+    preview_image: raw.preview_image,
+    in_stock: raw.in_stock,
+    is_partner: true,
+  }
 }
 
 function matchesSearch(product: Product, search: string): boolean {
@@ -89,11 +194,35 @@ function matchesSearch(product: Product, search: string): boolean {
     return true
 
   const inTitle = product.title.toLowerCase().includes(normalized)
-  const inVariants = (product.product_variants ?? []).some(variant =>
-    variant.sku.toLowerCase().includes(normalized),
-  )
+  const inCategory = product.category?.title?.toLowerCase().includes(normalized)
+  const inExternalId = product.external_id?.toLowerCase().includes(normalized)
 
-  return inTitle || inVariants
+  const inVariants = (product.product_variants ?? []).some((variant) => {
+    const inSku = variant.sku?.toLowerCase().includes(normalized)
+    const inColor = variant.color?.name?.toLowerCase().includes(normalized)
+    return Boolean(inSku || inColor)
+  })
+
+  return Boolean(inTitle || inCategory || inExternalId || inVariants)
+}
+
+function hasStock(product: Product): boolean {
+  if (product.product_variants?.length)
+    return product.product_variants.some(variant => variant.stock > 0)
+
+  return Boolean(product.in_stock)
+}
+
+function sortProducts(items: Product[], sortBy: FetchProductsParams['sortBy']) {
+  const result = [...items]
+
+  if (sortBy === 'price-asc')
+    return result.sort((a, b) => Number(a.price || 0) - Number(b.price || 0))
+
+  if (sortBy === 'price-desc')
+    return result.sort((a, b) => Number(b.price || 0) - Number(a.price || 0))
+
+  return result.sort((a, b) => String(b.id).localeCompare(String(a.id)))
 }
 
 export async function fetchProducts(
@@ -109,39 +238,56 @@ export async function fetchProducts(
     signal,
   } = params
 
-  const query = new URLSearchParams({
+  const ownQuery = new URLSearchParams({
     fields: PRODUCT_FIELDS,
-    page: String(page),
-    limit: String(limit),
+    limit: '-1',
     sort: mapSort(sortBy),
-    meta: 'filter_count',
   })
 
   if (category)
-    query.set('filter[category][slug][_eq]', category)
+    ownQuery.set('filter[category][slug][_eq]', category)
 
-  const json = await getJSON<DirectusListResponse<Product[]>>(
-    `/items/products?${query.toString()}`,
-    signal,
-  )
+  const partnerQuery = new URLSearchParams({
+    'fields': PARTNER_PRODUCT_FIELDS,
+    'limit': '-1',
+    'filter[is_active][_eq]': 'true',
+  })
 
-  let items = json.data ?? []
+  if (category)
+    partnerQuery.set('filter[category][slug][_eq]', category)
 
-  const normalizedSearch = search.trim()
+  const [ownJson, partnerJson] = await Promise.all([
+    getJSON<DirectusListResponse<Product[]>>(
+      `/items/products?${ownQuery.toString()}`,
+      signal,
+    ),
+    getJSON<DirectusListResponse<PartnerProductRaw[]>>(
+      `/items/partner_products?${partnerQuery.toString()}`,
+      signal,
+    ),
+  ])
 
-  if (normalizedSearch)
-    items = items.filter(product => matchesSearch(product, normalizedSearch))
+  let items: Product[] = [
+    ...(ownJson.data ?? []),
+    ...((partnerJson.data ?? []).map(normalizePartnerProduct)),
+  ]
+
+  if (search.trim())
+    items = items.filter(product => matchesSearch(product, search))
 
   if (inStockOnly)
     items = items.filter(product => hasStock(product))
 
+  items = sortProducts(items, sortBy)
+
   const total = items.length
-  const hasMore = page * limit < total
+  const start = (page - 1) * limit
+  const end = start + limit
 
   return {
-    items,
+    items: items.slice(start, end),
     total,
-    hasMore,
+    hasMore: end < total,
     page,
     limit,
   }
@@ -151,18 +297,35 @@ export async function fetchProductBySlug(
   slug: string,
   signal?: AbortSignal,
 ): Promise<Product | null> {
-  const query = new URLSearchParams({
+  const ownQuery = new URLSearchParams({
     'fields': PRODUCT_FIELDS,
     'filter[slug][_eq]': slug,
     'limit': '1',
   })
 
-  const json = await getJSON<DirectusListResponse<Product[]>>(
-    `/items/products?${query.toString()}`,
+  const ownJson = await getJSON<DirectusListResponse<Product[]>>(
+    `/items/products?${ownQuery.toString()}`,
     signal,
   )
 
-  return json.data?.[0] ?? null
+  const ownProduct = ownJson.data?.[0]
+  if (ownProduct)
+    return ownProduct
+
+  const partnerQuery = new URLSearchParams({
+    'fields': PARTNER_PRODUCT_FIELDS,
+    'filter[slug][_eq]': slug,
+    'filter[is_active][_eq]': 'true',
+    'limit': '1',
+  })
+
+  const partnerJson = await getJSON<DirectusListResponse<PartnerProductRaw[]>>(
+    `/items/partner_products?${partnerQuery.toString()}`,
+    signal,
+  )
+
+  const partnerProduct = partnerJson.data?.[0]
+  return partnerProduct ? normalizePartnerProduct(partnerProduct) : null
 }
 
 export async function fetchCategories(signal?: AbortSignal): Promise<Category[]> {
