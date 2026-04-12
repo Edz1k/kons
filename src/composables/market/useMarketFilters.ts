@@ -24,10 +24,19 @@ export function useMarketFilters() {
   const router = useRouter()
   const productsStore = useProductsStore()
 
-  const { categories } = storeToRefs(productsStore)
+  const {
+    categories,
+    catalogType,
+  } = storeToRefs(productsStore)
+
+  const isOwnCatalog = computed(() => catalogType.value === 'own')
+  const isPartnerCatalog = computed(() => catalogType.value === 'partner')
 
   const categoryOptions = computed<CategoryOption[]>(() => [
-    { slug: '', title: 'Все типы' },
+    {
+      slug: '',
+      title: isPartnerCatalog.value ? 'Все категории' : 'Все категории',
+    },
     ...categories.value.map(category => ({
       slug: category.slug,
       title: category.title,
@@ -109,6 +118,7 @@ export function useMarketFilters() {
     () => route.query.search,
     (value) => {
       const normalized = normalizeQueryValue(value)
+
       if (localSearch.value !== normalized)
         localSearch.value = normalized
     },
@@ -122,9 +132,19 @@ export function useMarketFilters() {
 
   const inStockOnlyModel = computed<boolean>({
     get() {
+      if (!isOwnCatalog.value)
+        return false
+
       return route.query.inStock === 'true'
     },
     set(value) {
+      if (!isOwnCatalog.value) {
+        replaceQuery({
+          inStock: undefined,
+        })
+        return
+      }
+
       replaceQuery({
         inStock: value ? 'true' : undefined,
       })
@@ -159,11 +179,24 @@ export function useMarketFilters() {
     },
   })
 
+  watch(
+    isOwnCatalog,
+    (value) => {
+      if (!value && route.query.inStock) {
+        replaceQuery({
+          inStock: undefined,
+        })
+      }
+    },
+  )
+
   function resetAll() {
     localSearch.value = ''
 
     router.replace({
-      query: {},
+      query: {
+        type: route.query.type,
+      },
     })
   }
 
@@ -174,6 +207,8 @@ export function useMarketFilters() {
     inStockOnlyModel,
     selectedCategoryObject,
     selectedSortObject,
+    isOwnCatalog,
+    isPartnerCatalog,
     resetAll,
     submitSearch,
   }

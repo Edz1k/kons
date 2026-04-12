@@ -29,10 +29,14 @@ const error = ref('')
 const modalRef = ref()
 
 const variants = computed<ProductVariant[]>(() => item.value?.product_variants ?? [])
+const isPartnerProduct = computed(() => Boolean(item.value?.is_partner))
 
 function getInitialVariant(productVariants: ProductVariant[]): ProductVariant | null {
   if (!productVariants.length)
     return null
+
+  if (isPartnerProduct.value)
+    return productVariants.find(variant => variant.is_default) ?? productVariants[0] ?? null
 
   const defaultVariant = productVariants.find(variant => variant.is_default)
 
@@ -111,22 +115,73 @@ const currentSku = computed(() => {
     ?? ''
 })
 
-const currentStock = computed(() => {
+const currentStock = computed<number | null>(() => {
+  if (isPartnerProduct.value)
+    return null
+
   if (typeof currentVariant.value?.stock === 'number')
     return currentVariant.value.stock
 
   return item.value?.in_stock ? 1 : 0
 })
 
-const isInStock = computed(() => currentStock.value > 0)
+const isInStock = computed(() => {
+  if (isPartnerProduct.value)
+    return true
 
-const currentPrice = computed(() => {
+  return Number(currentStock.value ?? 0) > 0
+})
+
+const currentPrice = computed<number | null>(() => {
+  if (isPartnerProduct.value)
+    return null
+
   const variantPrice = currentVariant.value?.price
 
   if (typeof variantPrice === 'number' && !Number.isNaN(variantPrice))
     return variantPrice
 
-  return Number(item.value?.price ?? 0)
+  const basePrice = Number(item.value?.price ?? 0)
+  return Number.isNaN(basePrice) ? null : basePrice
+})
+
+const stockBadgeText = computed(() => {
+  if (isPartnerProduct.value)
+    return 'Под заказ'
+
+  return isInStock.value
+    ? `Остаток: ${currentStock.value} шт.`
+    : 'Нет в наличии'
+})
+
+const stockBadgeClasses = computed(() => {
+  if (isPartnerProduct.value)
+    return 'bg-amber-500/10 text-amber-700'
+
+  return isInStock.value
+    ? 'bg-green-500/10 text-green-700'
+    : 'bg-red-500/10 text-red-600'
+})
+
+const productStatusText = computed(() => {
+  if (isPartnerProduct.value)
+    return 'Под заказ'
+
+  return isInStock.value ? 'Доступен к заказу' : 'Временно отсутствует'
+})
+
+const actionButtonText = computed(() => {
+  if (isPartnerProduct.value)
+    return 'Оставить заявку'
+
+  return isInStock.value ? 'Оставить заявку' : 'Нет в наличии'
+})
+
+const isActionDisabled = computed(() => {
+  if (isPartnerProduct.value)
+    return false
+
+  return !isInStock.value
 })
 
 function getColorStyle(variant: ProductVariant) {
@@ -138,6 +193,7 @@ function getColorStyle(variant: ProductVariant) {
 
 function getVariantLabel(variant: ProductVariant) {
   return variant.color?.name
+    ?? variant.variation_description
     ?? variant.sku
     ?? 'Вариант'
 }
@@ -181,7 +237,7 @@ async function load() {
 
   try {
     if (!slug.value) {
-      error.value = 'Некорректный slug товара'
+      loading.value = false
       return
     }
 
@@ -215,8 +271,15 @@ watch(currentVariant, () => {
     setInitialImage()
 })
 
-onMounted(load)
-watch(slug, load)
+onMounted(() => {
+  if (slug.value)
+    load()
+})
+
+watch(slug, (value) => {
+  if (value)
+    load()
+})
 </script>
 
 <template>
@@ -307,7 +370,10 @@ watch(slug, load)
               {{ item.title }}
             </h1>
 
-            <div class="mt-5 text-2xl font-semibold md:text-3xl">
+            <div
+              v-if="!isPartnerProduct && currentPrice !== null"
+              class="mt-5 text-2xl font-semibold md:text-3xl"
+            >
               {{ formatPrice(currentPrice) }} ₸
             </div>
 
@@ -321,13 +387,9 @@ watch(slug, load)
 
               <div
                 class="rounded-full px-3 py-2 text-sm"
-                :class="isInStock
-                  ? 'bg-green-500/10 text-green-700'
-                  : 'bg-red-500/10 text-red-600'"
+                :class="stockBadgeClasses"
               >
-                {{ isInStock
-                  ? `Остаток: ${currentStock} шт.`
-                  : 'Нет в наличии' }}
+                {{ stockBadgeText }}
               </div>
             </div>
 
@@ -343,10 +405,31 @@ watch(slug, load)
               class="mt-6"
             >
               <p class="mb-3 text-sm text-black/55">
-                Цвет
+                {{ isPartnerProduct ? 'Варианты' : 'Цвет' }}
               </p>
 
-              <div class="flex flex-wrap gap-2">
+              <div
+                v-if="isPartnerProduct"
+                class="flex flex-wrap gap-2"
+              >
+                <button
+                  v-for="variant in variants"
+                  :key="variant.id"
+                  type="button"
+                  class="border rounded-full px-4 py-2 text-sm transition"
+                  :class="currentVariant?.id === variant.id
+                    ? 'border-black bg-black text-white'
+                    : 'border-black/15 bg-white text-black hover:border-black/35'"
+                  @click="selectVariant(variant)"
+                >
+                  {{ getVariantLabel(variant) }}
+                </button>
+              </div>
+
+              <div
+                v-else
+                class="flex flex-wrap gap-2"
+              >
                 <button
                   v-for="variant in variants"
                   :key="variant.id"
@@ -379,17 +462,19 @@ watch(slug, load)
             <div class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4">
               <span class="text-sm text-black/50">Статус</span>
               <span class="text-right text-sm font-medium">
-                {{ isInStock ? 'Доступен к заказу' : 'Временно отсутствует' }}
+                {{ productStatusText }}
               </span>
             </div>
 
             <div
-              v-if="currentVariant?.color?.name"
+              v-if="currentVariant && getVariantLabel(currentVariant)"
               class="flex items-start justify-between gap-4 rounded-2xl bg-black/[0.03] px-4 py-4"
             >
-              <span class="text-sm text-black/50">Выбранный цвет</span>
+              <span class="text-sm text-black/50">
+                {{ isPartnerProduct ? 'Выбранный вариант' : 'Выбранный цвет' }}
+              </span>
               <span class="text-right text-sm font-medium">
-                {{ currentVariant.color.name }}
+                {{ getVariantLabel(currentVariant) }}
               </span>
             </div>
 
@@ -406,15 +491,15 @@ watch(slug, load)
             <div>
               <button
                 class="mt-4 w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
-                :disabled="!isInStock"
+                :disabled="isActionDisabled"
                 @click="modalRef?.openModal({
                   productTitle: item.title,
-                  variantName: currentVariant?.color?.name ?? '',
+                  variantName: getVariantLabel(currentVariant || {} as ProductVariant),
                   sku: currentSku,
-                  maxQuantity: currentStock,
+                  maxQuantity: isPartnerProduct ? undefined : currentStock ?? 0,
                 })"
               >
-                {{ isInStock ? 'Оставить заявку' : 'Нет в наличии' }}
+                {{ actionButtonText }}
               </button>
             </div>
           </div>

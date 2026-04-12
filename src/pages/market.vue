@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useInfiniteScrollTrigger } from '~/composables/market/useInfiniteScrollTrigger'
 import { useMarketCatalog } from '~/composables/market/useMarketProducts'
 import { useProductsStore } from '~/stores/product'
@@ -15,11 +15,15 @@ const {
   total,
   hasMore,
   initialized,
+  catalogType,
 } = storeToRefs(productsStore)
 
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 
-const { isReadyForInfiniteScroll } = useMarketCatalog()
+const {
+  isReadyForInfiniteScroll,
+  setCatalogType,
+} = useMarketCatalog()
 
 const isInitialLoading = computed(() => {
   return loading.value && items.value.length === 0
@@ -45,8 +49,16 @@ const loadMoreSkeletonItems = computed(() => {
     : []
 })
 
-onMounted(() => {
-  productsStore.loadCategories()
+const pageTitle = computed(() => {
+  return catalogType.value === 'partner'
+    ? 'Товары под заказ'
+    : 'Товары в наличии'
+})
+
+const pageDescription = computed(() => {
+  return catalogType.value === 'partner'
+    ? 'Каталог партнёрских товаров под заказ. Используйте поиск и фильтры, чтобы быстрее найти нужную позицию.'
+    : 'Каталог наших товаров. Используйте поиск и фильтры, чтобы быстрее найти нужную позицию.'
 })
 
 useInfiniteScrollTrigger({
@@ -68,11 +80,11 @@ useInfiniteScrollTrigger({
       <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 class="text-3xl text-primary font-900 tracking-tight md:text-4xl">
-            Каталог
+            {{ pageTitle }}
           </h1>
 
           <p class="mt-2 max-w-2xl text-sm text-muted leading-6 md:text-base">
-            Выберите подходящий товар, используйте поиск и фильтры, чтобы быстрее найти нужную позицию.
+            {{ pageDescription }}
           </p>
         </div>
 
@@ -81,6 +93,30 @@ useInfiniteScrollTrigger({
             {{ total }} шт.
           </span>
         </div>
+      </div>
+
+      <div class="mb-6 flex flex-wrap gap-3">
+        <button
+          type="button"
+          class="rounded-full px-4 py-2 text-sm font-medium transition"
+          :class="catalogType === 'own'
+            ? 'bg-primary text-white'
+            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+          @click="setCatalogType('own')"
+        >
+          В наличии
+        </button>
+
+        <button
+          type="button"
+          class="rounded-full px-4 py-2 text-sm font-medium transition"
+          :class="catalogType === 'partner'
+            ? 'bg-primary text-white'
+            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+          @click="setCatalogType('partner')"
+        >
+          Под заказ
+        </button>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] xl:gap-8">

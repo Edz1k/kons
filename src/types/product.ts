@@ -12,6 +12,8 @@ export interface DirectusListResponse<T> {
   meta?: DirectusListMeta
 }
 
+export type CatalogType = 'own' | 'partner'
+
 export interface Category {
   id: string | number
   title: string

@@ -1,71 +1,140 @@
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '~/stores/product'
 
 export function useMarketCatalog() {
   const route = useRoute()
+  const router = useRouter()
   const productsStore = useProductsStore()
 
-  const { initialized } = storeToRefs(productsStore)
+  const {
+    loading,
+    loadingMore,
+    initialized,
+    search,
+    inStockOnly,
+    selectedCategory,
+    sortBy,
+    catalogType,
+  } = storeToRefs(productsStore)
 
-  const isBootstrapping = ref(false)
-  const isReadyForInfiniteScroll = ref(false)
+  function buildQuery() {
+    const query: Record<string, string> = {}
 
-  const normalizedRouteState = computed(() => ({
-    category: typeof route.query.category === 'string'
-      ? route.query.category
-      : '',
-    sort: typeof route.query.sort === 'string'
-      ? route.query.sort
-      : 'default',
-    search: typeof route.query.search === 'string'
-      ? route.query.search.trim()
-      : '',
-    inStockOnly: route.query.inStock === 'true',
-  }))
+    if (catalogType.value && catalogType.value !== 'own')
+      query.type = catalogType.value
 
-  async function applyRouteAndReload() {
-    productsStore.syncFromQuery(route.query)
+    if (selectedCategory.value)
+      query.category = selectedCategory.value
+
+    if (sortBy.value !== 'default')
+      query.sort = sortBy.value
+
+    if (search.value)
+      query.search = search.value
+
+    if (inStockOnly.value)
+      query.inStock = 'true'
+
+    return query
+  }
+
+  async function updateRouteQuery() {
+    const nextQuery = buildQuery()
+    const currentQuery = route.query
+
+    const isSame
+      = String(currentQuery.type ?? '') === String(nextQuery.type ?? '')
+        && String(currentQuery.category ?? '') === String(nextQuery.category ?? '')
+        && String(currentQuery.sort ?? '') === String(nextQuery.sort ?? '')
+        && String(currentQuery.search ?? '') === String(nextQuery.search ?? '')
+        && String(currentQuery.inStock ?? '') === String(nextQuery.inStock ?? '')
+
+    if (isSame)
+      return
+
+    await router.replace({
+      query: nextQuery,
+    })
+  }
+
+  async function applyQueryToStore() {
+    productsStore.syncFromQuery(route.query as Record<string, unknown>)
+    await productsStore.loadCategories(true)
     await productsStore.restoreOrReload()
   }
 
-  async function initMarketCatalog() {
-    if (isBootstrapping.value)
+  async function setCatalogType(type: 'own' | 'partner') {
+    if (catalogType.value === type)
       return
 
-    isBootstrapping.value = true
+    await productsStore.setCatalogType(type)
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
+  }
 
-    try {
-      await productsStore.loadCategories()
-      await applyRouteAndReload()
-      isReadyForInfiniteScroll.value = true
-    }
-    finally {
-      isBootstrapping.value = false
-    }
+  async function setCategory(categorySlug: string) {
+    productsStore.setCategory(categorySlug)
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
+  }
+
+  async function clearCategory() {
+    productsStore.clearCategory()
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
+  }
+
+  async function setSort(sort: 'default' | 'price-asc' | 'price-desc') {
+    productsStore.setSort(sort)
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
+  }
+
+  async function setSearch(searchValue: string) {
+    productsStore.setSearch(searchValue)
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
+  }
+
+  async function setInStockOnly(value: boolean) {
+    productsStore.setInStockOnly(value)
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
+  }
+
+  async function resetFilters() {
+    productsStore.resetFilters()
+    await updateRouteQuery()
+    await productsStore.resetAndReload()
   }
 
   watch(
-    normalizedRouteState,
+    () => route.query,
     async () => {
-      if (!initialized.value)
-        return
-
-      await applyRouteAndReload()
-
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      })
+      productsStore.syncFromQuery(route.query as Record<string, unknown>)
+      await productsStore.loadCategories(true)
+      await productsStore.restoreOrReload()
     },
+    { immediate: true },
   )
 
-  onMounted(async () => {
-    await initMarketCatalog()
+  const isReadyForInfiniteScroll = computed(() => {
+    return initialized.value && !loading.value && !loadingMore.value
   })
 
   return {
     isReadyForInfiniteScroll,
+
+    updateRouteQuery,
+    setCatalogType,
+    setCategory,
+    clearCategory,
+    setSort,
+    setSearch,
+    setInStockOnly,
+    resetFilters,
+    applyQueryToStore,
   }
 }

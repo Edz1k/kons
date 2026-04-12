@@ -12,6 +12,7 @@ const {
   sortOptions,
   inStockOnlyModel,
   selectedSortObject,
+  isOwnCatalog,
   submitSearch,
   resetAll,
 } = useMarketFilters()
@@ -20,7 +21,6 @@ const {
 <template>
   <div class="border border-slate-200 rounded-[24px] bg-white p-4 shadow-sm md:p-5">
     <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-      <!-- Search -->
       <div class="flex flex-1 flex-col gap-3 sm:flex-row">
         <div class="relative flex-1">
           <input
@@ -41,7 +41,6 @@ const {
         </button>
       </div>
 
-      <!-- Controls -->
       <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
         <Listbox v-model="selectedSortObject">
           <div class="relative min-w-[220px]">
@@ -72,7 +71,10 @@ const {
           </div>
         </Listbox>
 
-        <label class="inline-flex items-center gap-3 border border-slate-200 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-primary">
+        <label
+          v-if="isOwnCatalog"
+          class="inline-flex items-center gap-3 border border-slate-200 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-primary"
+        >
           <input
             v-model="inStockOnlyModel"
             type="checkbox"

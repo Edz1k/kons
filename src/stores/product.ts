@@ -1,11 +1,12 @@
-import type { Category, Product } from '~/types/product'
+import type { CatalogType, Category, Product } from '~/types/product'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { fetchCategories, fetchProducts } from '~/services/directus'
+import { fetchCategoriesByType, fetchProducts } from '~/services/directus'
 
 const PAGE_SIZE = 12
 const MAX_CACHE_SIZE = 10
 const ALLOWED_SORTS = new Set(['default', 'price-asc', 'price-desc'])
+const ALLOWED_CATALOG_TYPES = new Set<CatalogType>(['own', 'partner'])
 
 type SortValue = 'default' | 'price-asc' | 'price-desc'
 
@@ -21,6 +22,7 @@ interface CatalogFiltersSnapshot {
   inStockOnly: boolean
   selectedCategory: string
   sortBy: SortValue
+  catalogType: CatalogType
 }
 
 export const useProductsStore = defineStore('products', () => {
@@ -37,6 +39,7 @@ export const useProductsStore = defineStore('products', () => {
   const inStockOnly = ref(false)
   const selectedCategory = ref('')
   const sortBy = ref<SortValue>('default')
+  const catalogType = ref<CatalogType>('own')
 
   const page = ref(1)
   const limit = ref(PAGE_SIZE)
@@ -68,12 +71,22 @@ export const useProductsStore = defineStore('products', () => {
     return value === true || value === 'true'
   }
 
+  function normalizeCatalogType(value: unknown): CatalogType {
+    if (typeof value !== 'string')
+      return 'own'
+
+    return ALLOWED_CATALOG_TYPES.has(value as CatalogType)
+      ? (value as CatalogType)
+      : 'own'
+  }
+
   function getCurrentFiltersSnapshot(): CatalogFiltersSnapshot {
     return {
       search: search.value,
       inStockOnly: inStockOnly.value,
       selectedCategory: selectedCategory.value,
       sortBy: sortBy.value,
+      catalogType: catalogType.value,
     }
   }
 
@@ -107,12 +120,9 @@ export const useProductsStore = defineStore('products', () => {
   function saveCurrentStateToCache() {
     const key = getCatalogKey()
 
-    // если ключ уже есть — удаляем
-    if (catalogCache.value[key]) {
+    if (catalogCache.value[key])
       delete catalogCache.value[key]
-    }
 
-    // добавляем заново (становится самым "новым")
     catalogCache.value[key] = createCurrentSnapshot()
 
     const keys = Object.keys(catalogCache.value)
@@ -166,6 +176,7 @@ export const useProductsStore = defineStore('products', () => {
       loadingMore.value = true
 
     error.value = ''
+
     try {
       const response = await fetchProducts({
         page: page.value,
@@ -174,6 +185,7 @@ export const useProductsStore = defineStore('products', () => {
         search: search.value,
         inStockOnly: inStockOnly.value,
         sortBy: sortBy.value,
+        catalogType: catalogType.value,
       })
 
       if (requestId !== activeRequestId)
@@ -228,17 +240,24 @@ export const useProductsStore = defineStore('products', () => {
     await resetAndReload()
   }
 
-  async function loadCategories() {
+  async function loadCategories(force = false) {
     if (loadingCategories.value)
       return
 
-    if (categories.value.length)
+    if (categories.value.length && !force)
       return
 
     loadingCategories.value = true
 
     try {
-      categories.value = await fetchCategories()
+      categories.value = await fetchCategoriesByType(catalogType.value)
+
+      if (
+        selectedCategory.value
+        && !categories.value.some(category => category.slug === selectedCategory.value)
+      ) {
+        selectedCategory.value = ''
+      }
     }
     catch (e: unknown) {
       error.value = e instanceof Error ? e.message : String(e)
@@ -268,11 +287,26 @@ export const useProductsStore = defineStore('products', () => {
     sortBy.value = normalizeSort(value)
   }
 
+  async function setCatalogType(value: unknown) {
+    const nextType = normalizeCatalogType(value)
+
+    if (catalogType.value === nextType)
+      return
+
+    catalogType.value = nextType
+    selectedCategory.value = ''
+    categories.value = []
+    initialized.value = false
+
+    await loadCategories(true)
+  }
+
   function syncFromQuery(query: Record<string, unknown>) {
     selectedCategory.value = normalizeCategory(query.category)
     sortBy.value = normalizeSort(query.sort)
     search.value = normalizeSearch(query.search)
     inStockOnly.value = normalizeInStock(query.inStock)
+    catalogType.value = normalizeCatalogType(query.type)
   }
 
   function resetFilters() {
@@ -283,6 +317,8 @@ export const useProductsStore = defineStore('products', () => {
   }
 
   const loadedCount = computed(() => items.value.length)
+  const isOwnCatalog = computed(() => catalogType.value === 'own')
+  const isPartnerCatalog = computed(() => catalogType.value === 'partner')
 
   return {
     items,
@@ -298,12 +334,15 @@ export const useProductsStore = defineStore('products', () => {
     inStockOnly,
     selectedCategory,
     sortBy,
+    catalogType,
 
     page,
     limit,
     total,
     hasMore,
     loadedCount,
+    isOwnCatalog,
+    isPartnerCatalog,
 
     loadProducts,
     loadNextPage,
@@ -316,6 +355,7 @@ export const useProductsStore = defineStore('products', () => {
     setCategory,
     clearCategory,
     setSort,
+    setCatalogType,
     syncFromQuery,
     resetFilters,
 

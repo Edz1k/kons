@@ -1,4 +1,5 @@
 import type {
+  CatalogType,
   Category,
   Color,
   DirectusListResponse,
@@ -39,8 +40,6 @@ const PARTNER_PRODUCT_FIELDS = [
   'category.slug',
   'external_id',
   'source_type',
-  'price_from',
-  'in_stock',
   'preview_image',
   'payload',
 ].join(',')
@@ -92,6 +91,7 @@ export interface FetchProductsParams {
   search?: string
   inStockOnly?: boolean
   sortBy?: 'default' | 'price-asc' | 'price-desc'
+  catalogType?: CatalogType
   signal?: AbortSignal
 }
 
@@ -225,6 +225,13 @@ function sortProducts(items: Product[], sortBy: FetchProductsParams['sortBy']) {
   return result.sort((a, b) => String(b.id).localeCompare(String(a.id)))
 }
 
+function filterByCatalogType(items: Product[], catalogType: CatalogType): Product[] {
+  if (catalogType === 'own')
+    return items.filter(product => !product.is_partner)
+
+  return items.filter(product => product.is_partner)
+}
+
 export async function fetchProducts(
   params: FetchProductsParams = {},
 ): Promise<FetchProductsResult> {
@@ -235,6 +242,7 @@ export async function fetchProducts(
     search = '',
     inStockOnly = false,
     sortBy = 'default',
+    catalogType = 'own',
     signal,
   } = params
 
@@ -256,15 +264,22 @@ export async function fetchProducts(
   if (category)
     partnerQuery.set('filter[category][slug][_eq]', category)
 
+  const shouldLoadOwn = catalogType === 'own'
+  const shouldLoadPartner = catalogType === 'partner'
+
   const [ownJson, partnerJson] = await Promise.all([
-    getJSON<DirectusListResponse<Product[]>>(
-      `/items/products?${ownQuery.toString()}`,
-      signal,
-    ),
-    getJSON<DirectusListResponse<PartnerProductRaw[]>>(
-      `/items/partner_products?${partnerQuery.toString()}`,
-      signal,
-    ),
+    shouldLoadOwn
+      ? getJSON<DirectusListResponse<Product[]>>(
+          `/items/products?${ownQuery.toString()}`,
+          signal,
+        )
+      : Promise.resolve({ data: [] as Product[] }),
+    shouldLoadPartner
+      ? getJSON<DirectusListResponse<PartnerProductRaw[]>>(
+          `/items/partner_products?${partnerQuery.toString()}`,
+          signal,
+        )
+      : Promise.resolve({ data: [] as PartnerProductRaw[] }),
   ])
 
   let items: Product[] = [
@@ -272,10 +287,12 @@ export async function fetchProducts(
     ...((partnerJson.data ?? []).map(normalizePartnerProduct)),
   ]
 
+  items = filterByCatalogType(items, catalogType)
+
   if (search.trim())
     items = items.filter(product => matchesSearch(product, search))
 
-  if (inStockOnly)
+  if (inStockOnly && catalogType === 'own')
     items = items.filter(product => hasStock(product))
 
   items = sortProducts(items, sortBy)
@@ -328,7 +345,7 @@ export async function fetchProductBySlug(
   return partnerProduct ? normalizePartnerProduct(partnerProduct) : null
 }
 
-export async function fetchCategories(signal?: AbortSignal): Promise<Category[]> {
+export async function fetchOwnCategories(signal?: AbortSignal): Promise<Category[]> {
   const query = new URLSearchParams({
     fields: 'id,title,slug',
     sort: 'title',
@@ -341,4 +358,29 @@ export async function fetchCategories(signal?: AbortSignal): Promise<Category[]>
   )
 
   return json.data ?? []
+}
+
+export async function fetchPartnerCategories(signal?: AbortSignal): Promise<Category[]> {
+  const query = new URLSearchParams({
+    fields: 'id,title,slug',
+    sort: 'title',
+    limit: '-1',
+  })
+
+  const json = await getJSON<DirectusListResponse<Category[]>>(
+    `/items/partner_categories?${query.toString()}`,
+    signal,
+  )
+
+  return json.data ?? []
+}
+
+export async function fetchCategoriesByType(
+  catalogType: CatalogType,
+  signal?: AbortSignal,
+): Promise<Category[]> {
+  if (catalogType === 'partner')
+    return fetchPartnerCategories(signal)
+
+  return fetchOwnCategories(signal)
 }

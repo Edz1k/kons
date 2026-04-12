@@ -8,12 +8,15 @@ const props = defineProps<{
 }>()
 
 const productLink = computed(() => `/product/${props.product.slug}`)
-
 const variants = computed(() => props.product.product_variants ?? [])
+const isPartnerProduct = computed(() => Boolean(props.product.is_partner))
 
 const activeVariant = computed(() => {
   if (!variants.value.length)
     return null
+
+  if (isPartnerProduct.value)
+    return variants.value.find(variant => variant.is_default) ?? variants.value[0] ?? null
 
   const defaultVariant = variants.value.find(variant => variant.is_default)
 
@@ -48,21 +51,37 @@ const imageUrl = computed(() => {
 })
 
 const isInStock = computed(() => {
+  if (isPartnerProduct.value)
+    return true
+
   if (!variants.value.length)
     return false
 
   return variants.value.some(variant => variant.stock > 0)
 })
 
-const stockClasses = computed(() =>
-  isInStock.value
-    ? 'bg-emerald-500/15 text-emerald-200 ring-1 ring-emerald-500/30'
-    : 'bg-rose-500/15 text-rose-200 ring-1 ring-rose-500/30',
-)
+const badgeText = computed(() => {
+  if (isPartnerProduct.value)
+    return 'Под заказ'
 
-const dotClasses = computed(() =>
-  isInStock.value ? 'bg-emerald-300' : 'bg-rose-300',
-)
+  return isInStock.value ? 'В наличии' : 'Нет в наличии'
+})
+
+const stockClasses = computed(() => {
+  if (isPartnerProduct.value)
+    return 'bg-amber-500/15 text-amber-700 ring-1 ring-amber-500/30'
+
+  return isInStock.value
+    ? 'bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30'
+    : 'bg-rose-500/15 text-rose-700 ring-1 ring-rose-500/30'
+})
+
+const dotClasses = computed(() => {
+  if (isPartnerProduct.value)
+    return 'bg-amber-500'
+
+  return isInStock.value ? 'bg-emerald-500' : 'bg-rose-500'
+})
 
 function formatPrice(v?: string | number) {
   if (v === undefined || v === null || v === '')
@@ -95,7 +114,7 @@ function formatPrice(v?: string | number) {
           class="h-1.5 w-1.5 rounded-full"
           :class="dotClasses"
         />
-        {{ isInStock ? 'В наличии' : 'Нет в наличии' }}
+        {{ badgeText }}
       </span>
     </div>
 
@@ -139,11 +158,14 @@ function formatPrice(v?: string | number) {
           {{ product.category?.title || 'Brillex' }}
         </div>
 
-        <div
-          v-if="product.price !== undefined"
-          class="text-base font-bold tracking-tight"
-        >
-          {{ formatPrice(product.price) }} ₸
+        <div class="text-base font-bold tracking-tight">
+          <span v-if="!isPartnerProduct">
+            {{ formatPrice(product.price) }} ₸
+          </span>
+
+          <span v-else class="text-sm text-amber-600 font-medium">
+            Цена по запросу
+          </span>
         </div>
       </div>
 
