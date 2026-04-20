@@ -2,7 +2,7 @@
 const year = new Date().getFullYear()
 
 const linksLeft = [
-  { label: 'Каталог', to: '/catalog' },
+  { label: 'Каталог', to: '/market' },
   { label: 'Портфолио', to: '/portfolio' },
 ] as const
 
@@ -111,7 +111,7 @@ const socialBtn
             </a>
 
             <a
-              href="https://instagram.com/your_username"
+              href="https://instagram.com/viplinekz"
               target="_blank"
               rel="noopener noreferrer"
               :class="socialBtn"
