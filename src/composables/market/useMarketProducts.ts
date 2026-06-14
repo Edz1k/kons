@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { computed, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '~/stores/product'
 
@@ -7,6 +7,7 @@ export function useMarketCatalog() {
   const route = useRoute()
   const router = useRouter()
   const productsStore = useProductsStore()
+  const mounted = ref(false)
 
   const {
     loading,
@@ -113,12 +114,20 @@ export function useMarketCatalog() {
   watch(
     () => route.query,
     async () => {
+      if (!mounted.value)
+        return
+
       productsStore.syncFromQuery(route.query as Record<string, unknown>)
       await productsStore.loadCategories(true)
       await productsStore.restoreOrReload()
     },
-    { immediate: true },
   )
+
+  onMounted(async () => {
+    mounted.value = true
+    productsStore.resetLoadingState()
+    await applyQueryToStore()
+  })
 
   const isReadyForInfiniteScroll = computed(() => {
     return initialized.value && !loading.value && !loadingMore.value

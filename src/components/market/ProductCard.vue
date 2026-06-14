@@ -2,10 +2,13 @@
 import type { Product } from '~/types/product'
 import { computed } from 'vue'
 import { fileUrl } from '~/services/directus'
+import { useAuthStore } from '~/stores/auth'
 
 const props = defineProps<{
   product: Product
 }>()
+
+const authStore = useAuthStore()
 
 const productLink = computed(() => `/product/${props.product.slug}`)
 const variants = computed(() => props.product.product_variants ?? [])
@@ -81,6 +84,18 @@ const dotClasses = computed(() => {
     return 'bg-amber-500'
 
   return isInStock.value ? 'bg-emerald-500' : 'bg-rose-500'
+})
+
+const discountedPrice = computed(() => {
+  if (isPartnerProduct.value || !authStore.hasDiscount)
+    return null
+
+  const price = Number(props.product.price ?? 0)
+
+  if (Number.isNaN(price) || price <= 0)
+    return null
+
+  return Math.round(price * (100 - authStore.discountPercent) / 100)
 })
 
 function formatPrice(v?: string | number) {
@@ -159,9 +174,20 @@ function formatPrice(v?: string | number) {
         </div>
 
         <div class="text-base font-bold tracking-tight">
-          <span v-if="!isPartnerProduct">
-            {{ formatPrice(product.price) }} ₸
-          </span>
+          <div v-if="!isPartnerProduct" class="text-right">
+            <template v-if="discountedPrice !== null">
+              <div class="text-xs line-through opacity-45">
+                {{ formatPrice(product.price) }} ₸
+              </div>
+              <div class="text-secondary">
+                {{ formatPrice(discountedPrice) }} ₸
+              </div>
+            </template>
+
+            <span v-else>
+              {{ formatPrice(product.price) }} ₸
+            </span>
+          </div>
 
           <span v-else class="text-sm text-amber-600 font-medium">
             Цена по запросу

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useAuthStore } from '~/stores/auth'
 import { useProductsStore } from '~/stores/product'
 
 const isOpen = ref(false)
@@ -8,6 +9,11 @@ const isCatalogOpen = ref(false)
 
 const productsStore = useProductsStore()
 const { categories, loadingCategories } = storeToRefs(productsStore)
+const authStore = useAuthStore()
+const { isAuthenticated, discountPercent } = storeToRefs(authStore)
+
+const accountLink = computed(() => isAuthenticated.value ? '/profile' : '/login')
+const accountLabel = computed(() => isAuthenticated.value ? 'Кабинет' : 'Войти')
 
 const links = [
   { label: 'Портфолио', to: '/portfolio' },
@@ -42,6 +48,10 @@ function categoryLink(slug: string) {
     query: { category: slug },
   }
 }
+
+onMounted(() => {
+  void authStore.init()
+})
 </script>
 
 <template>
@@ -87,6 +97,20 @@ function categoryLink(slug: string) {
 
       <!-- Right block -->
       <div class="flex items-center gap-4 lg:gap-6">
+        <RouterLink
+          :to="accountLink"
+          class="hidden items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold transition md:inline-flex hover:bg-white/20"
+        >
+          <span class="i-mdi:account-circle text-lg" />
+          <span>{{ accountLabel }}</span>
+          <span
+            v-if="isAuthenticated && discountPercent > 0"
+            class="rounded-full bg-secondary px-2 py-0.5 text-xs text-white"
+          >
+            -{{ discountPercent }}%
+          </span>
+        </RouterLink>
+
         <div class="hidden flex-col text-right text-sm opacity-80 lg:flex">
           <span class="transition hover:opacity-100">zakaz@brillex.kz</span>
           <span class="transition hover:opacity-100">+7 (705) 259 88-88</span>
@@ -192,6 +216,24 @@ function categoryLink(slug: string) {
                 class="group relative w-fit inline-flex items-center opacity-90 transition hover:opacity-100"
               >
                 {{ link.label }}
+                <span
+                  class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
+                />
+              </RouterLink>
+            </li>
+
+            <li @click="closeMenu">
+              <RouterLink
+                :to="accountLink"
+                class="group relative w-fit inline-flex items-center gap-2 opacity-90 transition hover:opacity-100"
+              >
+                <span>{{ accountLabel }}</span>
+                <span
+                  v-if="isAuthenticated && discountPercent > 0"
+                  class="rounded-full bg-secondary px-2 py-0.5 text-xs text-white"
+                >
+                  -{{ discountPercent }}%
+                </span>
                 <span
                   class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
                 />

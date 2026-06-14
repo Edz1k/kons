@@ -103,17 +103,37 @@ export interface FetchProductsResult {
   limit: number
 }
 
+export interface DirectusRequestOptions {
+  method?: string
+  body?: unknown
+  signal?: AbortSignal
+  token?: string
+}
+
 export function fileUrl(fileId: string) {
   return `${BASE}/assets/${fileId}`
 }
 
-async function getJSON<T>(path: string, signal?: AbortSignal): Promise<T> {
+export async function directusRequest<T>(
+  path: string,
+  options: DirectusRequestOptions = {},
+): Promise<T> {
   if (!BASE)
     throw new Error('VITE_DIRECTUS_URL is not set')
 
+  const headers = new Headers()
+
+  if (options.body !== undefined)
+    headers.set('Content-Type', 'application/json')
+
+  if (options.token)
+    headers.set('Authorization', `Bearer ${options.token}`)
+
   const response = await fetch(`${BASE}${path}`, {
-    method: 'GET',
-    signal,
+    method: options.method ?? 'GET',
+    headers,
+    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    signal: options.signal,
   })
 
   if (!response.ok) {
@@ -121,7 +141,16 @@ async function getJSON<T>(path: string, signal?: AbortSignal): Promise<T> {
     throw new Error(`Directus ${response.status}: ${text}`)
   }
 
-  return response.json() as Promise<T>
+  const text = await response.text()
+
+  if (!text)
+    return undefined as T
+
+  return JSON.parse(text) as T
+}
+
+async function getJSON<T>(path: string, signal?: AbortSignal): Promise<T> {
+  return directusRequest<T>(path, { signal })
 }
 
 function mapSort(sortBy: FetchProductsParams['sortBy']) {

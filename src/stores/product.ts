@@ -157,6 +157,13 @@ export const useProductsStore = defineStore('products', () => {
     catalogCache.value = {}
   }
 
+  function resetLoadingState() {
+    activeRequestId += 1
+    loading.value = false
+    loadingMore.value = false
+    loadingCategories.value = false
+  }
+
   async function loadProducts(reset = false) {
     if (loading.value || loadingMore.value)
       return
@@ -362,5 +369,6 @@ export const useProductsStore = defineStore('products', () => {
     restoreFromCache,
     saveCurrentStateToCache,
     clearCatalogCache,
+    resetLoadingState,
   }
 })

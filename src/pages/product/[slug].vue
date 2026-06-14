@@ -3,12 +3,14 @@ import type { Product, ProductVariant } from '~/types/product'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchProductBySlug, fileUrl } from '~/services/directus'
+import { useAuthStore } from '~/stores/auth'
 
 defineOptions({
   name: 'ProductDetailPage',
 })
 
 const route = useRoute()
+const authStore = useAuthStore()
 
 const slug = computed(() => {
   const params = route.params
@@ -143,6 +145,13 @@ const currentPrice = computed<number | null>(() => {
 
   const basePrice = Number(item.value?.price ?? 0)
   return Number.isNaN(basePrice) ? null : basePrice
+})
+
+const discountedCurrentPrice = computed<number | null>(() => {
+  if (currentPrice.value === null || !authStore.hasDiscount)
+    return null
+
+  return Math.round(currentPrice.value * (100 - authStore.discountPercent) / 100)
 })
 
 const stockBadgeText = computed(() => {
@@ -374,7 +383,18 @@ watch(slug, (value) => {
               v-if="!isPartnerProduct && currentPrice !== null"
               class="mt-5 text-2xl font-semibold md:text-3xl"
             >
-              {{ formatPrice(currentPrice) }} ₸
+              <template v-if="discountedCurrentPrice !== null">
+                <div class="text-base text-black/40 line-through">
+                  {{ formatPrice(currentPrice) }} ₸
+                </div>
+                <div class="text-secondary">
+                  {{ formatPrice(discountedCurrentPrice) }} ₸
+                </div>
+              </template>
+
+              <template v-else>
+                {{ formatPrice(currentPrice) }} ₸
+              </template>
             </div>
 
             <div class="mt-4 flex flex-wrap gap-2">
