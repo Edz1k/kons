@@ -22,6 +22,7 @@
     "@unocss/reset": "catalog:frontend",
     "@vueuse/core": "catalog:frontend",
     "maska": "catalog:frontend",
+    "motion-v": "catalog:frontend",
     "nprogress": "catalog:frontend",
     "pinia": "catalog:frontend",
     "swiper": "catalog:frontend",

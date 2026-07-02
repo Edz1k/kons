@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { motion } from 'motion-v'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const sectionRef = ref<HTMLElement | null>(null)
@@ -35,25 +36,23 @@ function handleScroll() {
   requestAnimationFrame(updateProgress)
 }
 
-// crocs: старт снизу -> едет вверх
 const crocsStyle = computed(() => {
-  const startY = 350
-  const endY = -180
+  const startY = 150
+  const endY = -135
   const y = startY + (endY - startY) * scrollProgress.value
 
   return {
-    transform: `translate3d(0, ${y}px, 0)`,
+    transform: `translate3d(0, ${y}px, 0) rotate(4deg)`,
   }
 })
 
-// sumka: старт сверху -> едет вниз
 const sumkaStyle = computed(() => {
-  const startY = -150
-  const endY = 240
+  const startY = -120
+  const endY = 135
   const y = startY + (endY - startY) * scrollProgress.value
 
   return {
-    transform: `translate3d(0, ${y}px, 0) rotate(-20deg)`,
+    transform: `translate3d(0, ${y}px, 0) rotate(-7deg)`,
   }
 })
 
@@ -72,30 +71,40 @@ onBeforeUnmount(() => {
 <template>
   <section
     ref="sectionRef"
-    class="relative isolate overflow-hidden py-16 lg:py-24 md:py-20"
+    class="relative isolate min-h-[540px] overflow-hidden py-16 lg:py-28 md:py-24"
   >
-    <!-- Декоративные картинки -->
     <div class="pointer-events-none absolute inset-0 z-0">
-      <FadeComponent>
+      <motion.div
+        class="absolute bottom-[-48px] left-[-72px] max-w-[300px] w-[58vw] lg:bottom-[-92px] lg:left-[-26px] md:bottom-[-72px] md:left-[-36px] sm:left-[-42px] lg:max-w-[450px] lg:w-[27vw] md:max-w-[390px] md:w-[30vw] sm:w-[42vw]"
+        :initial="{ opacity: 0, x: -60, y: 45, rotate: -6, scale: 0.9 }"
+        :while-in-view="{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }"
+        :viewport="{ once: true, amount: 0.35 }"
+        :transition="{ type: 'spring', stiffness: 78, damping: 18 }"
+      >
         <img
           src="/pictures/crocs.webp"
           alt=""
           :style="crocsStyle"
-          class="parallax-item absolute bottom-[-20px] left-[-40px] max-w-[240px] w-[52vw] object-contain md:bottom-[0] md:left-0 sm:left-[-20px] md:max-w-none md:w-[30%] sm:max-w-[280px] sm:w-[42vw]"
+          class="parallax-item w-full object-contain opacity-90 drop-shadow-[0_28px_48px_rgba(0,0,0,0.16)]"
         >
-      </FadeComponent>
+      </motion.div>
 
-      <FadeComponent>
+      <motion.div
+        class="absolute right-[-78px] top-[8px] max-w-[320px] w-[62vw] lg:right-[-26px] lg:top-[-28px] md:right-[-42px] md:top-[-12px] sm:right-[-42px] lg:max-w-[470px] lg:w-[29vw] md:max-w-[430px] md:w-[32vw] sm:w-[46vw]"
+        :initial="{ opacity: 0, x: 64, y: -44, rotate: 7, scale: 0.9 }"
+        :while-in-view="{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }"
+        :viewport="{ once: true, amount: 0.35 }"
+        :transition="{ type: 'spring', stiffness: 78, damping: 18, delay: 0.08 }"
+      >
         <img
           src="/pictures/sumka.webp"
           alt=""
           :style="sumkaStyle"
-          class="parallax-item absolute right-[-30px] top-[80px] max-w-[260px] w-[56vw] object-contain md:right-0 md:top-[120px] sm:right-[-10px] md:max-w-none md:w-[35%] sm:max-w-[300px] sm:w-[44vw]"
+          class="parallax-item w-full object-contain opacity-90 drop-shadow-[0_30px_50px_rgba(0,0,0,0.18)]"
         >
-      </FadeComponent>
+      </motion.div>
     </div>
 
-    <!-- Текст -->
     <div class="relative z-20 mx-auto max-w-7xl px-4 text-center lg:px-8 sm:px-6">
       <h2 class="font-bold leading-[0.95] tracking-tight uppercase">
         <FadeComponent>
