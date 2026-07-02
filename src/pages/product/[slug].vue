@@ -33,6 +33,14 @@ const modalRef = ref()
 const variants = computed<ProductVariant[]>(() => item.value?.product_variants ?? [])
 const isPartnerProduct = computed(() => Boolean(item.value?.is_partner))
 
+function sortImages<T extends { sort?: number | null }>(images: T[] = []): T[] {
+  return [...images].sort((a, b) => {
+    const aSort = typeof a.sort === 'number' ? a.sort : Number.POSITIVE_INFINITY
+    const bSort = typeof b.sort === 'number' ? b.sort : Number.POSITIVE_INFINITY
+    return aSort - bSort
+  })
+}
+
 function getInitialVariant(productVariants: ProductVariant[]): ProductVariant | null {
   if (!productVariants.length)
     return null
@@ -61,7 +69,7 @@ function getVariantImages(variant: ProductVariant | null): string[] {
   if (!variant)
     return []
 
-  const directusImages = variant.images
+  const directusImages = sortImages(variant.images)
     ?.map(image => image.directus_files_id)
     .filter(Boolean)
     .map(id => fileUrl(id)) ?? []
@@ -81,7 +89,7 @@ function getProductImages(product: Product | null): string[] {
   if (!product)
     return []
 
-  const directusImages = product.images
+  const directusImages = sortImages(product.images)
     ?.map(image => image.directus_files_id)
     .filter(Boolean)
     .map(id => fileUrl(id)) ?? []
@@ -134,6 +142,22 @@ const isInStock = computed(() => {
   return Number(currentStock.value ?? 0) > 0
 })
 
+const restockDateText = computed(() => {
+  if (isInStock.value || !currentVariant.value?.restock_date)
+    return ''
+
+  const date = new Date(currentVariant.value.restock_date)
+
+  if (Number.isNaN(date.getTime()))
+    return currentVariant.value.restock_date
+
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+})
+
 const currentPrice = computed<number | null>(() => {
   if (isPartnerProduct.value)
     return null
@@ -160,7 +184,9 @@ const stockBadgeText = computed(() => {
 
   return isInStock.value
     ? `Остаток: ${currentStock.value} шт.`
-    : 'Нет в наличии'
+    : restockDateText.value
+      ? `Ожидается ${restockDateText.value}`
+      : 'Нет в наличии'
 })
 
 const stockBadgeClasses = computed(() => {
@@ -176,7 +202,12 @@ const productStatusText = computed(() => {
   if (isPartnerProduct.value)
     return 'Под заказ'
 
-  return isInStock.value ? 'Доступен к заказу' : 'Временно отсутствует'
+  if (isInStock.value)
+    return 'Доступен к заказу'
+
+  return restockDateText.value
+    ? `Снова в наличии ${restockDateText.value}`
+    : 'Временно отсутствует'
 })
 
 const actionButtonText = computed(() => {

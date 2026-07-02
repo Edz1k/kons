@@ -22,6 +22,7 @@ export interface Category {
 
 export interface ProductImage {
   directus_files_id: string
+  sort?: number | null
 }
 
 export interface Color {
@@ -36,6 +37,7 @@ export interface ProductVariant {
 
   sku?: string
   stock: number
+  restock_date?: string | null
   is_default: boolean
 
   images?: ProductImage[]

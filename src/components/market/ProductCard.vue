@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Product } from '~/types/product'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { fileUrl } from '~/services/directus'
 import { useAuthStore } from '~/stores/auth'
 
@@ -9,10 +9,26 @@ const props = defineProps<{
 }>()
 
 const authStore = useAuthStore()
+const previewVariantId = ref<string | null>(null)
 
 const productLink = computed(() => `/product/${props.product.slug}`)
 const variants = computed(() => props.product.product_variants ?? [])
 const isPartnerProduct = computed(() => Boolean(props.product.is_partner))
+
+watch(
+  () => props.product.id,
+  () => {
+    previewVariantId.value = null
+  },
+)
+
+function sortImages<T extends { sort?: number | null }>(images: T[] = []): T[] {
+  return [...images].sort((a, b) => {
+    const aSort = typeof a.sort === 'number' ? a.sort : Number.POSITIVE_INFINITY
+    const bSort = typeof b.sort === 'number' ? b.sort : Number.POSITIVE_INFINITY
+    return aSort - bSort
+  })
+}
 
 const visibleColorOptions = computed(() => {
   const options = variants.value
@@ -25,6 +41,7 @@ const visibleColorOptions = computed(() => {
 
       return {
         key: String(variant.color?.id ?? variant.color?.slug ?? variant.id),
+        variantId: String(variant.id),
         label,
         hex: variant.color?.hex,
       }
@@ -51,6 +68,13 @@ const activeVariant = computed(() => {
   if (!variants.value.length)
     return null
 
+  if (previewVariantId.value) {
+    const previewVariant = variants.value.find(variant => String(variant.id) === previewVariantId.value)
+
+    if (previewVariant)
+      return previewVariant
+  }
+
   if (isPartnerProduct.value)
     return variants.value.find(variant => variant.is_default) ?? variants.value[0] ?? null
 
@@ -68,7 +92,7 @@ const activeVariant = computed(() => {
 })
 
 const imageUrl = computed(() => {
-  const variantImage = activeVariant.value?.images?.[0]?.directus_files_id
+  const variantImage = sortImages(activeVariant.value?.images)?.[0]?.directus_files_id
 
   if (variantImage)
     return fileUrl(variantImage)
@@ -78,7 +102,7 @@ const imageUrl = computed(() => {
   if (externalVariantImage)
     return externalVariantImage
 
-  const productImage = props.product.images?.[0]?.directus_files_id
+  const productImage = sortImages(props.product.images)?.[0]?.directus_files_id
 
   if (productImage)
     return fileUrl(productImage)
@@ -96,9 +120,32 @@ const isInStock = computed(() => {
   return variants.value.some(variant => variant.stock > 0)
 })
 
+const restockDateText = computed(() => {
+  if (isInStock.value)
+    return ''
+
+  const restockDate = activeVariant.value?.restock_date
+
+  if (!restockDate)
+    return ''
+
+  const date = new Date(restockDate)
+
+  if (Number.isNaN(date.getTime()))
+    return restockDate
+
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+  }).format(date)
+})
+
 const badgeText = computed(() => {
   if (isPartnerProduct.value)
     return 'Под заказ'
+
+  if (!isInStock.value && restockDateText.value)
+    return `Ожидается ${restockDateText.value}`
 
   return isInStock.value ? 'В наличии' : 'Нет в наличии'
 })
@@ -149,12 +196,21 @@ function getColorOptionStyle(hex?: string) {
 
   return { background: hex }
 }
+
+function previewVariant(variantId: string) {
+  previewVariantId.value = variantId
+}
+
+function resetVariantPreview() {
+  previewVariantId.value = null
+}
 </script>
 
 <template>
   <RouterLink
     :to="productLink"
     class="group relative overflow-hidden border border-white/10 rounded-2xl bg-white/5 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-2xl hover:-translate-y-1"
+    @mouseleave="resetVariantPreview"
   >
     <div class="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
       <div class="absolute inset-0 from-black/30 via-transparent to-transparent bg-gradient-to-t" />
@@ -247,9 +303,15 @@ function getColorOptionStyle(hex?: string) {
           <span
             v-for="option in colorPreviewOptions"
             :key="option.key"
-            class="h-5 w-5 border border-white/70 rounded-full shadow-sm ring-1 ring-black/10 -ml-1 first:ml-0"
+            role="button"
+            tabindex="0"
+            class="h-5 w-5 cursor-pointer border border-white/70 rounded-full shadow-sm ring-1 ring-black/10 transition-transform focus:z-10 hover:z-10 -ml-1 first:ml-0 focus:scale-125 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/80"
+            :class="previewVariantId === option.variantId ? 'z-10 scale-125' : ''"
             :style="getColorOptionStyle(option.hex)"
             :title="option.label"
+            :aria-label="option.label"
+            @mouseenter="previewVariant(option.variantId)"
+            @focus="previewVariant(option.variantId)"
           />
 
           <span

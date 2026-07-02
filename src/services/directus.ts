@@ -16,14 +16,17 @@ const PRODUCT_FIELDS = [
   'description',
   'price',
   'images.directus_files_id',
+  'images.sort',
   'category.id',
   'category.title',
   'category.slug',
   'product_variants.id',
   'product_variants.sku',
   'product_variants.stock',
+  'product_variants.restock_date',
   'product_variants.is_default',
   'product_variants.images.directus_files_id',
+  'product_variants.images.sort',
   'product_variants.color.id',
   'product_variants.color.name',
   'product_variants.color.slug',
@@ -280,6 +283,8 @@ export async function fetchProducts(
     limit: '-1',
     sort: mapSort(sortBy),
   })
+  ownQuery.set('deep[images][_sort]', 'sort')
+  ownQuery.set('deep[product_variants][images][_sort]', 'sort')
 
   if (category)
     ownQuery.set('filter[category][slug][_eq]', category)
@@ -348,6 +353,8 @@ export async function fetchProductBySlug(
     'filter[slug][_eq]': slug,
     'limit': '1',
   })
+  ownQuery.set('deep[images][_sort]', 'sort')
+  ownQuery.set('deep[product_variants][images][_sort]', 'sort')
 
   const ownJson = await getJSON<DirectusListResponse<Product[]>>(
     `/items/products?${ownQuery.toString()}`,
