@@ -108,35 +108,37 @@ onBeforeUnmount(() => {
     <div class="relative z-20 mx-auto max-w-7xl px-4 text-center lg:px-8 sm:px-6">
       <h2 class="font-bold leading-[0.95] tracking-tight uppercase">
         <FadeComponent>
-          <span class="block text-5xl text-black lg:text-8xl md:text-7xl">
-            СДЕЛАЕМ
+          <span class="block text-4xl text-black lg:text-8xl md:text-7xl sm:text-5xl">
+            МЫ СОЗДАЕМ
           </span>
         </FadeComponent>
 
         <FadeComponent>
-          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
-            БРЕНД ОДЕЖДЫ
+          <span class="block text-4xl text-black lg:text-8xl md:text-7xl sm:text-5xl">
+            НЕ ВЕЩИ.
           </span>
         </FadeComponent>
 
         <FadeComponent>
-          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
-            ВНУТРИ
+          <span class="block text-4xl text-black lg:text-8xl md:text-7xl sm:text-5xl">
+            МЫ СОЗДАЕМ
           </span>
         </FadeComponent>
 
         <FadeComponent>
-          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
-            ВАШЕЙ
-          </span>
-        </FadeComponent>
-
-        <FadeComponent>
-          <span class="block text-5xl text-secondary lg:text-8xl md:text-7xl">
-            КОМПАНИИ
+          <span class="block text-4xl text-secondary lg:text-8xl md:text-7xl sm:text-5xl">
+            ВПЕЧАТЛЕНИЕ.
           </span>
         </FadeComponent>
       </h2>
+
+      <FadeComponent :delay="120">
+        <p class="mx-auto mt-8 max-w-2xl text-base text-neutral-600 leading-7 md:mt-10 md:text-xl sm:text-lg">
+          Каждое изделие — это продуманный дизайн, качественные материалы и
+          внимание к деталям. Мы создаём мерч, который не просто выглядит красиво,
+          а помогает бренду выделяться, запоминаться и вызывать доверие.
+        </p>
+      </FadeComponent>
     </div>
   </section>
 </template>

@@ -91,11 +91,12 @@ function getMobileStyle(index: number) {
         <div class="w-full pt-8 lg:w-1/2 lg:pt-0">
           <div class="lg:sticky lg:top-24 lg:min-h-[calc(100vh-6rem)] lg:flex lg:items-center">
             <div class="w-full rounded-3xl bg-black p-6 text-white lg:p-10 sm:p-8">
-              <h3 class="text-2xl font-semibold lg:text-5xl sm:text-3xl">
+              <span class="text-xs text-white/50 font-semibold tracking-[0.2em] uppercase">
                 Brillex
-              </h3>
-              <p class="mt-4 text-sm leading-6 opacity-80 sm:text-base sm:leading-7">
-                Здесь может быть текст, изображение, мокап, видео или карточка товара.
+              </span>
+              <p class="mt-5 text-xl font-bold leading-tight uppercase lg:text-4xl sm:text-3xl">
+                Если вещь не хочется носить —
+                <span class="text-secondary">она не работает на ваш бренд.</span>
               </p>
             </div>
           </div>

@@ -12,10 +12,10 @@ const scrollY = ref(0)
 const isMobile = ref(false)
 
 const titleLines = [
-  { text: 'МЫ СОЗДАЕМ МЕРЧ,', accent: true },
-  { text: 'КОТОРЫЙ ВДОХНОВЛЯЕТ' },
-  { text: 'СТАТЬ АМБАССАДОРОМ' },
-  { text: 'ВАШЕГО БРЕНДА' },
+  { text: 'ЛЮДИ ЗАПОМИНАЮТ' },
+  { text: 'НЕ РЕКЛАМУ.' },
+  { text: 'ЛЮДИ ЗАПОМИНАЮТ' },
+  { text: 'ЭМОЦИИ.', accent: true },
 ]
 
 const heroAssets = {
@@ -139,13 +139,6 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="relative min-h-[90vh] overflow-hidden bg-white">
-    <motion.div
-      class="pointer-events-none absolute left-[14vw] top-[24vh] z-0 h-[42vh] w-[72vw] border border-black/6 rounded-full"
-      :initial="{ opacity: 0, scale: 0.78 }"
-      :animate="{ opacity: 1, scale: 1 }"
-      :transition="{ duration: 1, delay: 0.18, ease: [0.16, 1, 0.3, 1] }"
-    />
-
     <div class="pointer-events-none absolute inset-0">
       <motion.div
         class="absolute bottom-[-88px] left-[-72px] w-[250px] lg:bottom-[-135px] lg:left-[-80px] md:bottom-[-98px] md:left-[-60px] sm:bottom-[-72px] sm:left-[-42px] lg:w-[390px] md:w-[300px] sm:w-[255px]"
@@ -214,9 +207,9 @@ onBeforeUnmount(() => {
           :animate="{ opacity: 1, y: 0 }"
           :transition="{ duration: 0.65, delay: 0.5, ease: [0.16, 1, 0.3, 1] }"
         >
-          Полный цикл — от идеи до готовой коллекции.
-          Мерч для компаний, брендов и мероприятий,
-          который хочется носить и показывать.
+          Мы создаём мерч, который вызывает эмоции
+          и делает ваш бренд частью повседневной
+          жизни клиентов и сотрудников.
         </motion.p>
 
         <motion.div
@@ -233,7 +226,7 @@ onBeforeUnmount(() => {
               :while-hover="{ x: -2 }"
               :transition="{ type: 'spring', stiffness: 420, damping: 24 }"
             >
-              Заказать мерч
+              Создать коллекцию
             </motion.span>
             <motion.span
               class="h-8 w-8 inline-flex items-center justify-center rounded-full bg-white/18"
