@@ -3,12 +3,20 @@ import type { Product } from '~/types/product'
 import { computed, ref, watch } from 'vue'
 import { fileUrl } from '~/services/directus'
 import { useAuthStore } from '~/stores/auth'
+import { useReservationsStore } from '~/stores/reservations'
+import {
+  formatReservedUntil,
+  productReservedQty,
+  productReservedUntil,
+  variantAvailableStock,
+} from '~/utils/stock'
 
 const props = defineProps<{
   product: Product
 }>()
 
 const authStore = useAuthStore()
+const reservationsStore = useReservationsStore()
 const previewVariantId = ref<string | null>(null)
 
 const productLink = computed(() => `/product/${props.product.slug}`)
@@ -32,7 +40,7 @@ function sortImages<T extends { sort?: number | null }>(images: T[] = []): T[] {
 
 const visibleColorOptions = computed(() => {
   const options = variants.value
-    .filter(variant => isPartnerProduct.value || variant.stock > 0)
+    .filter(variant => isPartnerProduct.value || variantAvailableStock(variant) > 0)
     .map((variant) => {
       const label = variant.color?.name
         ?? variant.variation_description
@@ -80,10 +88,10 @@ const activeVariant = computed(() => {
 
   const defaultVariant = variants.value.find(variant => variant.is_default)
 
-  if (defaultVariant && defaultVariant.stock > 0)
+  if (defaultVariant && variantAvailableStock(defaultVariant) > 0)
     return defaultVariant
 
-  const firstInStockVariant = variants.value.find(variant => variant.stock > 0)
+  const firstInStockVariant = variants.value.find(variant => variantAvailableStock(variant) > 0)
 
   if (firstInStockVariant)
     return firstInStockVariant
@@ -117,8 +125,19 @@ const isInStock = computed(() => {
   if (!variants.value.length)
     return false
 
-  return variants.value.some(variant => variant.stock > 0)
+  return variants.value.some(variant => variantAvailableStock(variant) > 0)
 })
+
+const reservedQty = computed(() => productReservedQty(props.product))
+
+const reservedUntilText = computed(() =>
+  formatReservedUntil(productReservedUntil(props.product)),
+)
+
+/** Есть ли среди активных резервов клиента резерв на этот товар. */
+const isMyReservation = computed(() =>
+  reservationsStore.reservationsForProduct(props.product.id).length > 0,
+)
 
 const restockDateText = computed(() => {
   if (isInStock.value)
@@ -144,26 +163,42 @@ const badgeText = computed(() => {
   if (isPartnerProduct.value)
     return 'Под заказ'
 
-  if (!isInStock.value && restockDateText.value)
+  if (isInStock.value)
+    return 'В наличии'
+
+  if (reservedQty.value > 0) {
+    return reservedUntilText.value
+      ? `В резерве до ${reservedUntilText.value}`
+      : 'В резерве'
+  }
+
+  if (restockDateText.value)
     return `Ожидается ${restockDateText.value}`
 
-  return isInStock.value ? 'В наличии' : 'Нет в наличии'
+  return 'Нет в наличии'
 })
 
 const stockClasses = computed(() => {
   if (isPartnerProduct.value)
     return 'bg-amber-500/15 text-amber-700 ring-1 ring-amber-500/30'
 
-  return isInStock.value
-    ? 'bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30'
-    : 'bg-rose-500/15 text-rose-700 ring-1 ring-rose-500/30'
+  if (isInStock.value)
+    return 'bg-emerald-500/15 text-emerald-700 ring-1 ring-emerald-500/30'
+
+  if (reservedQty.value > 0)
+    return 'bg-blue-500/15 text-blue-700 ring-1 ring-blue-500/30'
+
+  return 'bg-rose-500/15 text-rose-700 ring-1 ring-rose-500/30'
 })
 
 const dotClasses = computed(() => {
   if (isPartnerProduct.value)
     return 'bg-amber-500'
 
-  return isInStock.value ? 'bg-emerald-500' : 'bg-rose-500'
+  if (isInStock.value)
+    return 'bg-emerald-500'
+
+  return reservedQty.value > 0 ? 'bg-blue-500' : 'bg-rose-500'
 })
 
 const discountedPrice = computed(() => {
@@ -216,7 +251,7 @@ function resetVariantPreview() {
       <div class="absolute inset-0 from-black/30 via-transparent to-transparent bg-gradient-to-t" />
     </div>
 
-    <div class="absolute left-3 top-3 z-10">
+    <div class="absolute left-3 top-3 z-10 flex flex-col items-start gap-2">
       <span
         class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold backdrop-blur-md"
         :class="stockClasses"
@@ -226,6 +261,14 @@ function resetVariantPreview() {
           :class="dotClasses"
         />
         {{ badgeText }}
+      </span>
+
+      <span
+        v-if="!isPartnerProduct && reservedQty > 0 && isInStock"
+        class="inline-flex items-center gap-2 rounded-full bg-blue-500/15 px-3 py-1 text-xs text-blue-700 font-semibold ring-1 ring-blue-500/30 backdrop-blur-md"
+      >
+        <div class="i-mdi:bookmark text-sm" />
+        {{ isMyReservation ? 'Ваш резерв' : `${reservedQty} шт. в резерве` }}
       </span>
     </div>
 

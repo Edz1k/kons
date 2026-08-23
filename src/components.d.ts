@@ -21,6 +21,8 @@ declare module 'vue' {
     PartnerProductCard: typeof import('./components/market/PartnerProductCard.vue')['default']
     ProductCard: typeof import('./components/market/ProductCard.vue')['default']
     ProductSkeleton: typeof import('./components/market/ProductSkeleton.vue')['default']
+    ReservationCard: typeof import('./components/market/ReservationCard.vue')['default']
+    ReserveModal: typeof import('./components/market/ReserveModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StickyFeatureSection: typeof import('./components/sections/StickyFeatureSection.vue')['default']

@@ -6,6 +6,7 @@ import type {
   Product,
   ProductVariant,
 } from '~/types/product'
+import { variantAvailableStock } from '~/utils/stock'
 
 const BASE = import.meta.env.VITE_DIRECTUS_URL as string
 
@@ -23,6 +24,8 @@ const PRODUCT_FIELDS = [
   'product_variants.id',
   'product_variants.sku',
   'product_variants.stock',
+  'product_variants.reserved_qty',
+  'product_variants.reserved_until',
   'product_variants.restock_date',
   'product_variants.is_default',
   'product_variants.images.directus_files_id',
@@ -240,7 +243,7 @@ function matchesSearch(product: Product, search: string): boolean {
 
 function hasStock(product: Product): boolean {
   if (product.product_variants?.length)
-    return product.product_variants.some(variant => variant.stock > 0)
+    return product.product_variants.some(variant => variantAvailableStock(variant) > 0)
 
   return Boolean(product.in_stock)
 }

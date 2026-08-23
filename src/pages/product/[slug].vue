@@ -4,6 +4,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { fetchProductBySlug, fileUrl } from '~/services/directus'
 import { useAuthStore } from '~/stores/auth'
+import { useReservationsStore } from '~/stores/reservations'
+import { formatReservedUntil, formatTimeLeft, variantAvailableStock, variantReservedQty } from '~/utils/stock'
 
 defineOptions({
   name: 'ProductDetailPage',
@@ -11,6 +13,7 @@ defineOptions({
 
 const route = useRoute()
 const authStore = useAuthStore()
+const reservationsStore = useReservationsStore()
 
 const slug = computed(() => {
   const params = route.params
@@ -29,6 +32,8 @@ const selectedImage = ref<string | null>(null)
 const loading = ref(true)
 const error = ref('')
 const modalRef = ref()
+const reserveModalRef = ref()
+const reservationError = ref('')
 
 const variants = computed<ProductVariant[]>(() => item.value?.product_variants ?? [])
 const isPartnerProduct = computed(() => Boolean(item.value?.is_partner))
@@ -125,15 +130,43 @@ const currentSku = computed(() => {
     ?? ''
 })
 
+/** Остаток за вычетом активных резервов — именно его можно купить сейчас. */
 const currentStock = computed<number | null>(() => {
   if (isPartnerProduct.value)
     return null
 
-  if (typeof currentVariant.value?.stock === 'number')
-    return currentVariant.value.stock
+  if (currentVariant.value)
+    return variantAvailableStock(currentVariant.value)
 
   return item.value?.in_stock ? 1 : 0
 })
+
+const currentReservedQty = computed(() => variantReservedQty(currentVariant.value))
+
+const reservedUntilText = computed(() =>
+  formatReservedUntil(currentVariant.value?.reserved_until, true),
+)
+
+/** Резерв текущего пользователя на выбранный вариант, если он есть. */
+const myReservation = computed(() =>
+  reservationsStore.reservationForVariant(currentVariant.value?.id ?? null),
+)
+
+const myReservationTimeLeft = computed(() =>
+  formatTimeLeft(myReservation.value?.expires_at, reservationsStore.now),
+)
+
+const myReservationUntilText = computed(() =>
+  formatReservedUntil(myReservation.value?.expires_at, true),
+)
+
+const reservedByOthersQty = computed(() =>
+  Math.max(0, currentReservedQty.value - (myReservation.value?.quantity ?? 0)),
+)
+
+const canReserve = computed(() =>
+  !isPartnerProduct.value && Number(currentStock.value ?? 0) > 0,
+)
 
 const isInStock = computed(() => {
   if (isPartnerProduct.value)
@@ -182,20 +215,31 @@ const stockBadgeText = computed(() => {
   if (isPartnerProduct.value)
     return 'Под заказ'
 
-  return isInStock.value
-    ? `Остаток: ${currentStock.value} шт.`
-    : restockDateText.value
-      ? `Ожидается ${restockDateText.value}`
-      : 'Нет в наличии'
+  if (isInStock.value)
+    return `Остаток: ${currentStock.value} шт.`
+
+  if (currentReservedQty.value > 0) {
+    return reservedUntilText.value
+      ? `В резерве до ${reservedUntilText.value}`
+      : 'В резерве'
+  }
+
+  return restockDateText.value
+    ? `Ожидается ${restockDateText.value}`
+    : 'Нет в наличии'
 })
 
 const stockBadgeClasses = computed(() => {
   if (isPartnerProduct.value)
     return 'bg-amber-500/10 text-amber-700'
 
-  return isInStock.value
-    ? 'bg-green-500/10 text-green-700'
-    : 'bg-red-500/10 text-red-600'
+  if (isInStock.value)
+    return 'bg-green-500/10 text-green-700'
+
+  if (currentReservedQty.value > 0)
+    return 'bg-blue-500/10 text-blue-700'
+
+  return 'bg-red-500/10 text-red-600'
 })
 
 const productStatusText = computed(() => {
@@ -204,6 +248,12 @@ const productStatusText = computed(() => {
 
   if (isInStock.value)
     return 'Доступен к заказу'
+
+  if (currentReservedQty.value > 0) {
+    return reservedUntilText.value
+      ? `В резерве до ${reservedUntilText.value}`
+      : 'В резерве'
+  }
 
   return restockDateText.value
     ? `Снова в наличии ${restockDateText.value}`
@@ -306,6 +356,46 @@ async function load() {
   }
 }
 
+function openReserveModal() {
+  if (!item.value)
+    return
+
+  reservationError.value = ''
+
+  reserveModalRef.value?.openModal({
+    productId: item.value.id,
+    productTitle: item.value.title,
+    variantId: currentVariant.value?.id ?? null,
+    variantName: currentVariant.value ? getVariantLabel(currentVariant.value) : '',
+    sku: currentSku.value,
+    availableStock: currentStock.value ?? 0,
+    price: discountedCurrentPrice.value ?? currentPrice.value,
+  })
+}
+
+async function handleReserved() {
+  await load()
+}
+
+async function cancelMyReservation() {
+  const reservation = myReservation.value
+
+  if (!reservation)
+    return
+
+  reservationError.value = ''
+
+  try {
+    await reservationsStore.cancel(reservation.id)
+    await load()
+  }
+  catch (e) {
+    reservationError.value = e instanceof Error
+      ? e.message
+      : 'Не удалось отменить резерв'
+  }
+}
+
 watch(currentVariant, () => {
   if (!currentImages.value.includes(selectedImage.value ?? ''))
     setInitialImage()
@@ -314,6 +404,8 @@ watch(currentVariant, () => {
 onMounted(() => {
   if (slug.value)
     load()
+
+  reservationsStore.load()
 })
 
 watch(slug, (value) => {
@@ -539,9 +631,62 @@ watch(slug, (value) => {
               </span>
             </div>
 
-            <div>
+            <div
+              v-if="myReservation"
+              class="mt-4 border border-blue-500/25 rounded-2xl bg-blue-500/5 p-4"
+            >
+              <div class="flex items-center gap-2 text-sm text-blue-700 font-semibold">
+                <div class="i-mdi:bookmark-check text-lg" />
+                Вы зарезервировали {{ myReservation.quantity }} шт.
+              </div>
+
+              <p class="mt-2 text-sm text-black/60 leading-6">
+                Резерв действует до {{ myReservationUntilText }}
+                <template v-if="myReservationTimeLeft">
+                  — осталось {{ myReservationTimeLeft }}
+                </template>
+              </p>
+
               <button
-                class="mt-4 w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
+                type="button"
+                class="mt-3 w-full border border-black/15 rounded-xl bg-white py-2.5 text-sm font-medium transition disabled:cursor-not-allowed hover:bg-black/5 disabled:opacity-60"
+                :disabled="reservationsStore.saving"
+                @click="cancelMyReservation"
+              >
+                Отменить резерв
+              </button>
+            </div>
+
+            <div
+              v-else-if="!isPartnerProduct && reservedByOthersQty > 0 && !isInStock"
+              class="mt-4 border border-blue-500/25 rounded-2xl bg-blue-500/5 px-4 py-3 text-sm text-blue-700 leading-6"
+            >
+              Товар зарезервирован другим клиентом<template v-if="reservedUntilText">
+                до {{ reservedUntilText }}
+              </template>.
+              Оставьте заявку — сообщим, если резерв снимут.
+            </div>
+
+            <div
+              v-if="reservationError"
+              class="mt-3 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-600"
+            >
+              {{ reservationError }}
+            </div>
+
+            <div class="grid mt-4 gap-2">
+              <button
+                v-if="!isPartnerProduct"
+                class="w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
+                :disabled="!canReserve || Boolean(myReservation)"
+                @click="openReserveModal"
+              >
+                {{ myReservation ? 'Уже в вашем резерве' : 'Зарезервировать на 3 дня' }}
+              </button>
+
+              <button
+                class="w-full border border-black/15 rounded-xl bg-white py-3 text-black transition-colors duration-300 disabled:cursor-not-allowed hover:bg-black/5 disabled:opacity-60"
+                :class="isPartnerProduct ? 'bg-secondary text-white border-transparent hover:bg-primary' : ''"
                 :disabled="isActionDisabled"
                 @click="modalRef?.openModal({
                   productTitle: item.title,
@@ -574,5 +719,6 @@ watch(slug, (value) => {
     </div>
 
     <LeadsComponent ref="modalRef" />
+    <ReserveModal ref="reserveModalRef" @reserved="handleReserved" />
   </section>
 </template>

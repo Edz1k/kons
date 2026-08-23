@@ -3,9 +3,11 @@ import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
+import { useReservationsStore } from '~/stores/reservations'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const reservationsStore = useReservationsStore()
 const {
   user,
   profile,
@@ -14,8 +16,17 @@ const {
   discountPercent,
 } = storeToRefs(authStore)
 
+const {
+  activeItems: activeReservations,
+  historyItems: pastReservations,
+  loading: reservationsLoading,
+  saving: reservationsSaving,
+  now: reservationsNow,
+} = storeToRefs(reservationsStore)
+
 const companyName = ref('')
 const phone = ref('')
+const reservationError = ref('')
 const saving = ref(false)
 const saveMessage = ref('')
 const localError = ref('')
@@ -43,8 +54,25 @@ onMounted(async () => {
       path: '/login',
       query: { redirect: '/profile' },
     })
+
+    return
   }
+
+  await reservationsStore.load(true)
 })
+
+async function cancelReservation(id: number) {
+  reservationError.value = ''
+
+  try {
+    await reservationsStore.cancel(id)
+  }
+  catch (e) {
+    reservationError.value = e instanceof Error
+      ? e.message
+      : 'Не удалось отменить резерв'
+  }
+}
 
 async function save() {
   saving.value = true
@@ -166,6 +194,75 @@ async function logout() {
             {{ saving ? 'Сохраняем...' : 'Сохранить' }}
           </button>
         </form>
+      </div>
+
+      <div class="mt-10">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="text-2xl font-900 tracking-tight">
+              Мои резервы
+            </h2>
+            <p class="mt-2 text-sm text-slate-500 leading-6">
+              Товар держим 3 дня. Менеджер свяжется с вами, чтобы подтвердить покупку.
+            </p>
+          </div>
+
+          <RouterLink
+            to="/market"
+            class="w-fit border border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-semibold transition hover:bg-slate-50"
+          >
+            В каталог
+          </RouterLink>
+        </div>
+
+        <p
+          v-if="reservationError"
+          class="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600"
+        >
+          {{ reservationError }}
+        </p>
+
+        <div
+          v-if="reservationsLoading && !activeReservations.length"
+          class="mt-5 border border-slate-200 rounded-[24px] bg-white p-6 text-sm text-muted shadow-sm"
+        >
+          Загружаем резервы...
+        </div>
+
+        <div
+          v-else-if="!activeReservations.length && !pastReservations.length"
+          class="mt-5 border border-slate-200 rounded-[24px] bg-slate-50 p-6 text-sm text-slate-500 leading-6"
+        >
+          Активных резервов нет. Откройте карточку товара и нажмите «Зарезервировать на 3 дня».
+        </div>
+
+        <div v-else class="mt-5 flex flex-col gap-4">
+          <ReservationCard
+            v-for="reservation in activeReservations"
+            :key="reservation.id"
+            :reservation="reservation"
+            :now="reservationsNow"
+            :busy="reservationsSaving"
+            @cancel="cancelReservation"
+          />
+        </div>
+
+        <div v-if="pastReservations.length" class="mt-8">
+          <h3 class="text-sm text-slate-500 font-800 tracking-[0.18em] uppercase">
+            История
+          </h3>
+
+          <div class="mt-4 flex flex-col gap-4">
+            <ReservationCard
+              v-for="reservation in pastReservations"
+              :key="reservation.id"
+              :reservation="reservation"
+              :now="reservationsNow"
+              :busy="reservationsSaving"
+              @cancel="cancelReservation"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </section>

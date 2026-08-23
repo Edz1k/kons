@@ -43,6 +43,11 @@ export interface ProductVariant {
   images?: ProductImage[]
   color?: Color
 
+  /** Сколько штук держат активные резервы клиентов. Пересчитывает Directus. */
+  reserved_qty?: number
+  /** Когда истекает ближайший активный резерв по этому варианту. */
+  reserved_until?: string | null
+
   external_images_urls?: string[]
   external_id?: string
   external_sku?: string
