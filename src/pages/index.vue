@@ -219,7 +219,7 @@ onBeforeUnmount(() => {
           :transition="{ ...heroCopyTransition, delay: 0.64 }"
         >
           <RouterLink
-            to="/contacts"
+            to="/market"
             class="group inline-flex items-center gap-3 rounded-full bg-secondary px-6 py-3 text-base text-white font-medium shadow-[0_18px_36px_rgba(230,87,35,0.28)] transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
           >
             <motion.span

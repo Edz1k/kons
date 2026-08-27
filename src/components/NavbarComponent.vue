@@ -56,7 +56,7 @@ onMounted(() => {
 
 <template>
   <nav
-    class="sticky top-0 z-50 border-b border-white/10 bg-primary text-white backdrop-blur-lg"
+    class="sticky top-0 z-50 border-b border-white/10 bg-black text-white backdrop-blur-lg"
   >
     <div class="mx-auto flex items-center justify-between px-6 py-4 container lg:py-5">
       <!-- Logo -->

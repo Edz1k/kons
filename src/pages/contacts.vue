@@ -3,7 +3,6 @@ const phone = '+7 (705) 259-88-88'
 const cleanPhone = phone.replace(/\D/g, '')
 
 const whatsappLink = `https://wa.me/${cleanPhone}`
-const instagram = 'https://instagram.com/brillex.kz'
 </script>
 
 <template>
@@ -42,17 +41,6 @@ const instagram = 'https://instagram.com/brillex.kz'
           </a>
 
           <!-- Instagram -->
-          <a
-            :href="instagram"
-            target="_blank"
-            class="group flex items-center gap-4 rounded-3xl from-pink-500 via-red-500 to-yellow-500 bg-gradient-to-r px-6 py-5 text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-          >
-            <div class="i-mdi:instagram text-3xl" />
-            <div>
-              <p class="text-sm opacity-80">Наш профиль</p>
-              <p class="text-lg font-semibold">Instagram</p>
-            </div>
-          </a>
 
           <!-- Телефон -->
           <div class="rounded-3xl bg-white px-6 py-5 shadow-sm ring-1 ring-slate-200">

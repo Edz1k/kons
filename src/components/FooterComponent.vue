@@ -20,7 +20,7 @@ const socialBtn
 </script>
 
 <template>
-  <footer class="relative overflow-hidden rounded-t-[2rem] bg-primary text-white">
+  <footer class="relative overflow-hidden rounded-t-[2rem] bg-black text-white">
     <!-- background glow -->
     <div
       class="pointer-events-none absolute left-0 top-0 h-64 w-64 rounded-full bg-white/10 blur-3xl"
@@ -97,28 +97,6 @@ const socialBtn
               title="WhatsApp"
             >
               <span class="i-mdi:whatsapp" aria-hidden="true" />
-            </a>
-
-            <a
-              href="https://t.me/your_username"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="socialBtn"
-              aria-label="Telegram"
-              title="Telegram"
-            >
-              <span class="i-mdi:telegram" aria-hidden="true" />
-            </a>
-
-            <a
-              href="https://instagram.com/viplinekz"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="socialBtn"
-              aria-label="Instagram"
-              title="Instagram"
-            >
-              <span class="i-mdi:instagram" aria-hidden="true" />
             </a>
           </div>
         </div>
