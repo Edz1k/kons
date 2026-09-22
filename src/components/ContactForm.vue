@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useAmocrm } from '~/composables/useAmocrm'
+import { EMAIL_PRIMARY } from '~/constants/contacts'
 
 type ContactType = 'invite' | 'video'
 
@@ -12,7 +13,7 @@ const props = withDefaults(defineProps<{
   sku?: string
   quantity?: string | number
 }>(), {
-  email: 'zakaz@brillex.kz',
+  email: EMAIL_PRIMARY,
   source: 'layout-contact-form',
 })
 

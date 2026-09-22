@@ -24,16 +24,27 @@ const heroAssets = {
     animate: { opacity: 1, x: 0, y: 0, rotate: -8, scale: 1 },
     transition: { type: 'spring', stiffness: 74, damping: 15, delay: 0.24 },
   },
-  chain: {
-    initial: { opacity: 0, x: -110, y: -90, rotate: -28, scale: 0.7 },
-    animate: { opacity: 1, x: 0, y: 0, rotate: -10, scale: 1 },
-    transition: { type: 'spring', stiffness: 88, damping: 14, delay: 0.12 },
+  fan: {
+    initial: { opacity: 0, x: -90, y: -58, rotate: -14, scale: 0.88 },
+    animate: { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 },
+    transition: { type: 'spring', stiffness: 62, damping: 17, delay: 0.14 },
   },
-  dog: {
+  notebooks: {
     initial: { opacity: 0, x: 140, y: 100, rotate: 18, scale: 0.72 },
     animate: { opacity: 1, x: 0, y: 0, rotate: 6, scale: 1 },
     transition: { type: 'spring', stiffness: 82, damping: 16, delay: 0.32 },
   },
+}
+
+/**
+ * Веер держится угла на любом экране: размер и вылет считаем от окна,
+ * иначе на большом мониторе он сползает к середине левого края и мельчает.
+ * Крепление уводим за угол — в кадр заходят только карточки.
+ */
+const fanBoxStyle = {
+  width: 'clamp(140px, 27vw, 540px)',
+  left: 'calc(-1 * clamp(34px, 6.2vw, 150px))',
+  top: 'clamp(4px, 1.2vh, 18px)',
 }
 
 const heroCopyTransition = {
@@ -103,7 +114,7 @@ const hudiStyle = createParallaxStyle({
   mobileScrollY: -0.08,
 })
 
-const chainStyle = createParallaxStyle({
+const fanStyle = createParallaxStyle({
   strengthX: 38,
   strengthY: 38,
   invertX: true,
@@ -112,9 +123,9 @@ const chainStyle = createParallaxStyle({
   mobileScrollY: 0.05,
 })
 
-const dogStyle = createParallaxStyle({
-  strengthX: 60,
-  strengthY: 30,
+const notebooksStyle = createParallaxStyle({
+  strengthX: 34,
+  strengthY: 26,
   invertX: true,
   invertY: false,
   mobileScrollX: 0,
@@ -155,29 +166,30 @@ onBeforeUnmount(() => {
       </motion.div>
 
       <motion.div
-        class="absolute left-[-58px] top-[-28px] w-[210px] lg:left-[-50px] lg:top-[-20px] md:left-[-38px] md:top-[-8px] sm:left-[-28px] sm:top-[-8px] lg:w-[350px] md:w-[255px] sm:w-[210px]"
-        :initial="heroAssets.chain.initial"
-        :animate="heroAssets.chain.animate"
-        :transition="heroAssets.chain.transition"
+        class="absolute"
+        :style="fanBoxStyle"
+        :initial="heroAssets.fan.initial"
+        :animate="heroAssets.fan.animate"
+        :transition="heroAssets.fan.transition"
       >
         <img
-          src="/pictures/chain.webp"
+          src="/pictures/pantone-fan.webp"
           alt=""
-          :style="chainStyle"
-          class="parallax-item w-full drop-shadow-[0_26px_42px_rgba(0,0,0,0.17)]"
+          :style="fanStyle"
+          class="parallax-item w-full drop-shadow-[0_28px_44px_rgba(15,23,42,0.18)]"
         >
       </motion.div>
 
       <motion.div
-        class="absolute bottom-[-62px] right-[-52px] w-[255px] lg:bottom-[-105px] lg:right-[-44px] md:bottom-[-68px] md:right-[-34px] sm:bottom-[-42px] sm:right-[-24px] lg:w-[375px] md:w-[280px] sm:w-[230px]"
-        :initial="heroAssets.dog.initial"
-        :animate="heroAssets.dog.animate"
-        :transition="heroAssets.dog.transition"
+        class="absolute bottom-[-10px] right-[0px] w-[225px] lg:bottom-[-26px] lg:right-[10px] md:bottom-[-20px] md:right-[0px] sm:bottom-[-16px] sm:right-[-4px] lg:w-[380px] md:w-[290px] sm:w-[230px]"
+        :initial="heroAssets.notebooks.initial"
+        :animate="heroAssets.notebooks.animate"
+        :transition="heroAssets.notebooks.transition"
       >
         <img
-          src="/pictures/sobaka.png"
+          src="/pictures/notebooks.webp"
           alt=""
-          :style="dogStyle"
+          :style="notebooksStyle"
           class="parallax-item w-full drop-shadow-[0_32px_52px_rgba(0,0,0,0.2)]"
         >
       </motion.div>

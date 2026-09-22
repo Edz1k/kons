@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
+import { EMAIL_PRIMARY, PHONE } from '~/constants/contacts'
 import { useAuthStore } from '~/stores/auth'
 import { useProductsStore } from '~/stores/product'
 
@@ -112,8 +113,8 @@ onMounted(() => {
         </RouterLink>
 
         <div class="hidden flex-col text-right text-sm opacity-80 lg:flex">
-          <span class="transition hover:opacity-100">zakaz@brillex.kz</span>
-          <span class="transition hover:opacity-100">+7 (705) 259 88-88</span>
+          <span class="transition hover:opacity-100">{{ EMAIL_PRIMARY }}</span>
+          <span class="transition hover:opacity-100">{{ PHONE }}</span>
         </div>
 
         <button
@@ -244,10 +245,10 @@ onMounted(() => {
           <!-- Contacts mobile -->
           <div class="mt-6 border-t border-white/10 pt-4 text-base opacity-80">
             <div class="transition hover:opacity-100">
-              +7 (705) 259 88-88
+              {{ PHONE }}
             </div>
             <div class="transition hover:opacity-100">
-              zakaz@brillex.kz
+              {{ EMAIL_PRIMARY }}
             </div>
           </div>
         </div>
