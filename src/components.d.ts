@@ -26,5 +26,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StickyFeatureSection: typeof import('./components/sections/StickyFeatureSection.vue')['default']
+    WhatsAppButton: typeof import('./components/WhatsAppButton.vue')['default']
   }
 }

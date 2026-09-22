@@ -1,8 +1,12 @@
 <script setup lang="ts">
-const phone = '+7 (705) 259-88-88'
-const cleanPhone = phone.replace(/\D/g, '')
-
-const whatsappLink = `https://wa.me/${cleanPhone}`
+import {
+  ADDRESS_FULL,
+  EMAILS,
+  MAP_WIDGET_URL,
+  PHONE,
+  PHONE_DIGITS,
+  WHATSAPP_LINK,
+} from '~/constants/contacts'
 </script>
 
 <template>
@@ -19,7 +23,7 @@ const whatsappLink = `https://wa.me/${cleanPhone}`
         </h1>
 
         <p class="mt-5 max-w-2xl text-base text-slate-600 leading-7 md:text-lg">
-          Мы всегда на связи — напишите нам в WhatsApp, Instagram или приезжайте к нам.
+          Мы всегда на связи — напишите нам в WhatsApp, на почту или приезжайте к нам.
         </p>
       </div>
 
@@ -29,7 +33,7 @@ const whatsappLink = `https://wa.me/${cleanPhone}`
         <div class="flex flex-col gap-5">
           <!-- WhatsApp -->
           <a
-            :href="whatsappLink"
+            :href="WHATSAPP_LINK"
             target="_blank"
             class="group flex items-center gap-4 rounded-3xl bg-[#25D366] px-6 py-5 text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
           >
@@ -48,10 +52,25 @@ const whatsappLink = `https://wa.me/${cleanPhone}`
               Телефон
             </p>
             <a
-              :href="`tel:${cleanPhone}`"
+              :href="`tel:+${PHONE_DIGITS}`"
               class="mt-1 block text-lg text-black font-semibold"
             >
-              {{ phone }}
+              {{ PHONE }}
+            </a>
+          </div>
+
+          <!-- Почта -->
+          <div class="rounded-3xl bg-white px-6 py-5 shadow-sm ring-1 ring-slate-200">
+            <p class="text-sm text-slate-500">
+              Почта
+            </p>
+            <a
+              v-for="email in EMAILS"
+              :key="email"
+              :href="`mailto:${email}`"
+              class="mt-1 block text-lg text-black font-semibold transition hover:text-secondary"
+            >
+              {{ email }}
             </a>
           </div>
 
@@ -61,7 +80,7 @@ const whatsappLink = `https://wa.me/${cleanPhone}`
               Адрес
             </p>
             <p class="mt-1 text-lg text-black font-semibold">
-              Казахстан, Алматы, ул. Радостовца 158
+              {{ ADDRESS_FULL }}
             </p>
           </div>
         </div>
@@ -71,7 +90,7 @@ const whatsappLink = `https://wa.me/${cleanPhone}`
           <!-- iframe -->
           <iframe
             class="h-full w-full rounded-lg shadow-md"
-            src="https://yandex.kz/map-widget/v1/-/CPV3IZMt--e"
+            :src="MAP_WIDGET_URL"
             frameborder="0"
             allowfullscreen
           />

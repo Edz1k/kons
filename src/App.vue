@@ -25,4 +25,6 @@ useHead({
 
 <template>
   <RouterView />
+
+  <WhatsAppButton />
 </template>

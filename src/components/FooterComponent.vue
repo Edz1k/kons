@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ADDRESS_FULL, EMAILS, PHONE, PHONE_DIGITS, WHATSAPP_LINK } from '~/constants/contacts'
+
 const year = new Date().getFullYear()
 
 const linksLeft = [
@@ -89,7 +91,7 @@ const socialBtn
 
           <div class="mt-6 flex items-center gap-3">
             <a
-              href="https://wa.me/77052598888"
+              :href="WHATSAPP_LINK"
               target="_blank"
               rel="noopener noreferrer"
               :class="socialBtn"
@@ -138,10 +140,10 @@ const socialBtn
                 Телефон
               </p>
               <a
-                href="tel:+77052598888"
+                :href="`tel:+${PHONE_DIGITS}`"
                 class="mt-1 inline-block text-lg text-white font-semibold transition md:text-xl hover:text-primary"
               >
-                +7 705 259 88 88
+                {{ PHONE }}
               </a>
             </div>
 
@@ -150,10 +152,12 @@ const socialBtn
                 Почта
               </p>
               <a
-                href="mailto:zakaz@brillex.ru"
-                class="mt-1 inline-block text-white/80 transition hover:text-white"
+                v-for="email in EMAILS"
+                :key="email"
+                :href="`mailto:${email}`"
+                class="mt-1 block text-white/80 transition hover:text-white"
               >
-                zakaz@brillex.ru
+                {{ email }}
               </a>
             </div>
 
@@ -162,7 +166,7 @@ const socialBtn
                 Адрес
               </p>
               <p class="mt-1 text-white/80">
-                г. Алматы, Казахстан
+                {{ ADDRESS_FULL }}
               </p>
             </div>
           </div>
