@@ -116,8 +116,47 @@ export interface DirectusRequestOptions {
   token?: string
 }
 
-export function fileUrl(fileId: string) {
-  return `${BASE}/assets/${fileId}`
+/**
+ * Ширина картинок под место на сайте — с запасом под ретину.
+ * Оригиналы в Directus в среднем ~1000×1500 PNG по 770 КБ, а нужны куда меньше.
+ */
+export const IMAGE_WIDTH = {
+  thumb: 160,
+  galleryThumb: 240,
+  card: 700,
+  gallery: 1200,
+} as const
+
+export interface AssetOptions {
+  width?: number
+  quality?: number
+}
+
+/**
+ * Картинка из Directus в webp нужной ширины. Оригиналы не трогаем: Directus
+ * конвертирует при первом запросе и кеширует результат.
+ */
+export function fileUrl(fileId: string, options: AssetOptions = {}) {
+  const params = new URLSearchParams({
+    format: 'webp',
+    quality: String(options.quality ?? 80),
+    withoutEnlargement: 'true',
+  })
+
+  if (options.width)
+    params.set('width', String(options.width))
+
+  return `${BASE}/assets/${fileId}?${params.toString()}`
+}
+
+/** Та же картинка Directus другой ширины. Внешние ссылки (партнёры) возвращаем как есть. */
+export function resizeAssetUrl(url: string, width: number) {
+  if (!url.startsWith(`${BASE}/assets/`))
+    return url
+
+  const resized = new URL(url)
+  resized.searchParams.set('width', String(width))
+  return resized.toString()
 }
 
 export async function directusRequest<T>(

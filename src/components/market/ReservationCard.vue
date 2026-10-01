@@ -2,7 +2,7 @@
 import type { Product, ProductVariant } from '~/types/product'
 import type { Reservation, ReservationStatus } from '~/types/reservation'
 import { computed } from 'vue'
-import { fileUrl } from '~/services/directus'
+import { fileUrl, IMAGE_WIDTH } from '~/services/directus'
 import { isReservationActive } from '~/stores/reservations'
 import { formatTimeLeft } from '~/utils/stock'
 
@@ -70,11 +70,11 @@ const imageUrl = computed(() => {
   const variantImage = sortImages(variant.value?.images)?.[0]?.directus_files_id
 
   if (variantImage)
-    return fileUrl(variantImage)
+    return fileUrl(variantImage, { width: IMAGE_WIDTH.thumb })
 
   const productImage = sortImages(product.value?.images)?.[0]?.directus_files_id
 
-  return productImage ? fileUrl(productImage) : null
+  return productImage ? fileUrl(productImage, { width: IMAGE_WIDTH.thumb }) : null
 })
 
 const variantLabel = computed(() =>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Product } from '~/types/product'
 import { computed, ref, watch } from 'vue'
-import { fileUrl } from '~/services/directus'
+import { fileUrl, IMAGE_WIDTH } from '~/services/directus'
 import { useAuthStore } from '~/stores/auth'
 import { useReservationsStore } from '~/stores/reservations'
 import {
@@ -103,7 +103,7 @@ const imageUrl = computed(() => {
   const variantImage = sortImages(activeVariant.value?.images)?.[0]?.directus_files_id
 
   if (variantImage)
-    return fileUrl(variantImage)
+    return fileUrl(variantImage, { width: IMAGE_WIDTH.card })
 
   const externalVariantImage = activeVariant.value?.external_images_urls?.[0]
 
@@ -113,7 +113,7 @@ const imageUrl = computed(() => {
   const productImage = sortImages(props.product.images)?.[0]?.directus_files_id
 
   if (productImage)
-    return fileUrl(productImage)
+    return fileUrl(productImage, { width: IMAGE_WIDTH.card })
 
   return props.product.preview_image ?? null
 })

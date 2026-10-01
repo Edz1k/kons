@@ -2,7 +2,7 @@
 import type { Product, ProductVariant } from '~/types/product'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { fetchProductBySlug, fileUrl } from '~/services/directus'
+import { fetchProductBySlug, fileUrl, IMAGE_WIDTH, resizeAssetUrl } from '~/services/directus'
 import { useAuthStore } from '~/stores/auth'
 import { useReservationsStore } from '~/stores/reservations'
 import { formatReservedUntil, formatTimeLeft, variantAvailableStock, variantReservedQty } from '~/utils/stock'
@@ -77,7 +77,7 @@ function getVariantImages(variant: ProductVariant | null): string[] {
   const directusImages = sortImages(variant.images)
     ?.map(image => image.directus_files_id)
     .filter(Boolean)
-    .map(id => fileUrl(id)) ?? []
+    .map(id => fileUrl(id, { width: IMAGE_WIDTH.gallery })) ?? []
 
   if (directusImages.length)
     return directusImages
@@ -97,7 +97,7 @@ function getProductImages(product: Product | null): string[] {
   const directusImages = sortImages(product.images)
     ?.map(image => image.directus_files_id)
     .filter(Boolean)
-    .map(id => fileUrl(id)) ?? []
+    .map(id => fileUrl(id, { width: IMAGE_WIDTH.gallery })) ?? []
 
   if (directusImages.length)
     return directusImages
@@ -488,9 +488,10 @@ watch(slug, (value) => {
               @click="selectedImage = imageUrl"
             >
               <img
-                :src="imageUrl"
+                :src="resizeAssetUrl(imageUrl, IMAGE_WIDTH.galleryThumb)"
                 :alt="item.title"
                 class="h-24 w-full object-cover"
+                loading="lazy"
               >
             </button>
           </div>
