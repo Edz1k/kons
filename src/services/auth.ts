@@ -71,8 +71,16 @@ export async function fetchCurrentUser(token: string) {
 }
 
 export async function fetchCustomerProfile(token: string) {
+  // Фильтр по владельцу обязателен: у администратора нет ограничений прав,
+  // и без него limit=1 отдаёт первый попавшийся чужой профиль.
+  const query = new URLSearchParams({
+    'fields': CUSTOMER_PROFILE_FIELDS,
+    'filter[user][_eq]': '$CURRENT_USER',
+    'limit': '1',
+  })
+
   const response = await directusRequest<DirectusListResponse<CustomerProfile[]>>(
-    `/items/customer_profiles?fields=${CUSTOMER_PROFILE_FIELDS}&limit=1`,
+    `/items/customer_profiles?${query.toString()}`,
     { token },
   )
 
