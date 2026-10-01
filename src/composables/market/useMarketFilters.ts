@@ -43,11 +43,16 @@ export function useMarketFilters() {
     })),
   ])
 
-  const sortOptions: SortOption[] = [
+  // У партнёрских товаров «Цена по запросу» — сортировать их по цене нечем.
+  const sortOptions = computed<SortOption[]>(() => [
     { value: 'default', label: 'По умолчанию' },
-    { value: 'price-asc', label: 'Сначала дешёвые' },
-    { value: 'price-desc', label: 'Сначала дорогие' },
-  ]
+    ...(isPartnerCatalog.value
+      ? []
+      : [
+        { value: 'price-asc', label: 'Сначала дешёвые' },
+        { value: 'price-desc', label: 'Сначала дорогие' },
+      ] satisfies SortOption[]),
+  ])
 
   function normalizeQueryValue(value: QueryValue): string {
     if (typeof value === 'string')
@@ -169,8 +174,8 @@ export function useMarketFilters() {
     get() {
       const currentSort = normalizeQueryValue(route.query.sort) || 'default'
 
-      return sortOptions.find(item => item.value === currentSort)
-        ?? sortOptions[0]
+      return sortOptions.value.find(item => item.value === currentSort)
+        ?? sortOptions.value[0]
     },
     set(value) {
       replaceQuery({

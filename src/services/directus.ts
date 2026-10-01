@@ -260,11 +260,60 @@ function sortProducts(items: Product[], sortBy: FetchProductsParams['sortBy']) {
   return result.sort((a, b) => String(b.id).localeCompare(String(a.id)))
 }
 
-function filterByCatalogType(items: Product[], catalogType: CatalogType): Product[] {
-  if (catalogType === 'own')
-    return items.filter(product => !product.is_partner)
+/**
+ * Партнёрский каталог — ~2000 товаров с тяжёлым payload. Раньше он целиком
+ * (22 МБ) скачивался в браузер на каждую порцию бесконечной прокрутки,
+ * теперь фильтр, поиск и пагинацию делает Directus и отдаёт одну страницу.
+ */
+async function fetchPartnerProductsPage(params: {
+  page: number
+  limit: number
+  category: string
+  search: string
+  signal?: AbortSignal
+}): Promise<FetchProductsResult> {
+  const { page, limit, category, search, signal } = params
 
-  return items.filter(product => product.is_partner)
+  const conditions: Record<string, unknown>[] = [{ is_active: { _eq: true } }]
+
+  if (category)
+    conditions.push({ category: { slug: { _eq: category } } })
+
+  const term = search.trim()
+
+  if (term) {
+    conditions.push({
+      _or: [
+        { title: { _icontains: term } },
+        { external_id: { _icontains: term } },
+      ],
+    })
+  }
+
+  const query = new URLSearchParams({
+    fields: PARTNER_PRODUCT_FIELDS,
+    filter: JSON.stringify({ _and: conditions }),
+    sort: '-id',
+    limit: String(limit),
+    page: String(page),
+    meta: 'filter_count',
+  })
+
+  const json = await getJSON<DirectusListResponse<PartnerProductRaw[]>>(
+    `/items/partner_products?${query.toString()}`,
+    signal,
+  )
+
+  const items = (json.data ?? []).map(normalizePartnerProduct)
+  const total = Number(json.meta?.filter_count ?? items.length)
+
+  return {
+    items,
+    total,
+    hasMore: page * limit < total,
+    page,
+    limit,
+  }
 }
 
 export async function fetchProducts(
@@ -281,6 +330,9 @@ export async function fetchProducts(
     signal,
   } = params
 
+  if (catalogType === 'partner')
+    return fetchPartnerProductsPage({ page, limit, category, search, signal })
+
   const ownQuery = new URLSearchParams({
     fields: PRODUCT_FIELDS,
     limit: '-1',
@@ -292,39 +344,12 @@ export async function fetchProducts(
   if (category)
     ownQuery.set('filter[category][slug][_eq]', category)
 
-  const partnerQuery = new URLSearchParams({
-    'fields': PARTNER_PRODUCT_FIELDS,
-    'limit': '-1',
-    'filter[is_active][_eq]': 'true',
-  })
+  const ownJson = await getJSON<DirectusListResponse<Product[]>>(
+    `/items/products?${ownQuery.toString()}`,
+    signal,
+  )
 
-  if (category)
-    partnerQuery.set('filter[category][slug][_eq]', category)
-
-  const shouldLoadOwn = catalogType === 'own'
-  const shouldLoadPartner = catalogType === 'partner'
-
-  const [ownJson, partnerJson] = await Promise.all([
-    shouldLoadOwn
-      ? getJSON<DirectusListResponse<Product[]>>(
-          `/items/products?${ownQuery.toString()}`,
-          signal,
-        )
-      : Promise.resolve({ data: [] as Product[] }),
-    shouldLoadPartner
-      ? getJSON<DirectusListResponse<PartnerProductRaw[]>>(
-          `/items/partner_products?${partnerQuery.toString()}`,
-          signal,
-        )
-      : Promise.resolve({ data: [] as PartnerProductRaw[] }),
-  ])
-
-  let items: Product[] = [
-    ...(ownJson.data ?? []),
-    ...((partnerJson.data ?? []).map(normalizePartnerProduct)),
-  ]
-
-  items = filterByCatalogType(items, catalogType)
+  let items: Product[] = ownJson.data ?? []
 
   if (search.trim())
     items = items.filter(product => matchesSearch(product, search))

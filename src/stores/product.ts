@@ -302,6 +302,10 @@ export const useProductsStore = defineStore('products', () => {
 
     catalogType.value = nextType
     selectedCategory.value = ''
+
+    // В партнёрском каталоге сортировки по цене нет — сбрасываем, чтобы не висела невидимая.
+    if (nextType === 'partner')
+      sortBy.value = 'default'
     categories.value = []
     initialized.value = false
 
