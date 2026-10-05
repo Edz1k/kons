@@ -1,0 +1,39 @@
+{
+  "name": "directus-extension-newsletter",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Письма клиентам о новых товарах и новых цветах: кнопка в карточке товара, отписка, журнал рассылок",
+  "directus:extension": {
+    "type": "bundle",
+    "path": {
+      "app": "app.js",
+      "api": "api.js"
+    },
+    "entries": [
+      {
+        "type": "hook",
+        "name": "newsletter-setup",
+        "source": "setup.js"
+      },
+      {
+        "type": "endpoint",
+        "name": "newsletter-unsubscribe",
+        "source": "unsubscribe.js"
+      },
+      {
+        "type": "operation",
+        "name": "newsletter-send",
+        "source": {
+          "app": "app.js",
+          "api": "send.js"
+        }
+      }
+    ],
+    "host": "^11.0.0"
+  },
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-custom-bundle"
+  ]
+}

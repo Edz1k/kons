@@ -78,3 +78,55 @@ ssh brillex-cms 'sudo docker exec brillex_directus rm -rf /directus/extensions/d
 ```
 
 Бэкап базы перед изменением схемы: `/home/ubuntu/brillex-directus-before-reservations-20260823122112.sql.gz`.
+
+---
+
+# Рассылка о новинках — серверная часть
+
+Расширение `directus/extensions/directus-extension-newsletter` (бандл: hook + endpoint + шаг Flow).
+Письма уходят с `noreply@brillex.kz` через свой почтовый сервер (`EMAIL_*` в `docker-compose.yml`,
+пароль — `EMAIL_SMTP_PASSWORD` в `.env` рядом).
+
+## Установка и обновление
+
+```bash
+scp -r directus/extensions/directus-extension-newsletter brillex-cms:/home/ubuntu/
+ssh brillex-cms 'sudo docker cp /home/ubuntu/directus-extension-newsletter brillex_directus:/directus/extensions/ && sudo docker exec -u 0 brillex_directus chown -R node:node /directus/extensions/directus-extension-newsletter && sudo docker restart brillex_directus'
+```
+
+При старте расширение само досоздаёт, чего не хватает (ничего не удаляет):
+
+- `products.announced_at`, `product_variants.announced_at` — когда про товар / цвет ушло письмо;
+- `customer_profiles.newsletter_unsubscribed` — клиент отписался;
+- коллекцию **«Рассылки»** (`newsletter_log`) — журнал: кто запустил, сколько ушло, ошибки;
+- Flow **«Разослать клиентам»** — кнопка в карточке товара.
+
+## Как пользоваться
+
+Карточка товара → справа **Flows → «Разослать клиентам»**:
+
+- поле «Тест» — письмо уйдёт только на этот адрес (ничего не отмечается, можно сколько угодно раз);
+- пусто — письмо уйдёт всем клиентам (пользователи с профилем клиента, активные, не отписавшиеся);
+- товар ещё не рассылали — письмо «Новинка» со всеми цветами;
+- товар уже рассылали, а потом добавили цвет — письмо «Новый цвет», новые цвета выделены;
+- новых цветов нет — откажет; «Разослать повторно» отправит ещё раз.
+
+Каждому клиенту — отдельное письмо с его именем, его скидкой и личной ссылкой «Отписаться»
+(подписана `SECRET` Directus; работает и «отписаться в один клик» в Gmail / Mail.ru).
+Письма уходят в фоне с паузой 1,5 с (`NEWSLETTER_GAP_MS`). Итог — в «Рассылках» и в колокольчике уведомлений.
+
+Вёрстка письма — `template.js`, логотип — `public/email/logo-light.png` на сайте.
+Превью на настоящем товаре без отправки:
+
+```bash
+node scripts/preview-newsletter.mjs termobutilka > /tmp/newsletter.html && open /tmp/newsletter.html
+```
+
+## Откат
+
+```bash
+ssh brillex-cms 'sudo docker exec brillex_directus rm -rf /directus/extensions/directus-extension-newsletter && sudo docker restart brillex_directus'
+```
+
+Поля и коллекция останутся (пустые и безвредные). Бэкап базы перед установкой:
+`/home/ubuntu/brillex-directus-before-newsletter-20261005132024.sql.gz`.
