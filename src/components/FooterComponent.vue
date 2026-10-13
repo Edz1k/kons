@@ -3,22 +3,19 @@ import { ADDRESS_FULL, EMAILS, PHONE, PHONE_DIGITS, WHATSAPP_LINK } from '~/cons
 
 const year = new Date().getFullYear()
 
-const linksLeft = [
+const links = [
   { label: 'Каталог', to: '/market' },
   { label: 'Портфолио', to: '/portfolio' },
-] as const
-
-const linksRight = [
   { label: 'Услуги', to: '/services' },
   { label: 'О нас', to: '/about' },
   { label: 'Контакты', to: '/contacts' },
 ] as const
 
 const navLink
-  = 'group inline-flex items-center gap-2 text-sm md:text-base text-white/80 transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 rounded-lg'
+  = 'group inline-flex items-center gap-2 text-sm md:text-base text-white/80 transition duration-300 hover:text-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white/60 rounded-lg'
 
 const socialBtn
-  = 'h-11 w-11 md:h-12 md:w-12 inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 text-xl text-white backdrop-blur-sm transition duration-300 hover:scale-105 hover:border-white/30 hover:bg-white hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70'
+  = 'h-11 w-11 md:h-12 md:w-12 inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 text-xl text-white backdrop-blur-xs transition duration-300 hover:scale-105 hover:border-white/30 hover:bg-white hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white/70'
 </script>
 
 <template>
@@ -29,7 +26,7 @@ const socialBtn
       aria-hidden="true"
     />
     <div
-      class="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-primary/20 blur-3xl"
+      class="pointer-events-none absolute right-0 top-1/3 h-72 w-72 rounded-full bg-navy/20 blur-3xl"
       aria-hidden="true"
     />
 
@@ -42,67 +39,24 @@ const socialBtn
     </div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 pb-8 pt-14 md:px-10 md:pb-10 md:pt-18">
-      <!-- top CTA -->
-      <div class="flex flex-col gap-6 border-b border-white/15 pb-10 md:flex-row md:items-end md:justify-between md:pb-12">
-        <div class="max-w-2xl">
-          <p class="text-sm text-white/60 font-medium tracking-[0.25em] uppercase">
-            Brillex
-          </p>
-
-          <h2 class="mt-4 text-3xl font-bold leading-tight tracking-tight md:text-5xl">
-            Создаём мерч,
-            <span class="text-secondary">
-              который выглядит
-            </span>
-            стильно и современно
-          </h2>
-
-          <p class="mt-4 max-w-xl text-sm text-white/75 leading-7 md:text-base">
-            Помогаем брендам, командам и проектам создавать качественный мерч с
-            характером — от идеи до готового результата.
-          </p>
-        </div>
-
-        <div class="shrink-0">
-          <RouterLink
-            to="/contacts"
-            class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm text-secondary font-semibold transition duration-300 hover:translate-y--1 md:px-7 md:py-3.5 md:text-base hover:shadow-lg"
+      <!-- logo + slogan -->
+      <div class="border-b border-white/15 pb-10 md:pb-12">
+        <RouterLink to="/" class="inline-flex" aria-label="Brillex — на главную">
+          <img
+            src="/logo.webp"
+            alt="Brillex"
+            class="h-16 w-auto object-contain brightness-0 invert md:h-20"
           >
-            Обсудить заказ
-          </RouterLink>
-        </div>
+        </RouterLink>
+
+        <h2 class="mt-6 text-3xl font-bold leading-tight tracking-tight md:text-5xl md:leading-none">
+          Результат
+          <span class="text-primary">выше ожиданий.</span>
+        </h2>
       </div>
 
       <!-- main content -->
-      <div class="grid gap-10 py-10 md:grid-cols-[1.2fr_1fr_1fr] md:gap-12 md:py-12">
-        <!-- brand / socials -->
-        <div>
-          <RouterLink
-            to="/"
-            class="inline-flex items-center text-2xl text-white font-bold tracking-tight"
-          >
-            BRILLEX
-          </RouterLink>
-
-          <p class="mt-4 max-w-sm text-sm text-white/75 leading-7 md:text-base">
-            Минималистичный мерч и визуальные решения для тех, кто ценит аккуратный
-            стиль, качество и детали.
-          </p>
-
-          <div class="mt-6 flex items-center gap-3">
-            <a
-              :href="WHATSAPP_LINK"
-              target="_blank"
-              rel="noopener noreferrer"
-              :class="socialBtn"
-              aria-label="WhatsApp"
-              title="WhatsApp"
-            >
-              <span class="i-mdi:whatsapp" aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-
+      <div class="grid gap-10 py-10 md:grid-cols-2 md:gap-12 md:py-12">
         <!-- nav -->
         <nav aria-label="Footer navigation">
           <p class="text-sm text-white/55 font-semibold tracking-[0.18em] uppercase">
@@ -110,16 +64,7 @@ const socialBtn
           </p>
 
           <ul class="grid mt-5 gap-3">
-            <li v-for="link in linksLeft" :key="link.to">
-              <RouterLink :to="link.to" :class="navLink">
-                <span class="h-1.5 w-1.5 rounded-full bg-white/30 transition group-hover:bg-white" />
-                {{ link.label }}
-              </RouterLink>
-            </li>
-          </ul>
-
-          <ul class="grid mt-6 gap-3">
-            <li v-for="link in linksRight" :key="link.to">
+            <li v-for="link in links" :key="link.to">
               <RouterLink :to="link.to" :class="navLink">
                 <span class="h-1.5 w-1.5 rounded-full bg-white/30 transition group-hover:bg-white" />
                 {{ link.label }}
@@ -137,14 +82,26 @@ const socialBtn
           <div class="mt-5 space-y-5">
             <div>
               <p class="text-xs text-white/45 tracking-[0.15em] uppercase">
-                Телефон
+                Телефон / WhatsApp
               </p>
-              <a
-                :href="`tel:+${PHONE_DIGITS}`"
-                class="mt-1 inline-block text-lg text-white font-semibold transition md:text-xl hover:text-primary"
-              >
-                {{ PHONE }}
-              </a>
+              <div class="mt-1 flex items-center gap-3">
+                <a
+                  :href="`tel:+${PHONE_DIGITS}`"
+                  class="inline-block text-lg text-white font-semibold transition md:text-xl hover:text-primary"
+                >
+                  {{ PHONE }}
+                </a>
+                <a
+                  :href="WHATSAPP_LINK"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  :class="socialBtn"
+                  aria-label="WhatsApp"
+                  title="WhatsApp"
+                >
+                  <span class="icon-[mdi--whatsapp]" aria-hidden="true" />
+                </a>
+              </div>
             </div>
 
             <div>

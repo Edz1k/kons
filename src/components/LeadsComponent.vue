@@ -119,7 +119,7 @@ defineExpose({
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-xs" />
       </TransitionChild>
 
       <div class="fixed inset-0 flex items-center justify-center p-4">
@@ -147,7 +147,7 @@ defineExpose({
                 class="h-10 w-10 flex items-center justify-center rounded-full bg-black/5 text-black/70 transition hover:bg-black/10"
                 @click="closeModal"
               >
-                <div class="i-mdi:close text-xl" />
+                <div class="icon-[mdi--close] text-xl" />
               </button>
             </div>
 
@@ -197,14 +197,14 @@ defineExpose({
                     :disabled="quantity <= 1"
                     @click="decreaseQuantity"
                   >
-                    <div class="i-mdi:minus text-xl" />
+                    <div class="icon-[mdi--minus] text-xl" />
                   </button>
 
                   <input
                     :value="quantity"
                     type="number"
                     min="1"
-                    class="h-12 w-full border border-black/15 rounded-2xl px-4 text-center text-black outline-none focus:border-black"
+                    class="h-12 w-full border border-black/15 rounded-2xl px-4 text-center text-black outline-hidden focus:border-black"
                     @input="setQuantityFromInput"
                   >
 
@@ -213,7 +213,7 @@ defineExpose({
                     class="h-12 w-12 flex items-center justify-center border border-black/15 rounded-2xl bg-white text-black transition hover:bg-black/5"
                     @click="increaseQuantity"
                   >
-                    <div class="i-mdi:plus text-xl" />
+                    <div class="icon-[mdi--plus] text-xl" />
                   </button>
                 </div>
               </div>
@@ -226,7 +226,7 @@ defineExpose({
                   v-model="name"
                   type="text"
                   placeholder="Введите имя"
-                  class="w-full border border-black/15 rounded-2xl px-4 py-3 text-black outline-none focus:border-black"
+                  class="w-full border border-black/15 rounded-2xl px-4 py-3 text-black outline-hidden focus:border-black"
                 >
               </div>
 
@@ -239,7 +239,7 @@ defineExpose({
                   v-maska="'+7 (7##) ### ## ##'"
                   type="tel"
                   placeholder="+7 (7__) ___ __ __"
-                  class="w-full border border-black/15 rounded-2xl px-4 py-3 text-black outline-none focus:border-black"
+                  class="w-full border border-black/15 rounded-2xl px-4 py-3 text-black outline-hidden focus:border-black"
                 >
               </div>
 

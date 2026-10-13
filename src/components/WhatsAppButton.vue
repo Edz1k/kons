@@ -11,6 +11,6 @@ import { WHATSAPP_LINK, WHATSAPP_PHONE } from '~/constants/contacts'
     :aria-label="`Написать в WhatsApp ${WHATSAPP_PHONE}`"
     title="Написать в WhatsApp"
   >
-    <span class="i-mdi:whatsapp text-3xl md:text-4xl" aria-hidden="true" />
+    <span class="icon-[mdi--whatsapp] text-3xl md:text-4xl" aria-hidden="true" />
   </a>
 </template>

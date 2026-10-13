@@ -14,15 +14,15 @@ import {
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <!-- Заголовок -->
       <div class="mb-12 md:mb-16">
-        <p class="text-sm text-secondary font-800 tracking-[0.25em] uppercase">
+        <p class="text-sm text-primary font-extrabold tracking-[0.25em] uppercase">
           Контакты
         </p>
 
-        <h1 class="mt-4 text-4xl font-900 leading-[0.95] md:text-6xl">
+        <h1 class="mt-4 text-4xl font-black leading-[0.95] md:text-6xl md:leading-none">
           Свяжитесь с нами
         </h1>
 
-        <p class="mt-5 max-w-2xl text-base text-slate-600 leading-7 md:text-lg">
+        <p class="mt-5 max-w-2xl text-base text-slate-600 leading-7 md:text-lg md:leading-7">
           Мы всегда на связи — напишите нам в WhatsApp, на почту или приезжайте к нам.
         </p>
       </div>
@@ -37,7 +37,7 @@ import {
             target="_blank"
             class="group flex items-center gap-4 rounded-3xl bg-[#25D366] px-6 py-5 text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
           >
-            <div class="i-mdi:whatsapp text-3xl" />
+            <div class="icon-[mdi--whatsapp] text-3xl" />
             <div>
               <p class="text-sm opacity-80">Написать</p>
               <p class="text-lg font-semibold">WhatsApp</p>
@@ -47,7 +47,7 @@ import {
           <!-- Instagram -->
 
           <!-- Телефон -->
-          <div class="rounded-3xl bg-white px-6 py-5 shadow-sm ring-1 ring-slate-200">
+          <div class="rounded-3xl bg-white px-6 py-5 shadow-xs ring-1 ring-slate-200">
             <p class="text-sm text-slate-500">
               Телефон
             </p>
@@ -60,7 +60,7 @@ import {
           </div>
 
           <!-- Почта -->
-          <div class="rounded-3xl bg-white px-6 py-5 shadow-sm ring-1 ring-slate-200">
+          <div class="rounded-3xl bg-white px-6 py-5 shadow-xs ring-1 ring-slate-200">
             <p class="text-sm text-slate-500">
               Почта
             </p>
@@ -68,14 +68,14 @@ import {
               v-for="email in EMAILS"
               :key="email"
               :href="`mailto:${email}`"
-              class="mt-1 block text-lg text-black font-semibold transition hover:text-secondary"
+              class="mt-1 block text-lg text-black font-semibold transition hover:text-primary"
             >
               {{ email }}
             </a>
           </div>
 
           <!-- Адрес -->
-          <div class="rounded-3xl bg-white px-6 py-5 shadow-sm ring-1 ring-slate-200">
+          <div class="rounded-3xl bg-white px-6 py-5 shadow-xs ring-1 ring-slate-200">
             <p class="text-sm text-slate-500">
               Адрес
             </p>

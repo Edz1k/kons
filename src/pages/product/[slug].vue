@@ -499,7 +499,7 @@ watch(slug, (value) => {
 
         <div>
           <div class="border-b border-black/10 pb-6">
-            <h1 class="text-3xl font-bold leading-tight lg:text-5xl md:text-4xl">
+            <h1 class="text-3xl font-bold leading-tight lg:text-5xl md:text-4xl lg:leading-none md:leading-10">
               {{ item.title }}
             </h1>
 
@@ -511,7 +511,7 @@ watch(slug, (value) => {
                 <div class="text-base text-black/40 line-through">
                   {{ formatPrice(currentPrice) }} ₸
                 </div>
-                <div class="text-secondary">
+                <div class="text-primary">
                   {{ formatPrice(discountedCurrentPrice) }} ₸
                 </div>
               </template>
@@ -637,7 +637,7 @@ watch(slug, (value) => {
               class="mt-4 border border-blue-500/25 rounded-2xl bg-blue-500/5 p-4"
             >
               <div class="flex items-center gap-2 text-sm text-blue-700 font-semibold">
-                <div class="i-mdi:bookmark-check text-lg" />
+                <div class="icon-[mdi--bookmark-check] text-lg" />
                 Вы зарезервировали {{ myReservation.quantity }} шт.
               </div>
 
@@ -678,7 +678,7 @@ watch(slug, (value) => {
             <div class="grid mt-4 gap-2">
               <button
                 v-if="!isPartnerProduct"
-                class="w-full rounded-xl bg-secondary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-primary disabled:opacity-60"
+                class="w-full rounded-xl bg-primary py-3 text-white transition-colors duration-300 disabled:cursor-not-allowed hover:bg-navy disabled:opacity-60"
                 :disabled="!canReserve || Boolean(myReservation)"
                 @click="openReserveModal"
               >
@@ -687,7 +687,7 @@ watch(slug, (value) => {
 
               <button
                 class="w-full border border-black/15 rounded-xl bg-white py-3 text-black transition-colors duration-300 disabled:cursor-not-allowed hover:bg-black/5 disabled:opacity-60"
-                :class="isPartnerProduct ? 'bg-secondary text-white border-transparent hover:bg-primary' : ''"
+                :class="isPartnerProduct ? 'bg-primary text-white border-transparent hover:bg-navy' : ''"
                 :disabled="isActionDisabled"
                 @click="modalRef?.openModal({
                   productTitle: item.title,

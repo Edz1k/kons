@@ -108,7 +108,7 @@ const totalPrice = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 border border-slate-200 rounded-[24px] bg-white p-4 shadow-sm sm:flex-row sm:items-center">
+  <div class="flex flex-col gap-4 border border-slate-200 rounded-[24px] bg-white p-4 shadow-xs sm:flex-row sm:items-center">
     <div class="h-20 w-20 shrink-0 overflow-hidden border border-slate-100 rounded-2xl bg-slate-50">
       <img
         v-if="imageUrl"
@@ -121,7 +121,7 @@ const totalPrice = computed(() => {
         v-else
         class="h-full w-full flex items-center justify-center text-slate-300"
       >
-        <div class="i-mdi:image-outline text-2xl" />
+        <div class="icon-[mdi--image-outline] text-2xl" />
       </div>
     </div>
 
@@ -145,7 +145,7 @@ const totalPrice = computed(() => {
       <RouterLink
         v-if="product?.slug"
         :to="`/product/${product.slug}`"
-        class="mt-2 block truncate text-base font-semibold transition hover:text-secondary"
+        class="mt-2 block truncate text-base font-semibold transition hover:text-primary"
       >
         {{ product.title }}
       </RouterLink>

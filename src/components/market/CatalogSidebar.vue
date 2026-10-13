@@ -23,12 +23,12 @@ async function clearCategory() {
 
 <template>
   <aside class="hidden lg:block">
-    <div class="sticky top-28 border border-slate-200 rounded-[24px] bg-white p-5 shadow-sm">
+    <div class="sticky top-28 border border-slate-200 rounded-[24px] bg-white p-5 shadow-xs">
       <div class="mb-4">
-        <h2 class="text-lg text-primary font-800">
+        <h2 class="text-lg text-navy font-extrabold">
           Категории
         </h2>
-        <p class="mt-1 text-sm text-muted">
+        <p class="mt-1 text-sm text-slate-400">
           Выберите раздел каталога
         </p>
       </div>
@@ -37,14 +37,14 @@ async function clearCategory() {
         <button
           class="w-full rounded-2xl px-4 py-3 text-left text-sm transition"
           :class="selectedCategory === ''
-            ? 'bg-secondary text-white'
-            : 'bg-slate-50 text-primary hover:bg-slate-100'"
+            ? 'bg-primary text-white'
+            : 'bg-slate-50 text-navy hover:bg-slate-100'"
           @click="clearCategory"
         >
           Все товары
         </button>
 
-        <div v-if="loadingCategories" class="px-2 py-3 text-sm text-muted">
+        <div v-if="loadingCategories" class="px-2 py-3 text-sm text-slate-400">
           Загрузка категорий...
         </div>
 
@@ -54,8 +54,8 @@ async function clearCategory() {
             :key="category.id"
             class="w-full rounded-2xl px-4 py-3 text-left text-sm transition"
             :class="selectedCategory === category.slug
-              ? 'bg-secondary text-white'
-              : 'bg-slate-50 text-primary hover:bg-slate-100'"
+              ? 'bg-primary text-white'
+              : 'bg-slate-50 text-navy hover:bg-slate-100'"
             @click="setCategory(category.slug)"
           >
             {{ category.title }}

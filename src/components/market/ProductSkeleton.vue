@@ -10,7 +10,7 @@ withDefaults(defineProps<Props>(), {
 
 <template>
   <div
-    class="overflow-hidden border border-black/10 rounded-2xl bg-white shadow-sm"
+    class="overflow-hidden border border-black/10 rounded-2xl bg-white shadow-xs"
     aria-hidden="true"
   >
     <!-- image -->

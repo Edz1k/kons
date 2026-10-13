@@ -267,7 +267,7 @@ function resetVariantPreview() {
         v-if="!isPartnerProduct && reservedQty > 0 && isInStock"
         class="inline-flex items-center gap-2 rounded-full bg-blue-500/15 px-3 py-1 text-xs text-blue-700 font-semibold ring-1 ring-blue-500/30 backdrop-blur-md"
       >
-        <div class="i-mdi:bookmark text-sm" />
+        <div class="icon-[mdi--bookmark] text-sm" />
         {{ isMyReservation ? 'Ваш резерв' : `${reservedQty} шт. в резерве` }}
       </span>
     </div>
@@ -318,7 +318,7 @@ function resetVariantPreview() {
               <div class="text-xs line-through opacity-45">
                 {{ formatPrice(product.price) }} ₸
               </div>
-              <div class="text-secondary">
+              <div class="text-primary">
                 {{ formatPrice(discountedPrice) }} ₸
               </div>
             </template>
@@ -348,7 +348,7 @@ function resetVariantPreview() {
             :key="option.key"
             role="button"
             tabindex="0"
-            class="h-5 w-5 cursor-pointer border border-white/70 rounded-full shadow-sm ring-1 ring-black/10 transition-transform focus:z-10 hover:z-10 -ml-1 first:ml-0 focus:scale-125 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/80"
+            class="h-5 w-5 cursor-pointer border border-white/70 rounded-full shadow-xs ring-1 ring-black/10 transition-transform focus:z-10 hover:z-10 -ml-1 first:ml-0 focus:scale-125 hover:scale-125 focus:outline-hidden focus:ring-2 focus:ring-white/80"
             :class="previewVariantId === option.variantId ? 'z-10 scale-125' : ''"
             :style="getColorOptionStyle(option.hex)"
             :title="option.label"

@@ -7,13 +7,16 @@ useHead({
 </script>
 
 <template>
-  <main p="x4 y10" text="center teal-700 dark:gray-200">
-    <div text-4xl>
-      <div i-carbon-warning inline-block />
+  <main class="px-4 py-10 text-center text-teal-700 dark:text-gray-200">
+    <div class="text-4xl">
+      <div class="inline-block icon-[carbon--warning]" />
     </div>
     <RouterView />
     <div>
-      <button text-sm btn m="3 t8" @click="router.back()">
+      <button
+        class="m-3 mt-8 inline-block cursor-pointer rounded-sm bg-teal-700 px-4 py-1 text-sm text-white outline-hidden hover:bg-teal-800 disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50"
+        @click="router.back()"
+      >
         {{ t('button.back') }}
       </button>
     </div>
