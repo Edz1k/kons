@@ -1,0 +1,126 @@
+@import 'tailwindcss' source('../');
+@import 'tw-animate-css';
+@import './fonts.css';
+
+@source '../../index.html';
+/* классы-обёртки страниц из .md (unplugin-vue-markdown в vite.config.ts) */
+@source inline('prose prose-sm m-auto text-left');
+
+@plugin '@tailwindcss/typography';
+/* иконки: icon-[mdi--whatsapp], размер 1.2em — как было в UnoCSS */
+@plugin '@iconify/tailwind4' {
+  scale: 1.2;
+}
+
+/* тёмная тема включается классом .dark на <html>, как и раньше */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Цвета бренда не меняем: чёрный, белый и фирменный оранжевый #fe4819.
+ * primary — оранжевый акцент (он же primary у shadcn-vue), navy — тёмно-синий.
+ */
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #fe4819;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #ededed;
+  --accent-foreground: #0a0a0a;
+  --destructive: #ef4444;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #fe4819;
+}
+
+@theme {
+  /* стек как был в UnoCSS: кириллицы в DM Sans нет, она берётся из системных шрифтов дальше по списку */
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-navy: #0f172a;
+  --color-danger: #ef4444;
+
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  /* шкалу rounded-* не трогаем: на ней свёрстаны старые страницы */
+}
+
+/*
+ * Совместимость с прежним сбросом (Tailwind v3 / UnoCSS): в v4 рамки по умолчанию
+ * цвета currentColor, а у кнопок нет cursor: pointer — возвращаем, чтобы старые
+ * страницы выглядели как раньше.
+ */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  /* в v3 у полей был системный белый фон, в v4 preflight делает их прозрачными */
+  input:where(:not([type='checkbox'], [type='radio'], [type='range'], [type='color'])),
+  textarea,
+  select {
+    background-color: Canvas;
+  }
+}
+
+/* горизонтальные ленты со свайпом на телефоне — без полосы прокрутки */
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

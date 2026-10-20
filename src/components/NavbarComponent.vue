@@ -77,7 +77,7 @@ onMounted(() => {
         >
           Каталог
           <span
-            class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
+            class="absolute left-0 h-[2px] w-0 bg-primary transition-all duration-200 -bottom-1 group-hover:w-full"
           />
         </RouterLink>
 
@@ -89,7 +89,7 @@ onMounted(() => {
             >
               {{ link.label }}
               <span
-                class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
+                class="absolute left-0 h-[2px] w-0 bg-primary transition-all duration-200 -bottom-1 group-hover:w-full"
               />
             </RouterLink>
           </li>
@@ -102,11 +102,11 @@ onMounted(() => {
           :to="accountLink"
           class="hidden items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold transition md:inline-flex hover:bg-white/20"
         >
-          <span class="i-mdi:account-circle text-lg" />
+          <span class="icon-[mdi--account-circle] text-lg" />
           <span>{{ accountLabel }}</span>
           <span
             v-if="isAuthenticated && discountPercent > 0"
-            class="rounded-full bg-secondary px-2 py-0.5 text-xs text-white"
+            class="rounded-full bg-primary px-2 py-0.5 text-xs text-white"
           >
             -{{ discountPercent }}%
           </span>
@@ -122,8 +122,8 @@ onMounted(() => {
           aria-label="Меню"
           @click="toggleMenu"
         >
-          <span v-if="!isOpen" class="i-mdi:menu text-2xl" />
-          <span v-else class="i-mdi:close text-2xl" />
+          <span v-if="!isOpen" class="icon-[mdi--menu] text-2xl" />
+          <span v-else class="icon-[mdi--close] text-2xl" />
         </button>
       </div>
     </div>
@@ -139,7 +139,7 @@ onMounted(() => {
     >
       <div
         v-if="isOpen"
-        class="border-t border-white/10 bg-primary/90 backdrop-blur-lg md:hidden"
+        class="border-t border-white/10 bg-navy/90 backdrop-blur-lg md:hidden"
       >
         <div class="max-h-[calc(100dvh-88px)] overflow-y-auto px-6 py-4">
           <ul class="flex flex-col gap-4 text-base font-medium">
@@ -153,7 +153,7 @@ onMounted(() => {
                 >
                   Каталог
                   <span
-                    class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
+                    class="absolute left-0 h-[2px] w-0 bg-primary transition-all duration-200 -bottom-1 group-hover:w-full"
                   />
                 </RouterLink>
 
@@ -164,7 +164,7 @@ onMounted(() => {
                   @click="toggleCatalog"
                 >
                   <span
-                    class="i-mdi:chevron-down text-xl transition-transform duration-300"
+                    class="icon-[mdi--chevron-down] text-xl transition-transform duration-300"
                     :class="{ 'rotate-180': isCatalogOpen }"
                   />
                 </button>
@@ -183,7 +183,7 @@ onMounted(() => {
                     <li>
                       <RouterLink
                         to="/market"
-                        class="text-white/80 transition hover:text-secondary"
+                        class="text-white/80 transition hover:text-primary"
                         @click="closeMenu"
                       >
                         Все товары
@@ -198,7 +198,7 @@ onMounted(() => {
                       <li v-for="category in categories" :key="category.id">
                         <RouterLink
                           :to="categoryLink(category.slug)"
-                          class="text-white/80 transition hover:text-secondary"
+                          class="text-white/80 transition hover:text-primary"
                           @click="closeMenu"
                         >
                           {{ category.title }}
@@ -218,7 +218,7 @@ onMounted(() => {
               >
                 {{ link.label }}
                 <span
-                  class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
+                  class="absolute left-0 h-[2px] w-0 bg-primary transition-all duration-200 -bottom-1 group-hover:w-full"
                 />
               </RouterLink>
             </li>
@@ -231,12 +231,12 @@ onMounted(() => {
                 <span>{{ accountLabel }}</span>
                 <span
                   v-if="isAuthenticated && discountPercent > 0"
-                  class="rounded-full bg-secondary px-2 py-0.5 text-xs text-white"
+                  class="rounded-full bg-primary px-2 py-0.5 text-xs text-white"
                 >
                   -{{ discountPercent }}%
                 </span>
                 <span
-                  class="absolute left-0 h-[2px] w-0 bg-secondary transition-all duration-200 -bottom-1 group-hover:w-full"
+                  class="absolute left-0 h-[2px] w-0 bg-primary transition-all duration-200 -bottom-1 group-hover:w-full"
                 />
               </RouterLink>
             </li>

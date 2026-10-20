@@ -101,14 +101,14 @@ async function logout() {
 </script>
 
 <template>
-  <section class="bg-white px-4 py-12 text-primary lg:px-8 md:px-6">
+  <section class="bg-white px-4 py-12 text-navy lg:px-8 md:px-6">
     <div class="mx-auto max-w-3xl">
       <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p class="text-sm text-secondary font-800 tracking-[0.18em] uppercase">
+          <p class="text-sm text-primary font-extrabold tracking-[0.18em] uppercase">
             Личный кабинет
           </p>
-          <h1 class="mt-3 text-3xl font-900 tracking-tight md:text-4xl">
+          <h1 class="mt-3 text-3xl font-black tracking-tight md:text-4xl">
             {{ displayName }}
           </h1>
         </div>
@@ -124,7 +124,7 @@ async function logout() {
 
       <div
         v-if="loading"
-        class="border border-slate-200 rounded-[24px] bg-white p-6 text-sm text-muted shadow-sm"
+        class="border border-slate-200 rounded-[24px] bg-white p-6 text-sm text-slate-400 shadow-xs"
       >
         Загружаем профиль...
       </div>
@@ -134,7 +134,7 @@ async function logout() {
           <div class="text-sm text-slate-500">
             Ваша скидка
           </div>
-          <div class="mt-2 text-4xl text-secondary font-900">
+          <div class="mt-2 text-4xl text-primary font-black">
             {{ discountPercent }}%
           </div>
           <div class="mt-3 text-sm text-slate-500 leading-6">
@@ -143,7 +143,7 @@ async function logout() {
         </div>
 
         <form
-          class="border border-slate-200 rounded-[24px] bg-white p-5 shadow-sm md:p-6"
+          class="border border-slate-200 rounded-[24px] bg-white p-5 shadow-xs md:p-6"
           @submit.prevent="save"
         >
           <div class="grid gap-4 md:grid-cols-2">
@@ -152,7 +152,7 @@ async function logout() {
               <input
                 v-model="companyName"
                 type="text"
-                class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-none transition focus:border-secondary focus:ring-2 focus:ring-secondary/10"
+                class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-hidden transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 placeholder="Название компании"
               >
             </label>
@@ -162,7 +162,7 @@ async function logout() {
               <input
                 v-model="phone"
                 type="tel"
-                class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-none transition focus:border-secondary focus:ring-2 focus:ring-secondary/10"
+                class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-hidden transition focus:border-primary focus:ring-2 focus:ring-primary/10"
                 placeholder="+7 (700) 000-00-00"
               >
             </label>
@@ -188,7 +188,7 @@ async function logout() {
 
           <button
             type="submit"
-            class="mt-6 rounded-2xl bg-secondary px-5 py-3 text-sm text-white font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 hover:opacity-90"
+            class="mt-6 rounded-2xl bg-primary px-5 py-3 text-sm text-white font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 hover:opacity-90"
             :disabled="saving"
           >
             {{ saving ? 'Сохраняем...' : 'Сохранить' }}
@@ -199,7 +199,7 @@ async function logout() {
       <div class="mt-10">
         <div class="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 class="text-2xl font-900 tracking-tight">
+            <h2 class="text-2xl font-black tracking-tight">
               Мои резервы
             </h2>
             <p class="mt-2 text-sm text-slate-500 leading-6">
@@ -224,7 +224,7 @@ async function logout() {
 
         <div
           v-if="reservationsLoading && !activeReservations.length"
-          class="mt-5 border border-slate-200 rounded-[24px] bg-white p-6 text-sm text-muted shadow-sm"
+          class="mt-5 border border-slate-200 rounded-[24px] bg-white p-6 text-sm text-slate-400 shadow-xs"
         >
           Загружаем резервы...
         </div>
@@ -248,7 +248,7 @@ async function logout() {
         </div>
 
         <div v-if="pastReservations.length" class="mt-8">
-          <h3 class="text-sm text-slate-500 font-800 tracking-[0.18em] uppercase">
+          <h3 class="text-sm text-slate-500 font-extrabold tracking-[0.18em] uppercase">
             История
           </h3>
 

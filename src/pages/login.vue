@@ -44,19 +44,19 @@ async function submit() {
 </script>
 
 <template>
-  <section class="bg-white px-4 py-12 text-primary lg:px-8 md:px-6">
+  <section class="bg-white px-4 py-12 text-navy lg:px-8 md:px-6">
     <div class="mx-auto max-w-md">
       <div class="mb-8">
-        <p class="text-sm text-secondary font-800 tracking-[0.18em] uppercase">
+        <p class="text-sm text-primary font-extrabold tracking-[0.18em] uppercase">
           Аккаунт
         </p>
-        <h1 class="mt-3 text-3xl font-900 tracking-tight md:text-4xl">
+        <h1 class="mt-3 text-3xl font-black tracking-tight md:text-4xl">
           Вход
         </h1>
       </div>
 
       <form
-        class="border border-slate-200 rounded-[24px] bg-white p-5 shadow-sm md:p-6"
+        class="border border-slate-200 rounded-[24px] bg-white p-5 shadow-xs md:p-6"
         @submit.prevent="submit"
       >
         <label class="block">
@@ -65,7 +65,7 @@ async function submit() {
             v-model="email"
             type="email"
             autocomplete="email"
-            class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-none transition focus:border-secondary focus:ring-2 focus:ring-secondary/10"
+            class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-hidden transition focus:border-primary focus:ring-2 focus:ring-primary/10"
             placeholder="name@example.com"
           >
         </label>
@@ -76,7 +76,7 @@ async function submit() {
             v-model="password"
             type="password"
             autocomplete="current-password"
-            class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-none transition focus:border-secondary focus:ring-2 focus:ring-secondary/10"
+            class="mt-2 w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm outline-hidden transition focus:border-primary focus:ring-2 focus:ring-primary/10"
             placeholder="Ваш пароль"
           >
         </label>
@@ -90,7 +90,7 @@ async function submit() {
 
         <button
           type="submit"
-          class="mt-6 w-full rounded-2xl bg-secondary px-5 py-3 text-sm text-white font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 hover:opacity-90"
+          class="mt-6 w-full rounded-2xl bg-primary px-5 py-3 text-sm text-white font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 hover:opacity-90"
           :disabled="loading"
         >
           {{ loading ? 'Входим...' : 'Войти' }}
@@ -100,7 +100,7 @@ async function submit() {
           Нет аккаунта?
           <RouterLink
             to="/register"
-            class="text-secondary font-semibold hover:underline"
+            class="text-primary font-semibold hover:underline"
           >
             Зарегистрироваться
           </RouterLink>

@@ -79,16 +79,16 @@ useInfiniteScrollTrigger({
     <div class="mx-auto max-w-7xl">
       <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 class="text-3xl text-primary font-900 tracking-tight md:text-4xl">
+          <h1 class="text-3xl text-navy font-black tracking-tight md:text-4xl">
             {{ pageTitle }}
           </h1>
 
-          <p class="mt-2 max-w-2xl text-sm text-muted leading-6 md:text-base">
+          <p class="mt-2 max-w-2xl text-sm text-slate-400 leading-6 md:text-base md:leading-6">
             {{ pageDescription }}
           </p>
         </div>
 
-        <div class="text-sm text-muted">
+        <div class="text-sm text-slate-400">
           <span v-if="!loading && !error">
             {{ total }} шт.
           </span>
@@ -100,7 +100,7 @@ useInfiniteScrollTrigger({
           type="button"
           class="rounded-full px-4 py-2 text-sm font-medium transition"
           :class="catalogType === 'own'
-            ? 'bg-primary text-white'
+            ? 'bg-navy text-white'
             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
           @click="setCatalogType('own')"
         >
@@ -111,7 +111,7 @@ useInfiniteScrollTrigger({
           type="button"
           class="rounded-full px-4 py-2 text-sm font-medium transition"
           :class="catalogType === 'partner'
-            ? 'bg-primary text-white'
+            ? 'bg-navy text-white'
             : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
           @click="setCatalogType('partner')"
         >
@@ -155,7 +155,7 @@ useInfiniteScrollTrigger({
 
           <div
             v-if="isEmpty"
-            class="border border-slate-200 rounded-2xl bg-slate-50 py-12 text-center text-sm text-muted"
+            class="border border-slate-200 rounded-2xl bg-slate-50 py-12 text-center text-sm text-slate-400"
           >
             Товары не найдены
           </div>
@@ -168,7 +168,7 @@ useInfiniteScrollTrigger({
 
           <div
             v-if="!hasMore && items.length > 0"
-            class="py-6 text-center text-sm text-muted"
+            class="py-6 text-center text-sm text-slate-400"
           >
             Больше товаров нет
           </div>

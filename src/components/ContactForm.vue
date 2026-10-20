@@ -80,25 +80,25 @@ async function submitForm() {
 </script>
 
 <template>
-  <section class="w-full py-14 md:py-20 xl:py-24">
+  <section class="w-full py-10 md:py-20 xl:py-24">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
-      <div class="mb-8 md:mb-10 xl:mb-12">
-        <p class="text-sm text-secondary font-800 tracking-[0.22em] uppercase md:text-base">
+      <div class="mb-5 md:mb-10 xl:mb-12">
+        <p class="text-sm text-primary font-extrabold tracking-[0.22em] uppercase md:text-base">
           Контактная форма
         </p>
 
-        <h2 class="mt-3 max-w-4xl text-3xl text-black font-900 leading-[0.95] tracking-[-0.03em] md:text-5xl sm:text-4xl xl:text-6xl">
+        <h2 class="mt-3 max-w-4xl text-3xl text-black font-black leading-[0.95] tracking-[-0.03em] md:text-5xl sm:text-4xl xl:text-6xl md:leading-none sm:leading-10 xl:leading-none">
           Пора знакомиться
         </h2>
 
-        <p class="mt-4 max-w-2xl text-sm text-slate-600 leading-7 md:text-lg sm:text-base">
+        <p class="mt-3 max-w-2xl text-sm text-slate-600 leading-6 md:text-lg sm:text-base md:leading-7 sm:leading-6">
           Оставьте заявку, и мы подберём удобный формат общения: личная встреча или видеозвонок.
         </p>
       </div>
 
       <div class="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-stretch">
-        <!-- Левая карточка с одной картинкой -->
-        <div class="relative min-h-[320px] overflow-hidden rounded-[28px] bg-slate-900 sm:min-h-[420px] xl:min-h-full">
+        <!-- Левая карточка с одной картинкой; на телефоне скрыта — дублирует заголовок, а форма должна влезать в экран -->
+        <div class="relative hidden min-h-[320px] overflow-hidden md:block rounded-[28px] bg-slate-900 sm:min-h-[420px] xl:min-h-full">
           <img
             src="/image.webp"
             alt="Brillex contact preview"
@@ -116,15 +116,15 @@ async function submitForm() {
 
           <div class="relative z-10 h-full flex flex-col justify-end p-6 md:p-8 sm:p-7 xl:p-10">
             <div class="max-w-[32rem]">
-              <div class="mb-4 inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-xs text-white/90 font-medium tracking-[0.18em] uppercase backdrop-blur-sm md:text-sm">
+              <div class="mb-4 inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-xs text-white/90 font-medium tracking-[0.18em] uppercase backdrop-blur-xs md:text-sm">
                 Brillex
               </div>
 
-              <h3 class="text-2xl text-white font-900 leading-tight md:text-[38px] sm:text-3xl md:leading-[1.05]">
+              <h3 class="text-2xl text-white font-black leading-tight md:text-[38px] sm:text-3xl md:leading-[1.05] sm:leading-9">
                 Начните с короткой формы — и мы свяжемся с вами удобным способом
               </h3>
 
-              <p class="mt-4 max-w-[28rem] text-sm text-white/80 leading-7 md:text-lg sm:text-base">
+              <p class="mt-4 max-w-[28rem] text-sm text-white/80 leading-7 md:text-lg sm:text-base md:leading-7 sm:leading-6">
                 Расскажите немного о себе, и мы предложим лучший вариант сотрудничества для вашего бренда, компании или мероприятия.
               </p>
             </div>
@@ -132,28 +132,28 @@ async function submitForm() {
         </div>
 
         <!-- Правая часть -->
-        <div class="border border-slate-200 rounded-[28px] bg-[#f7f7f7] p-6 shadow-[0_10px_40px_rgba(15,23,42,0.05)] md:rounded-[32px] md:p-8 sm:p-7 xl:p-10">
-          <div class="mb-8 flex flex-wrap items-center gap-3">
+        <div class="border border-slate-200 rounded-[28px] bg-[#f7f7f7] p-5 shadow-[0_10px_40px_rgba(15,23,42,0.05)] md:rounded-[32px] md:p-8 sm:p-7 xl:p-10">
+          <div class="mb-4 flex flex-wrap items-center gap-3 md:mb-8">
             <span class="text-sm text-slate-500 font-medium md:text-base">
               Кому:
             </span>
 
-            <div class="rounded-full bg-white px-4 py-2 text-sm text-slate-900 font-semibold shadow-sm ring-1 ring-slate-200 md:text-base">
+            <div class="rounded-full bg-white px-4 py-2 text-sm text-slate-900 font-semibold shadow-xs ring-1 ring-slate-200 md:text-base">
               {{ email }}
             </div>
           </div>
 
           <form class="flex flex-col" @submit.prevent="submitForm">
-            <div class="border-b border-slate-300 pb-4">
+            <div class="border-b border-slate-300 pb-3 md:pb-4">
               <input
                 v-model="name"
                 type="text"
                 placeholder="Ваше имя *"
-                class="w-full bg-transparent text-base text-slate-900 outline-none md:text-lg placeholder:text-slate-400"
+                class="w-full bg-transparent text-base text-slate-900 outline-hidden md:text-lg placeholder:text-slate-400"
               >
             </div>
 
-            <div class="mt-6 border-b border-slate-300 pb-4">
+            <div class="mt-4 border-b border-slate-300 pb-3 md:mt-6 md:pb-4">
               <div class="flex items-center gap-3">
                 <div class="text-lg">
                   🇰🇿
@@ -165,54 +165,54 @@ async function submitForm() {
                   type="tel"
                   inputmode="tel"
                   placeholder="+7 (700) 000-00-00"
-                  class="w-full bg-transparent text-base text-slate-900 outline-none md:text-lg placeholder:text-slate-400"
+                  class="w-full bg-transparent text-base text-slate-900 outline-hidden md:text-lg placeholder:text-slate-400"
                 >
               </div>
             </div>
 
-            <div class="mt-8 space-y-4">
-              <label class="flex cursor-pointer items-start gap-3 rounded-2xl bg-white px-4 py-4 transition hover:ring-1 hover:ring-slate-300">
+            <div class="mt-5 grid grid-cols-2 gap-2 md:mt-8 md:grid-cols-1 md:gap-4">
+              <label class="flex cursor-pointer items-start gap-2 rounded-2xl bg-white px-3 py-3 transition md:gap-3 md:px-4 md:py-4 hover:ring-1 hover:ring-slate-300">
                 <input
                   v-model="contactType"
                   type="radio"
                   value="invite"
-                  class="mt-1 h-5 w-5 shrink-0 accent-black"
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-black md:mt-1"
                 >
                 <div>
                   <p class="text-sm text-slate-900 font-semibold md:text-base">
                     Приглашаем Brillex в гости
                   </p>
-                  <p class="mt-1 text-sm text-slate-500 leading-6">
+                  <p class="mt-1 hidden text-sm text-slate-500 leading-6 md:block">
                     Обсудим задачу лично и покажем возможные решения по мерчу.
                   </p>
                 </div>
               </label>
 
-              <label class="flex cursor-pointer items-start gap-3 rounded-2xl bg-white px-4 py-4 transition hover:ring-1 hover:ring-slate-300">
+              <label class="flex cursor-pointer items-start gap-2 rounded-2xl bg-white px-3 py-3 transition md:gap-3 md:px-4 md:py-4 hover:ring-1 hover:ring-slate-300">
                 <input
                   v-model="contactType"
                   type="radio"
                   value="video"
-                  class="mt-1 h-5 w-5 shrink-0 accent-black"
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-black md:mt-1"
                 >
                 <div>
                   <p class="text-sm text-slate-900 font-semibold md:text-base">
                     Созвонимся по видео
                   </p>
-                  <p class="mt-1 text-sm text-slate-500 leading-6">
+                  <p class="mt-1 hidden text-sm text-slate-500 leading-6 md:block">
                     Быстро обсудим проект онлайн в удобное для вас время.
                   </p>
                 </div>
               </label>
             </div>
 
-            <label class="mt-8 flex items-start gap-3">
+            <label class="mt-5 flex items-start gap-3 md:mt-8">
               <input
                 v-model="agreed"
                 type="checkbox"
                 class="mt-1 h-5 w-5 shrink-0 accent-black"
               >
-              <span class="text-sm text-slate-600 leading-6 md:text-base">
+              <span class="text-sm text-slate-600 leading-6 md:text-base md:leading-6">
                 Я даю согласие на
                 <a
                   href="/privacy-policy"
@@ -224,10 +224,10 @@ async function submitForm() {
               </span>
             </label>
 
-            <div class="mt-8">
+            <div class="mt-5 md:mt-8">
               <button
                 type="submit"
-                class="min-h-[56px] inline-flex items-center justify-center rounded-full bg-secondary px-7 py-4 text-sm text-white font-semibold transition-all duration-300 md:min-h-[60px] disabled:cursor-not-allowed md:px-8 md:text-base disabled:opacity-50 hover:opacity-95 hover:-translate-y-0.5"
+                class="min-h-[56px] inline-flex items-center justify-center rounded-full bg-primary px-7 py-4 text-sm text-white font-semibold transition-all duration-300 md:min-h-[60px] disabled:cursor-not-allowed md:px-8 md:text-base disabled:opacity-50 hover:opacity-95 hover:-translate-y-0.5"
                 :disabled="loading || !isValid"
               >
                 {{ loading ? 'Отправка...' : 'Отправить заявку →' }}

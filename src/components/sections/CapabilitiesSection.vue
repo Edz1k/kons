@@ -52,18 +52,18 @@ function toggleItem(id: number) {
 </script>
 
 <template>
-  <section id="services" class="py-10 md:py-16">
+  <section id="services" class="pb-6 pt-8 md:py-16">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <!-- Заголовок -->
-      <div class="grid mb-8 gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-start">
+      <div class="grid mb-4 gap-3 lg:mb-8 lg:grid-cols-[1.1fr_1fr] lg:items-start lg:gap-6">
         <div>
-          <h2 class="m-0 text-4xl font-black leading-none tracking-tight uppercase md:text-6xl">
+          <h2 class="m-0 text-3xl font-black leading-none tracking-tight uppercase sm:text-4xl md:text-6xl md:leading-none">
             Возможности
           </h2>
         </div>
 
         <div class="max-w-2xl lg:pt-2">
-          <p class="m-0 text-base text-neutral-700 leading-7 md:text-lg">
+          <p class="m-0 text-sm text-neutral-700 leading-6 md:text-lg md:leading-7">
             Более 10 лет создаём продукцию, которая работает на бренд наших клиентов.
             Собственное производство позволяет гарантировать качество, соблюдать сроки
             и подбирать оптимальную технологию нанесения для каждого проекта.
@@ -74,7 +74,7 @@ function toggleItem(id: number) {
       <!-- Основной блок -->
       <div class="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)] lg:items-stretch">
         <!-- Левая колонка -->
-        <div class="space-y-3">
+        <div class="space-y-2 lg:space-y-3">
           <article
             v-for="item in items"
             :key="item.id"
@@ -87,17 +87,17 @@ function toggleItem(id: number) {
           >
             <button
               type="button"
-              class="w-full flex items-center justify-between gap-4 px-5 py-5 text-left md:px-7 md:py-6"
+              class="w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left md:gap-4 md:px-7 md:py-6"
               :aria-expanded="activeId === item.id"
               :aria-controls="`feature-panel-${item.id}`"
               @click="toggleItem(item.id)"
             >
-              <span class="text-xl font-semibold leading-tight lg:text-3xl md:text-2xl">
+              <span class="text-base font-semibold leading-tight sm:text-lg lg:text-3xl md:text-2xl lg:leading-9 md:leading-8">
                 {{ item.title }}
               </span>
 
               <span
-                class="h-12 w-12 flex shrink-0 items-center justify-center text-3xl text-black leading-none"
+                class="h-10 w-10 flex shrink-0 items-center justify-center text-3xl text-black leading-none md:h-12 md:w-12"
                 aria-hidden="true"
               >
                 {{ activeId === item.id ? '×' : '+' }}
@@ -107,27 +107,35 @@ function toggleItem(id: number) {
             <transition
               enter-active-class="transition-all duration-300 ease-out"
               enter-from-class="max-h-0 opacity-0"
-              enter-to-class="max-h-[460px] opacity-100"
+              enter-to-class="max-h-[640px] opacity-100"
               leave-active-class="transition-all duration-200 ease-in"
-              leave-from-class="max-h-[460px] opacity-100"
+              leave-from-class="max-h-[640px] opacity-100"
               leave-to-class="max-h-0 opacity-0"
             >
               <div
                 v-show="activeId === item.id"
                 :id="`feature-panel-${item.id}`"
                 role="region"
-                class="overflow-hidden px-5 pb-5 md:px-7 md:pb-7"
+                class="overflow-hidden px-4 pb-3 md:px-7 md:pb-7"
               >
-                <p class="m-0 max-w-2xl text-base text-neutral-700 leading-7 md:text-lg">
+                <p class="m-0 max-w-2xl text-sm text-neutral-700 leading-6 md:text-lg md:leading-7">
                   {{ item.text }}
                 </p>
+                <!-- на телефоне картинка внутри открытого пункта, а не отдельным блоком под списком -->
+                <img
+                  :src="item.image"
+                  :alt="item.imageAlt"
+                  loading="lazy"
+                  decoding="async"
+                  class="mt-3 aspect-[3/1] w-full rounded-2xl object-cover lg:hidden"
+                >
               </div>
             </transition>
           </article>
         </div>
 
         <!-- Правая колонка -->
-        <div class="h-full">
+        <div class="hidden h-full lg:block">
           <div class="h-full overflow-hidden rounded-3xl bg-[#f5f5f5]">
             <transition name="fade" mode="out-in">
               <img

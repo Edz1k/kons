@@ -8,16 +8,26 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Badge: typeof import('./components/ui/badge/Badge.vue')['default']
     BrandStatementSection: typeof import('./components/sections/BrandStatementSection.vue')['default']
+    Button: typeof import('./components/ui/button/Button.vue')['default']
     CapabilitiesSection: typeof import('./components/sections/CapabilitiesSection.vue')['default']
+    Carousel: typeof import('./components/ui/carousel/Carousel.vue')['default']
     CarouselComponent: typeof import('./components/CarouselComponent.vue')['default']
+    CarouselContent: typeof import('./components/ui/carousel/CarouselContent.vue')['default']
+    CarouselItem: typeof import('./components/ui/carousel/CarouselItem.vue')['default']
+    CarouselNext: typeof import('./components/ui/carousel/CarouselNext.vue')['default']
+    CarouselPrevious: typeof import('./components/ui/carousel/CarouselPrevious.vue')['default']
     CatalogSidebar: typeof import('./components/market/CatalogSidebar.vue')['default']
     ContactForm: typeof import('./components/ContactForm.vue')['default']
     FadeComponent: typeof import('./components/AnimationComponent/FadeComponent.vue')['default']
     FilterComponent: typeof import('./components/market/FilterComponent.vue')['default']
     FooterComponent: typeof import('./components/FooterComponent.vue')['default']
+    Input: typeof import('./components/ui/input/Input.vue')['default']
+    Label: typeof import('./components/ui/label/Label.vue')['default']
     LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
+    NumberTicker: typeof import('./components/AnimationComponent/NumberTicker.vue')['default']
     PartnerProductCard: typeof import('./components/market/PartnerProductCard.vue')['default']
     ProductCard: typeof import('./components/market/ProductCard.vue')['default']
     ProductSkeleton: typeof import('./components/market/ProductSkeleton.vue')['default']
@@ -26,6 +36,9 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StickyFeatureSection: typeof import('./components/sections/StickyFeatureSection.vue')['default']
+    StockSection: typeof import('./components/sections/StockSection.vue')['default']
+    Textarea: typeof import('./components/ui/textarea/Textarea.vue')['default']
+    TickerSection: typeof import('./components/sections/TickerSection.vue')['default']
     WhatsAppButton: typeof import('./components/WhatsAppButton.vue')['default']
   }
 }

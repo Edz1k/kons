@@ -27,46 +27,42 @@ const photos = [
   },
 ]
 
-function getMobileStyle(index: number) {
-  const rotations = [-6, 5, -8, 7, -4]
-  const offsets = [-10, 10, -6, 8, 0]
-
-  return {
-    transform: `rotate(${rotations[index] ?? 0}deg) translateX(${offsets[index] ?? 0}px)`,
-    zIndex: 10 + index,
-  }
-}
+// На телефоне фото идут лентой со свайпом, а не столбиком: иначе блок занимает 2,5 экрана
+const mobileRotations = [-3, 2, -2, 3, -1]
 </script>
 
 <template>
-  <section class="w-full py-12 lg:py-20">
+  <section class="w-full py-10 lg:py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <div class="flex flex-col lg:flex-row lg:gap-10">
         <!-- Левая колонка -->
         <div class="w-full lg:w-1/2">
-          <div class="border-b border-gray-200 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
-            <div class="space-y-8 lg:space-y-10">
+          <div class="border-b border-gray-200 pb-6 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10">
+            <div class="flex flex-col gap-4 lg:gap-10">
               <FadeComponent>
-                <h2 class="max-w-[520px] text-2xl font-semibold leading-tight lg:text-5xl sm:text-3xl">
+                <h2 class="max-w-[520px] text-2xl font-semibold leading-tight lg:text-5xl sm:text-3xl lg:leading-none sm:leading-9">
                   Бренд одежды внутри компании
                 </h2>
               </FadeComponent>
 
-              <!-- Мобильная версия: коллаж -->
-              <div class="flex flex-col items-center px-2 lg:hidden">
-                <FadeComponent
-                  v-for="(photo, i) in photos"
-                  :key="photo.src"
-                  class="relative mb-[-36px] w-[85%] last:mb-0"
-                  :style="getMobileStyle(i)"
-                >
-                  <img
-                    :src="photo.src"
-                    :alt="photo.alt"
-                    class="block w-full rounded-xl bg-white p-2 shadow-[0_18px_35px_rgba(0,0,0,0.18)] transition-transform duration-300"
+              <!-- Мобильная версия: лента со свайпом -->
+              <FadeComponent class="lg:hidden">
+                <div class="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 py-4 -mx-4 sm:px-6 sm:-mx-6">
+                  <div
+                    v-for="(photo, i) in photos"
+                    :key="photo.src"
+                    class="w-[min(56vw,27svh)] shrink-0 snap-center"
+                    :style="{ transform: `rotate(${mobileRotations[i] ?? 0}deg)` }"
                   >
-                </FadeComponent>
-              </div>
+                    <img
+                      :src="photo.src"
+                      :alt="photo.alt"
+                      loading="lazy"
+                      class="block w-full rounded-xl bg-white p-1.5 shadow-[0_12px_24px_rgba(0,0,0,0.16)]"
+                    >
+                  </div>
+                </div>
+              </FadeComponent>
 
               <!-- Десктопная версия -->
               <div class="relative hidden w-full lg:block lg:min-h-[1800px] md:min-h-[1400px]">
@@ -88,15 +84,15 @@ function getMobileStyle(index: number) {
         </div>
 
         <!-- Правая колонка -->
-        <div class="w-full pt-8 lg:w-1/2 lg:pt-0">
+        <div class="w-full pt-6 lg:w-1/2 lg:pt-0">
           <div class="lg:sticky lg:top-24 lg:min-h-[calc(100vh-6rem)] lg:flex lg:items-center">
             <div class="w-full rounded-3xl bg-black p-6 text-white lg:p-10 sm:p-8">
               <span class="text-xs text-white/50 font-semibold tracking-[0.2em] uppercase">
                 Brillex
               </span>
-              <p class="mt-5 text-xl font-bold leading-tight uppercase lg:text-4xl sm:text-3xl">
+              <p class="mt-5 text-xl font-bold leading-tight uppercase lg:text-4xl sm:text-3xl lg:leading-10 sm:leading-9">
                 Если вещь не хочется носить —
-                <span class="text-secondary">она не работает на ваш бренд.</span>
+                <span class="text-primary">она не работает на ваш бренд.</span>
               </p>
             </div>
           </div>

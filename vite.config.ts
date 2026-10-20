@@ -1,10 +1,10 @@
 import path from 'node:path'
 import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Shiki from '@shikijs/markdown-it'
+import TailwindCSS from '@tailwindcss/vite'
 import { unheadVueComposablesImports } from '@unhead/vue'
 import Vue from '@vitejs/plugin-vue'
 import LinkAttributes from 'markdown-it-link-attributes'
-import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import VueMacros from 'unplugin-vue-macros/vite'
@@ -33,6 +33,12 @@ export default defineConfig({
     }),
 
     VueMacros({
+      // shadcn-vue берёт пропсы из типов reka-ui (PrimitiveProps и т.п.) — betterDefine их
+      // не находит и теряет, например `as`, и Button рендерится как <div>.
+      // Vue 3.5 разбирает такие типы сам, поэтому для ui-компонентов betterDefine выключаем.
+      betterDefine: {
+        exclude: [/node_modules/, /src\/components\/ui\//],
+      },
       plugins: {
         vue: Vue({
           include: [/\.vue$/, /\.md$/],
@@ -74,9 +80,8 @@ export default defineConfig({
       dts: 'src/components.d.ts',
     }),
 
-    // https://github.com/antfu/unocss
-    // see uno.config.ts for config
-    Unocss(),
+    // https://tailwindcss.com — настройки и тема в src/styles/tailwind.css
+    TailwindCSS(),
 
     // https://github.com/unplugin/unplugin-vue-markdown
     // Don't need this? Try vitesse-lite: https://github.com/antfu/vitesse-lite

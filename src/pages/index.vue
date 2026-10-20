@@ -12,10 +12,10 @@ const scrollY = ref(0)
 const isMobile = ref(false)
 
 const titleLines = [
-  { text: 'ЛЮДИ ЗАПОМИНАЮТ' },
-  { text: 'НЕ РЕКЛАМУ.' },
-  { text: 'ЛЮДИ ЗАПОМИНАЮТ' },
-  { text: 'ЭМОЦИИ.', accent: true },
+  // неразрывный пробел: тире не уезжает на отдельную строку на телефоне
+  { text: 'ИЗ СЕМЕЙНОГО ДЕЛА\u00A0—' },
+  { text: 'В НОВЫЙ' },
+  { text: 'МАСШТАБ.', accent: true },
 ]
 
 const heroAssets = {
@@ -149,7 +149,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="relative min-h-[90vh] overflow-hidden bg-white">
+  <!-- на телефоне первый экран = экран минус навбар (113px), чтобы кнопка не уходила под край -->
+  <section class="relative min-h-[calc(100svh-113px)] overflow-hidden bg-white lg:min-h-[90vh]">
     <div class="pointer-events-none absolute inset-0">
       <motion.div
         class="absolute bottom-[-88px] left-[-72px] w-[250px] lg:bottom-[-135px] lg:left-[-80px] md:bottom-[-98px] md:left-[-60px] sm:bottom-[-72px] sm:left-[-42px] lg:w-[390px] md:w-[300px] sm:w-[255px]"
@@ -195,9 +196,9 @@ onBeforeUnmount(() => {
       </motion.div>
     </div>
 
-    <div class="relative z-10 mx-auto min-h-[90vh] flex items-center justify-center px-4 container">
+    <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh]">
       <div class="text-center">
-        <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl">
+        <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl lg:leading-none md:leading-none sm:leading-10">
           <motion.span
             v-for="(line, index) in titleLines"
             :key="line.text"
@@ -207,7 +208,7 @@ onBeforeUnmount(() => {
             :transition="{ ...heroCopyTransition, delay: 0.1 + index * 0.08 }"
             style="transform-origin: center bottom;"
           >
-            <span :class="line.accent ? 'text-secondary' : 'text-black'">
+            <span :class="line.accent ? 'text-primary' : 'text-black'">
               {{ line.text }}
             </span>
           </motion.span>
@@ -232,7 +233,7 @@ onBeforeUnmount(() => {
         >
           <RouterLink
             to="/market"
-            class="group inline-flex items-center gap-3 rounded-full bg-secondary px-6 py-3 text-base text-white font-medium shadow-[0_18px_36px_rgba(230,87,35,0.28)] transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
+            class="group inline-flex items-center gap-3 rounded-full bg-primary px-6 py-3 text-base text-white font-medium shadow-[0_18px_36px_rgba(230,87,35,0.28)] transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
           >
             <motion.span
               :while-hover="{ x: -2 }"
@@ -254,7 +255,10 @@ onBeforeUnmount(() => {
     </div>
   </section>
 
-  <section class="pt-12 -mt-12 lg:-mt-24 md:-mt-16">
+  <TickerSection />
+  <StockSection />
+
+  <section class="pt-12">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <CarouselComponent />
     </div>

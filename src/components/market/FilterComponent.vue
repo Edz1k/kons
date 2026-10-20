@@ -19,7 +19,7 @@ const {
 </script>
 
 <template>
-  <div class="border border-slate-200 rounded-[24px] bg-white p-4 shadow-sm md:p-5">
+  <div class="border border-slate-200 rounded-[24px] bg-white p-4 shadow-xs md:p-5">
     <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
       <div class="flex flex-1 flex-col gap-3 sm:flex-row">
         <div class="relative flex-1">
@@ -27,14 +27,14 @@ const {
             v-model="localSearch"
             type="text"
             placeholder="Поиск товаров..."
-            class="w-full border border-slate-200 rounded-2xl bg-white px-4 py-3 pr-12 text-sm text-primary outline-none transition focus:border-secondary placeholder:text-slate-400 focus:ring-2 focus:ring-secondary/10"
+            class="w-full border border-slate-200 rounded-2xl bg-white px-4 py-3 pr-12 text-sm text-navy outline-hidden transition focus:border-primary placeholder:text-slate-400 focus:ring-2 focus:ring-primary/10"
             @keyup.enter="submitSearch"
           >
-          <span class="i-mdi:magnify pointer-events-none absolute right-4 top-1/2 text-xl text-slate-400 -translate-y-1/2" />
+          <span class="icon-[mdi--magnify] pointer-events-none absolute right-4 top-1/2 text-xl text-slate-400 -translate-y-1/2" />
         </div>
 
         <button
-          class="inline-flex items-center justify-center rounded-2xl bg-secondary px-5 py-3 text-sm text-white font-semibold transition active:scale-[0.99] hover:opacity-90"
+          class="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 text-sm text-white font-semibold transition active:scale-[0.99] hover:opacity-90"
           @click="submitSearch"
         >
           Найти
@@ -44,7 +44,7 @@ const {
       <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
         <Listbox v-model="selectedSortObject">
           <div class="relative min-w-[220px]">
-            <ListboxButton class="w-full border border-slate-200 rounded-2xl bg-white px-4 py-3 text-left text-sm text-primary outline-none transition hover:border-slate-300 focus:ring-2 focus:ring-secondary/10">
+            <ListboxButton class="w-full border border-slate-200 rounded-2xl bg-white px-4 py-3 text-left text-sm text-navy outline-hidden transition hover:border-slate-300 focus:ring-2 focus:ring-primary/10">
               <span class="block truncate">
                 {{ selectedSortObject.label }}
               </span>
@@ -61,7 +61,7 @@ const {
                   class="cursor-pointer rounded-xl px-3 py-2 text-sm transition"
                   :class="[
                     active ? 'bg-slate-100' : '',
-                    selected ? 'font-semibold text-primary' : 'text-slate-600',
+                    selected ? 'font-semibold text-navy' : 'text-slate-600',
                   ]"
                 >
                   {{ option.label }}
@@ -73,18 +73,18 @@ const {
 
         <label
           v-if="isOwnCatalog"
-          class="inline-flex items-center gap-3 border border-slate-200 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-primary"
+          class="inline-flex items-center gap-3 border border-slate-200 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-navy"
         >
           <input
             v-model="inStockOnlyModel"
             type="checkbox"
-            class="h-4 w-4 border-slate-300 rounded text-secondary focus:ring-secondary"
+            class="h-4 w-4 border-slate-300 rounded-sm text-primary focus:ring-primary"
           >
           <span>Только в наличии</span>
         </label>
 
         <button
-          class="border border-slate-200 rounded-2xl bg-white px-4 py-3 text-sm text-primary transition hover:bg-slate-50"
+          class="border border-slate-200 rounded-2xl bg-white px-4 py-3 text-sm text-navy transition hover:bg-slate-50"
           @click="resetAll"
         >
           Сбросить

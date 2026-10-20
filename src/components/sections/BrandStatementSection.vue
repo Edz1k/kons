@@ -126,14 +126,14 @@ onBeforeUnmount(() => {
         </FadeComponent>
 
         <FadeComponent>
-          <span class="block text-4xl text-secondary lg:text-8xl md:text-7xl sm:text-5xl">
+          <span class="block text-4xl text-primary lg:text-8xl md:text-7xl sm:text-5xl">
             ВПЕЧАТЛЕНИЕ.
           </span>
         </FadeComponent>
       </h2>
 
       <FadeComponent :delay="120">
-        <p class="mx-auto mt-8 max-w-2xl text-base text-neutral-600 leading-7 md:mt-10 md:text-xl sm:text-lg">
+        <p class="mx-auto mt-8 max-w-2xl text-base text-neutral-600 leading-7 md:mt-10 md:text-xl sm:text-lg md:leading-7 sm:leading-7">
           Каждое изделие — это продуманный дизайн, качественные материалы и
           внимание к деталям. Мы создаём мерч, который не просто выглядит красиво,
           а помогает бренду выделяться, запоминаться и вызывать доверие.

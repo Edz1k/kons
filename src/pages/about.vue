@@ -55,24 +55,24 @@ const steps = [
 </script>
 
 <template>
-  <div class="overflow-hidden bg-white text-primary">
+  <div class="overflow-hidden bg-white text-navy">
     <!-- HERO -->
     <section class="relative">
       <div class="pointer-events-none absolute inset-0">
-        <div class="absolute left--20 top-0 h-90 w-90 rounded-full bg-secondary/10 blur-3xl" />
-        <div class="absolute right--10 top-20 h-100 w-100 rounded-full bg-primary/5 blur-3xl" />
-        <div class="absolute bottom-0 left-1/2 h-60 w-60 rounded-full bg-secondary/8 blur-3xl -translate-x-1/2" />
+        <div class="absolute -left-20 top-0 h-90 w-90 rounded-full bg-primary/10 blur-3xl" />
+        <div class="absolute -right-10 top-20 h-100 w-100 rounded-full bg-navy/5 blur-3xl" />
+        <div class="absolute bottom-0 left-1/2 h-60 w-60 rounded-full bg-primary/8 blur-3xl -translate-x-1/2" />
       </div>
 
       <div class="relative mx-auto max-w-7xl px-5 pb-24 pt-15 md:px-8 md:pb-32">
         <FadeComponent>
           <div class="mx-auto max-w-6xl text-center">
-            <p class="mb-6 text-base text-secondary font-800 tracking-[0.35em] uppercase md:text-lg">
+            <p class="mb-6 text-base text-primary font-extrabold tracking-[0.35em] uppercase md:text-lg">
               О нас
             </p>
 
-            <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl">
-              Мы создаём <span class="text-secondary"> мерч</span>, <br> который усиливает <br> ваш бренд
+            <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl lg:leading-none md:leading-none sm:leading-10">
+              Мы создаём <span class="text-primary"> мерч</span>, <br> который усиливает <br> ваш бренд
             </h1>
 
             <p class="mx-auto mt-8 max-w-4xl text-lg text-slate-600 leading-8 md:mt-10 md:text-2xl md:leading-11">
@@ -84,14 +84,14 @@ const steps = [
               <div class="flex flex-wrap items-center gap-4">
                 <RouterLink
                   to="/market"
-                  class="inline-block rounded-full bg-secondary px-6 py-3 text-base text-white font-medium transition duration-300 hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
+                  class="inline-block rounded-full bg-primary px-6 py-3 text-base text-white font-medium transition duration-300 hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
                 >
                   Заказать мерч →
                 </RouterLink>
 
                 <a
                   href="/portfolio"
-                  class="border border-secondary rounded-full px-6 py-3 text-base text-secondary font-medium transition duration-300 hover:bg-secondary md:px-8 md:py-4 md:text-lg hover:text-white"
+                  class="border border-primary rounded-full px-6 py-3 text-base text-primary font-medium transition duration-300 hover:bg-primary md:px-8 md:py-4 md:text-lg hover:text-white"
                 >
                   Смотреть портфолио
                 </a>
@@ -110,11 +110,11 @@ const steps = [
           :key="item.label"
           :delay="index * 120"
         >
-          <div class="group border border-slate-200 rounded-[28px] bg-white p-7 shadow-sm transition-all duration-300 hover:border-secondary/25 hover:shadow-xl hover:-translate-y-1">
-            <div class="text-4xl font-900 leading-none tracking-[-0.03em] md:text-6xl">
+          <div class="group border border-slate-200 rounded-[28px] bg-white p-7 shadow-xs transition-all duration-300 hover:border-primary/25 hover:shadow-xl hover:-translate-y-1">
+            <div class="text-4xl font-black leading-none tracking-[-0.03em] md:text-6xl md:leading-none">
               {{ item.value }}
             </div>
-            <div class="mt-3 text-sm text-slate-500 font-600 tracking-[0.14em] uppercase md:text-base">
+            <div class="mt-3 text-sm text-slate-500 font-semibold tracking-[0.14em] uppercase md:text-base">
               {{ item.label }}
             </div>
           </div>
@@ -127,11 +127,11 @@ const steps = [
       <div class="grid gap-8 md:grid-cols-2 md:items-stretch">
         <FadeComponent>
           <div>
-            <p class="mb-4 text-sm text-secondary font-800 tracking-[0.28em] uppercase md:text-base">
+            <p class="mb-4 text-sm text-primary font-extrabold tracking-[0.28em] uppercase md:text-base">
               Кто мы
             </p>
 
-            <h2 class="max-w-2xl text-4xl font-900 leading-[1] tracking-[-0.03em] md:text-6xl">
+            <h2 class="max-w-2xl text-4xl font-black leading-[1] tracking-[-0.03em] md:text-6xl md:leading-none">
               Не просто делаем мерч,
               а помогаем брендам выделяться
             </h2>
@@ -157,14 +157,14 @@ const steps = [
         </FadeComponent>
 
         <FadeComponent :delay="150">
-          <div class="relative h-full overflow-hidden rounded-[34px] bg-primary p-8 text-white shadow-2xl md:p-12">
-            <div class="absolute right--8 top--8 h-40 w-40 rounded-full bg-secondary/20 blur-3xl" />
+          <div class="relative h-full overflow-hidden rounded-[34px] bg-navy p-8 text-white shadow-2xl md:p-12">
+            <div class="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
             <div class="relative">
-              <p class="text-sm text-white/55 font-800 tracking-[0.28em] uppercase md:text-base">
+              <p class="text-sm text-white/55 font-extrabold tracking-[0.28em] uppercase md:text-base">
                 Наша миссия
               </p>
 
-              <h3 class="mt-5 max-w-xl text-3xl font-900 leading-[1.02] tracking-[-0.03em] md:text-5xl">
+              <h3 class="mt-5 max-w-xl text-3xl font-black leading-[1.02] tracking-[-0.03em] md:text-5xl md:leading-none">
                 Делать мерч современным,
                 заметным и полезным для бизнеса
               </h3>
@@ -185,11 +185,11 @@ const steps = [
       <div class="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-26">
         <FadeComponent>
           <div class="mx-auto max-w-5xl text-center">
-            <p class="mb-4 text-sm text-secondary font-800 tracking-[0.28em] uppercase md:text-base">
+            <p class="mb-4 text-sm text-primary font-extrabold tracking-[0.28em] uppercase md:text-base">
               Наша история
             </p>
 
-            <h2 class="text-4xl font-900 leading-[0.98] tracking-[-0.03em] md:text-6xl xl:text-7xl">
+            <h2 class="text-4xl font-black leading-[0.98] tracking-[-0.03em] md:text-6xl xl:text-7xl md:leading-none xl:leading-none">
               Мы выросли из идеи
               делать мерч лучше
             </h2>
@@ -221,11 +221,11 @@ const steps = [
     <section class="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
       <FadeComponent>
         <div class="mb-10 max-w-3xl md:mb-14">
-          <p class="mb-4 text-sm text-secondary font-800 tracking-[0.28em] uppercase md:text-base">
+          <p class="mb-4 text-sm text-primary font-extrabold tracking-[0.28em] uppercase md:text-base">
             Как мы работаем
           </p>
 
-          <h2 class="text-4xl font-900 leading-[0.98] tracking-[-0.03em] md:text-6xl">
+          <h2 class="text-4xl font-black leading-[0.98] tracking-[-0.03em] md:text-6xl md:leading-none">
             От идеи до готового результата
           </h2>
         </div>
@@ -237,16 +237,16 @@ const steps = [
           :key="step.number"
           :delay="index * 120"
         >
-          <div class="group h-full border border-slate-200 rounded-[30px] bg-white p-7 shadow-sm transition-all duration-300 hover:border-secondary/20 hover:shadow-xl hover:-translate-y-1.5">
-            <div class="text-5xl text-secondary/22 font-900 leading-none tracking-[-0.05em] transition-all duration-300 md:text-6xl group-hover:text-secondary/40">
+          <div class="group h-full border border-slate-200 rounded-[30px] bg-white p-7 shadow-xs transition-all duration-300 hover:border-primary/20 hover:shadow-xl hover:-translate-y-1.5">
+            <div class="text-5xl text-primary/22 font-black leading-none tracking-[-0.05em] transition-all duration-300 md:text-6xl group-hover:text-primary/40 md:leading-none">
               {{ step.number }}
             </div>
 
-            <h3 class="mt-5 text-2xl font-900 leading-tight md:text-3xl">
+            <h3 class="mt-5 text-2xl font-black leading-tight md:text-3xl md:leading-9">
               {{ step.title }}
             </h3>
 
-            <p class="mt-4 text-base text-slate-600 leading-8 md:text-lg">
+            <p class="mt-4 text-base text-slate-600 leading-8 md:text-lg md:leading-7">
               {{ step.description }}
             </p>
           </div>
@@ -258,11 +258,11 @@ const steps = [
     <section class="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
       <FadeComponent>
         <div class="mb-10 max-w-3xl md:mb-14">
-          <p class="mb-4 text-sm text-secondary font-800 tracking-[0.28em] uppercase md:text-base">
+          <p class="mb-4 text-sm text-primary font-extrabold tracking-[0.28em] uppercase md:text-base">
             Наши ценности
           </p>
 
-          <h2 class="text-4xl font-900 leading-[0.98] tracking-[-0.03em] md:text-6xl">
+          <h2 class="text-4xl font-black leading-[0.98] tracking-[-0.03em] md:text-6xl md:leading-none">
             Принципы, на которых строится Brillex
           </h2>
         </div>
@@ -274,17 +274,17 @@ const steps = [
           :key="item.title"
           :delay="index * 100"
         >
-          <div class="group h-full border border-slate-200 rounded-[30px] bg-white p-8 shadow-sm transition-all duration-300 hover:border-secondary/20 hover:shadow-xl hover:-translate-y-1.5">
+          <div class="group h-full border border-slate-200 rounded-[30px] bg-white p-8 shadow-xs transition-all duration-300 hover:border-primary/20 hover:shadow-xl hover:-translate-y-1.5">
             <div class="h-full flex flex-col">
-              <div class="h-16 w-16 inline-flex items-center justify-center rounded-2xl bg-secondary/10 transition-transform duration-300 group-hover:scale-110">
-                <div class="h-3.5 w-3.5 rounded-full bg-secondary" />
+              <div class="h-16 w-16 inline-flex items-center justify-center rounded-2xl bg-primary/10 transition-transform duration-300 group-hover:scale-110">
+                <div class="h-3.5 w-3.5 rounded-full bg-primary" />
               </div>
 
-              <h3 class="mt-6 min-h-[88px] text-3xl text-primary font-900 leading-[1.02] tracking-[-0.03em] md:text-[40px]">
+              <h3 class="mt-6 min-h-[88px] text-3xl text-navy font-black leading-[1.02] tracking-[-0.03em] md:text-[40px]">
                 {{ item.title }}
               </h3>
 
-              <p class="mt-5 flex-1 text-lg text-slate-600 leading-9 md:text-xl">
+              <p class="mt-5 flex-1 text-lg text-slate-600 leading-9 md:text-xl md:leading-7">
                 {{ item.description }}
               </p>
             </div>
@@ -294,20 +294,20 @@ const steps = [
     </section>
 
     <!-- WHY US -->
-    <section class="relative overflow-hidden bg-primary text-white">
+    <section class="relative overflow-hidden bg-navy text-white">
       <div class="pointer-events-none absolute inset-0">
-        <div class="absolute right-0 top-0 h-80 w-80 rounded-full bg-secondary/15 blur-3xl" />
+        <div class="absolute right-0 top-0 h-80 w-80 rounded-full bg-primary/15 blur-3xl" />
       </div>
 
       <div class="relative mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
         <div class="grid gap-10 md:grid-cols-2 md:items-center">
           <FadeComponent>
             <div>
-              <p class="mb-4 text-sm text-white/55 font-800 tracking-[0.28em] uppercase md:text-base">
+              <p class="mb-4 text-sm text-white/55 font-extrabold tracking-[0.28em] uppercase md:text-base">
                 Почему выбирают нас
               </p>
 
-              <h2 class="max-w-2xl text-4xl font-900 leading-[0.98] tracking-[-0.03em] md:text-6xl">
+              <h2 class="max-w-2xl text-4xl font-black leading-[0.98] tracking-[-0.03em] md:text-6xl md:leading-none">
                 Мы делаем так, чтобы мерч усиливал ваш бренд
               </h2>
 
@@ -325,12 +325,12 @@ const steps = [
               :key="item"
               :delay="index * 120"
             >
-              <div class="group flex items-start gap-4 border border-white/10 rounded-[28px] bg-white/6 p-5 backdrop-blur-sm transition-all duration-300 hover:bg-white/9 hover:-translate-y-1">
-                <span class="h-10 w-10 inline-flex flex-shrink-0 items-center justify-center rounded-full bg-secondary text-base text-white font-900 transition-transform duration-300 group-hover:scale-110">
+              <div class="group flex items-start gap-4 border border-white/10 rounded-[28px] bg-white/6 p-5 backdrop-blur-xs transition-all duration-300 hover:bg-white/9 hover:-translate-y-1">
+                <span class="h-10 w-10 inline-flex flex-shrink-0 items-center justify-center rounded-full bg-primary text-base text-white font-black transition-transform duration-300 group-hover:scale-110">
                   ✓
                 </span>
 
-                <p class="text-base text-white/82 leading-8 md:text-lg">
+                <p class="text-base text-white/82 leading-8 md:text-lg md:leading-7">
                   {{ item }}
                 </p>
               </div>
@@ -345,11 +345,11 @@ const steps = [
       <div class="grid gap-10 md:grid-cols-2 md:items-start">
         <FadeComponent>
           <div>
-            <p class="mb-4 text-sm text-secondary font-800 tracking-[0.28em] uppercase md:text-base">
+            <p class="mb-4 text-sm text-primary font-extrabold tracking-[0.28em] uppercase md:text-base">
               Наша команда
             </p>
 
-            <h2 class="text-4xl font-900 leading-[0.98] tracking-[-0.03em] md:text-6xl">
+            <h2 class="text-4xl font-black leading-[0.98] tracking-[-0.03em] md:text-6xl md:leading-none">
               За каждым проектом стоит команда,
               которая любит сильные идеи
             </h2>
@@ -383,14 +383,14 @@ const steps = [
     <section class="mx-auto max-w-7xl px-5 pb-22 md:px-8 md:pb-30">
       <FadeComponent>
         <div class="relative overflow-hidden rounded-[36px] bg-slate-50 p-8 md:p-14">
-          <div class="pointer-events-none absolute right--10 top--10 h-48 w-48 rounded-full bg-secondary/12 blur-3xl" />
+          <div class="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-primary/12 blur-3xl" />
 
           <div class="relative mx-auto max-w-4xl text-center">
-            <p class="mb-4 text-sm text-secondary font-800 tracking-[0.28em] uppercase md:text-base">
+            <p class="mb-4 text-sm text-primary font-extrabold tracking-[0.28em] uppercase md:text-base">
               Свяжитесь с нами
             </p>
 
-            <h2 class="text-4xl text-primary font-900 leading-[0.98] tracking-[-0.03em] md:text-6xl">
+            <h2 class="text-4xl text-navy font-black leading-[0.98] tracking-[-0.03em] md:text-6xl md:leading-none">
               Готовы обсудить ваш проект
               и создать мерч под ваш бренд
             </h2>
@@ -405,7 +405,7 @@ const steps = [
 
               <a
                 href="/portfolio"
-                class="inline-flex items-center justify-center border border-slate-200 rounded-2xl bg-white px-8 py-4 text-base text-primary font-800 transition-all duration-300 hover:border-secondary hover:text-secondary hover:shadow-lg hover:-translate-y-1"
+                class="inline-flex items-center justify-center border border-slate-200 rounded-2xl bg-white px-8 py-4 text-base text-navy font-extrabold transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-lg hover:-translate-y-1"
               >
                 Посмотреть кейсы
               </a>
