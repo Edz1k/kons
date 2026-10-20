@@ -7,7 +7,7 @@ useHead({
 </script>
 
 <template>
-  <main class="px-4 py-10 text-center text-teal-700 dark:text-gray-200">
+  <main class="px-4 py-10 text-center text-teal-700">
     <div class="text-4xl">
       <div class="inline-block icon-[carbon--warning]" />
     </div>

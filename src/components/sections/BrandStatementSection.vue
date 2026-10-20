@@ -36,7 +36,7 @@ function handleScroll() {
   requestAnimationFrame(updateProgress)
 }
 
-const crocsStyle = computed(() => {
+const penStyle = computed(() => {
   const startY = 150
   const endY = -135
   const y = startY + (endY - startY) * scrollProgress.value
@@ -46,7 +46,7 @@ const crocsStyle = computed(() => {
   }
 })
 
-const sumkaStyle = computed(() => {
+const notebookStyle = computed(() => {
   const startY = -120
   const endY = 135
   const y = startY + (endY - startY) * scrollProgress.value
@@ -75,31 +75,31 @@ onBeforeUnmount(() => {
   >
     <div class="pointer-events-none absolute inset-0 z-0">
       <motion.div
-        class="absolute bottom-[-48px] left-[-72px] max-w-[300px] w-[58vw] lg:bottom-[-92px] lg:left-[-26px] md:bottom-[-72px] md:left-[-36px] sm:left-[-42px] lg:max-w-[450px] lg:w-[27vw] md:max-w-[390px] md:w-[30vw] sm:w-[42vw]"
+        class="absolute bottom-[-40px] left-[-48px] max-w-[220px] w-[44vw] lg:bottom-[-70px] lg:left-[-10px] md:bottom-[-56px] md:left-[-24px] sm:left-[-32px] lg:max-w-[340px] lg:w-[21vw] md:max-w-[300px] md:w-[24vw] sm:w-[32vw]"
         :initial="{ opacity: 0, x: -60, y: 45, rotate: -6, scale: 0.9 }"
         :while-in-view="{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }"
         :viewport="{ once: true, amount: 0.35 }"
         :transition="{ type: 'spring', stiffness: 78, damping: 18 }"
       >
         <img
-          src="/pictures/crocs.webp"
+          src="/pictures/pen.webp"
           alt=""
-          :style="crocsStyle"
+          :style="penStyle"
           class="parallax-item w-full object-contain opacity-90 drop-shadow-[0_28px_48px_rgba(0,0,0,0.16)]"
         >
       </motion.div>
 
       <motion.div
-        class="absolute right-[-78px] top-[8px] max-w-[320px] w-[62vw] lg:right-[-26px] lg:top-[-28px] md:right-[-42px] md:top-[-12px] sm:right-[-42px] lg:max-w-[470px] lg:w-[29vw] md:max-w-[430px] md:w-[32vw] sm:w-[46vw]"
+        class="absolute right-[-36px] top-[8px] max-w-[120px] w-[26vw] lg:right-[2%] lg:top-[-20px] md:right-[-12px] md:top-[-8px] sm:right-[-24px] lg:max-w-[260px] lg:w-[15vw] md:max-w-[220px] md:w-[18vw] sm:w-[24vw]"
         :initial="{ opacity: 0, x: 64, y: -44, rotate: 7, scale: 0.9 }"
         :while-in-view="{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }"
         :viewport="{ once: true, amount: 0.35 }"
         :transition="{ type: 'spring', stiffness: 78, damping: 18, delay: 0.08 }"
       >
         <img
-          src="/pictures/sumka.webp"
+          src="/pictures/notebook-black.webp"
           alt=""
-          :style="sumkaStyle"
+          :style="notebookStyle"
           class="parallax-item w-full object-contain opacity-90 drop-shadow-[0_30px_50px_rgba(0,0,0,0.18)]"
         >
       </motion.div>
