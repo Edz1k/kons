@@ -29,6 +29,27 @@ const portfolioItems = [
   },
 ]
 
+// Реальные заказы клиентов
+const orderPhotos = [
+  { src: '/pictures/portfolio/sds.webp', alt: 'Мерч для SDS: рюкзак, шопер, блокнот и поло' },
+  { src: '/pictures/portfolio/laska.webp', alt: 'Набор для «Ласки»: термос, кружка, блокнот и ручка' },
+  { src: '/pictures/portfolio/russkiy-dom.webp', alt: 'Набор для «Русского дома»: термос, блокнот, повербанк, флешка и ручка' },
+  { src: '/pictures/portfolio/bosch.webp', alt: 'Мерч для Bosch: зонт, кружка, бутылка и термокружка' },
+]
+
+// Работы с нанесением — исходники маленькие (320px по высоте), только для небольших плиток
+const works = [
+  { src: '/pictures/works/toyota.webp', alt: 'Кружка и ручка Toyota Material Handling' },
+  { src: '/pictures/works/bosch-thermos.webp', alt: 'Термос Bosch' },
+  { src: '/pictures/works/garanti-leasing.webp', alt: 'Сумка Garanti Leasing' },
+  { src: '/pictures/works/disney-pandora.webp', alt: 'Ланьярды Disney × Pandora' },
+  { src: '/pictures/works/jacobs.webp', alt: 'Блокнот Jacobs с тиснением' },
+  { src: '/pictures/works/pwc.webp', alt: 'Блокноты PwC' },
+  { src: '/pictures/works/rokos.webp', alt: 'Термосы Rokos' },
+  { src: '/pictures/works/brillex-pens.webp', alt: 'Ручки Brillex' },
+  { src: '/pictures/works/ukkz.webp', alt: 'Папка Усть-Каменогорского конденсаторного завода' },
+]
+
 const values = [
   {
     title: 'Минимализм',
@@ -94,36 +115,56 @@ const values = [
       </section>
     </FadeComponent>
 
-    <!-- INTRO VISUAL STRIP -->
+    <!-- INTRO VISUAL STRIP: реальные заказы -->
     <FadeComponent>
       <section class="mx-auto max-w-7xl px-6 pb-10 md:px-10 md:pb-16">
-        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-          <div class="group overflow-hidden rounded-3xl bg-gray-50">
+        <div class="grid grid-cols-2 items-start gap-3 md:grid-cols-4 md:gap-5">
+          <div
+            v-for="(photo, index) in orderPhotos"
+            :key="photo.src"
+            class="group overflow-hidden rounded-3xl bg-gray-50"
+            :class="index % 2 === 1 ? 'md:mt-10' : ''"
+          >
             <img
-              src="/image.webp"
-              alt="Brillex portfolio image 1"
-              class="h-[340px] w-full object-cover transition duration-700 md:h-[420px] group-hover:scale-105"
-            >
-          </div>
-
-          <div class="group overflow-hidden rounded-3xl bg-gray-50 md:mt-10">
-            <img
-              src="/image.webp "
-              alt="Brillex portfolio image 2"
-              class="h-[340px] w-full object-cover transition duration-700 md:h-[420px] group-hover:scale-105"
-            >
-          </div>
-
-          <div class="group overflow-hidden rounded-3xl bg-gray-50">
-            <img
-              src="/image.webp"
-              alt="Brillex portfolio image 3"
-              class="h-[340px] w-full object-cover transition duration-700 md:h-[420px] group-hover:scale-105"
+              :src="photo.src"
+              :alt="photo.alt"
+              loading="lazy"
+              decoding="async"
+              class="h-[240px] w-full object-cover transition duration-700 sm:h-[340px] md:h-[420px] group-hover:scale-105"
             >
           </div>
         </div>
       </section>
     </FadeComponent>
+
+    <!-- WORKS: лента работ (Marquee, 21st.dev). Исходники маленькие, поэтому плитки небольшие -->
+    <section class="overflow-hidden pb-10 md:pb-16" aria-label="Наши работы">
+      <p class="mx-auto max-w-7xl px-6 text-sm text-primary font-semibold tracking-[0.2em] uppercase md:px-10">
+        Наши работы
+      </p>
+      <div
+        class="group mt-5 flex [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] [--duration:50s] [--gap:0.75rem]"
+        style="gap: var(--gap)"
+      >
+        <ul
+          v-for="copy in 2"
+          :key="copy"
+          class="flex shrink-0 animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none"
+          style="gap: var(--gap)"
+          :aria-hidden="copy > 1"
+        >
+          <li v-for="work in works" :key="work.src" class="shrink-0">
+            <img
+              :src="work.src"
+              :alt="work.alt"
+              loading="lazy"
+              decoding="async"
+              class="h-40 w-auto rounded-2xl object-cover"
+            >
+          </li>
+        </ul>
+      </div>
+    </section>
 
     <!-- BRAND STATEMENT -->
     <FadeComponent>
