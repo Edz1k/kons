@@ -8,9 +8,18 @@ body,
   padding: 0;
 }
 
-html.dark {
-  background: #121212;
-  color-scheme: dark;
+/*
+ * Сайт только светлый. «only light» запрещает браузерам (Chrome на Android,
+ * Samsung Internet, Яндекс и т.п.) принудительно затемнять страницу — иначе
+ * они сами инвертируют цвета и ломают вёрстку. Фон задаём явно.
+ */
+html {
+  color-scheme: only light;
+  background: #fff;
+}
+
+body {
+  background: #fff;
 }
 
 #nprogress {

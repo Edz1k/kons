@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { motion } from 'motion-v'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { WHATSAPP_LINK } from '~/constants/contacts'
 
 defineOptions({
   name: 'IndexPage',
@@ -12,11 +13,12 @@ const scrollY = ref(0)
 const isMobile = ref(false)
 
 const titleLines = [
-  // неразрывный пробел: тире не уезжает на отдельную строку на телефоне
-  { text: 'ИЗ СЕМЕЙНОГО ДЕЛА\u00A0—' },
-  { text: 'В НОВЫЙ' },
-  { text: 'МАСШТАБ.', accent: true },
+  { text: 'МЕРЧ ДЛЯ' },
+  { text: 'СИЛЬНЫХ' },
+  { text: 'БРЕНДОВ', accent: true },
 ]
+
+const calcLink = `${WHATSAPP_LINK}?text=${encodeURIComponent('Здравствуйте! Хочу получить расчёт на мерч.')}`
 
 const heroAssets = {
   hudi: {
@@ -198,6 +200,16 @@ onBeforeUnmount(() => {
 
     <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh]">
       <div class="text-center">
+        <motion.p
+          class="mb-5 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-[11px] text-neutral-600 font-semibold tracking-[0.04em] uppercase backdrop-blur-xs sm:px-4 sm:text-xs sm:tracking-[0.12em] md:mb-7 md:text-sm"
+          :initial="{ opacity: 0, y: 16 }"
+          :animate="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.5 }"
+        >
+          <span class="size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+          <span>Из семейного дела — в новый <span class="text-primary">масштаб</span></span>
+        </motion.p>
+
         <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl lg:leading-none md:leading-none sm:leading-10">
           <motion.span
             v-for="(line, index) in titleLines"
@@ -220,13 +232,12 @@ onBeforeUnmount(() => {
           :animate="{ opacity: 1, y: 0 }"
           :transition="{ duration: 0.65, delay: 0.5, ease: [0.16, 1, 0.3, 1] }"
         >
-          Мы создаём мерч, который вызывает эмоции
-          и делает ваш бренд частью повседневной
-          жизни клиентов и сотрудников.
+          Корпоративный мерч с нанесением логотипа. Свой склад
+          и производство в Алматы — тысячи товаров уже в наличии.
         </motion.p>
 
         <motion.div
-          class="mt-8"
+          class="mt-8 flex flex-wrap items-center justify-center gap-3"
           :initial="{ opacity: 0, y: 22, scale: 0.96 }"
           :animate="{ opacity: 1, y: 0, scale: 1 }"
           :transition="{ ...heroCopyTransition, delay: 0.64 }"
@@ -239,7 +250,7 @@ onBeforeUnmount(() => {
               :while-hover="{ x: -2 }"
               :transition="{ type: 'spring', stiffness: 420, damping: 24 }"
             >
-              Создать коллекцию
+              Смотреть товары
             </motion.span>
             <motion.span
               class="h-8 w-8 inline-flex items-center justify-center rounded-full bg-white/18"
@@ -250,6 +261,16 @@ onBeforeUnmount(() => {
               →
             </motion.span>
           </RouterLink>
+
+          <a
+            :href="calcLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 border border-black/15 rounded-full bg-white/80 px-6 py-3 text-base text-black font-medium backdrop-blur-xs transition md:px-8 md:py-4 md:text-lg hover:border-black hover:bg-white"
+          >
+            <span class="icon-[mdi--whatsapp] text-xl text-[#25D366]" aria-hidden="true" />
+            Получить расчёт
+          </a>
         </motion.div>
       </div>
     </div>
