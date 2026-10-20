@@ -214,7 +214,6 @@ export function renderNewProductEmail(p) {
 <meta name="supported-color-schemes" content="light">
 <title>${escapeHtml(subject)}</title>
 <!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
 <style>
   body { margin:0; padding:0; width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
   table, td { border-collapse:collapse; mso-table-lspace:0; mso-table-rspace:0; }
@@ -233,7 +232,7 @@ export function renderNewProductEmail(p) {
 </style>
 </head>
 <body style="margin:0;padding:0;background:${PAGE_BG};">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;font-size:1px;line-height:1px;color:${PAGE_BG};">${escapeHtml(preheader)}${'&#847;&zwnj;&nbsp;'.repeat(40)}</div>
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escapeHtml(preheader)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${PAGE_BG};">
 <tr><td align="center" style="padding:28px 12px 40px;">
 

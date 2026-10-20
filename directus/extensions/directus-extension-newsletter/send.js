@@ -225,9 +225,12 @@ async function deliver({ recipients, render, unsubscribeFor, subject, config, se
         subject,
         html: email.html,
         text: email.text,
+        replyTo: config.replyTo,
         headers: {
           'List-Unsubscribe': `<${unsubscribe}>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          // Mail.ru Постмастер делит статистику по этому типу рассылки.
+          'X-Mailru-Msgtype': 'newsletter',
         },
       })
       sent++

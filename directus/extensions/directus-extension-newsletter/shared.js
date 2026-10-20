@@ -13,6 +13,8 @@ export function newsletterConfig(env) {
     siteUrl,
     logoUrl: env.NEWSLETTER_LOGO_URL ?? `${siteUrl}/email/logo-light.png`,
     from: { name: 'Brillex', address: env.EMAIL_FROM },
+    /** Ответы на письмо уходят менеджерам, а не в noreply@. */
+    replyTo: env.NEWSLETTER_REPLY_TO ?? 'Manager@vip-line.kz',
     /** Пауза между письмами, чтобы почтовики не приняли рассылку за спам-залп. */
     gapMs: Number(env.NEWSLETTER_GAP_MS ?? 1500),
   }
