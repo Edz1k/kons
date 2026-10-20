@@ -12,10 +12,10 @@ const scrollY = ref(0)
 const isMobile = ref(false)
 
 const titleLines = [
-  { text: 'ЛЮДИ ЗАПОМИНАЮТ' },
-  { text: 'НЕ РЕКЛАМУ.' },
-  { text: 'ЛЮДИ ЗАПОМИНАЮТ' },
-  { text: 'ЭМОЦИИ.', accent: true },
+  // неразрывный пробел: тире не уезжает на отдельную строку на телефоне
+  { text: 'ИЗ СЕМЕЙНОГО ДЕЛА\u00A0—' },
+  { text: 'В НОВЫЙ' },
+  { text: 'МАСШТАБ.', accent: true },
 ]
 
 const heroAssets = {
@@ -255,7 +255,10 @@ onBeforeUnmount(() => {
     </div>
   </section>
 
-  <section class="pt-12 -mt-12 lg:-mt-24 md:-mt-16">
+  <TickerSection />
+  <StockSection />
+
+  <section class="pt-12">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <CarouselComponent />
     </div>

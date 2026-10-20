@@ -27,6 +27,7 @@ declare module 'vue' {
     Label: typeof import('./components/ui/label/Label.vue')['default']
     LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
+    NumberTicker: typeof import('./components/AnimationComponent/NumberTicker.vue')['default']
     PartnerProductCard: typeof import('./components/market/PartnerProductCard.vue')['default']
     ProductCard: typeof import('./components/market/ProductCard.vue')['default']
     ProductSkeleton: typeof import('./components/market/ProductSkeleton.vue')['default']
@@ -35,7 +36,9 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StickyFeatureSection: typeof import('./components/sections/StickyFeatureSection.vue')['default']
+    StockSection: typeof import('./components/sections/StockSection.vue')['default']
     Textarea: typeof import('./components/ui/textarea/Textarea.vue')['default']
+    TickerSection: typeof import('./components/sections/TickerSection.vue')['default']
     WhatsAppButton: typeof import('./components/WhatsAppButton.vue')['default']
   }
 }
