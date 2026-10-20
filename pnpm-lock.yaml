@@ -146,12 +146,6 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
-    embla-carousel-autoplay:
-      specifier: ^8.6.0
-      version: 8.6.0
-    embla-carousel-fade:
-      specifier: ^8.6.0
-      version: 8.6.0
     embla-carousel-vue:
       specifier: ^8.6.0
       version: 8.6.0
@@ -170,6 +164,9 @@ catalogs:
     reka-ui:
       specifier: ^2.11.0
       version: 2.11.0
+    swiper:
+      specifier: ^12.1.2
+      version: 12.2.0
     tailwind-merge:
       specifier: ^3.7.0
       version: 3.7.0
@@ -217,12 +214,6 @@ importers:
       clsx:
         specifier: catalog:frontend
         version: 2.1.1
-      embla-carousel-autoplay:
-        specifier: catalog:frontend
-        version: 8.6.0(embla-carousel@8.6.0)
-      embla-carousel-fade:
-        specifier: catalog:frontend
-        version: 8.6.0(embla-carousel@8.6.0)
       embla-carousel-vue:
         specifier: catalog:frontend
         version: 8.6.0(vue@3.5.13(typescript@5.8.2))
@@ -241,6 +232,9 @@ importers:
       reka-ui:
         specifier: catalog:frontend
         version: 2.11.0(vue@3.5.13(typescript@5.8.2))
+      swiper:
+        specifier: catalog:frontend
+        version: 12.2.0
       tailwind-merge:
         specifier: catalog:frontend
         version: 3.7.0
@@ -3294,16 +3288,6 @@ packages:
   electron-to-chromium@1.5.125:
     resolution: {integrity: sha512-A2+qEsSUc95QvyFDl7PNwkDDNphIKBVfBBtWWkPGRbiWEgzLo0SvLygYF6HgzVduHd+4WGPB/WD64POFgwzY3g==}
 
-  embla-carousel-autoplay@8.6.0:
-    resolution: {integrity: sha512-OBu5G3nwaSXkZCo1A6LTaFMZ8EpkYbwIaH+bPqdBnDGQ2fh4+NbzjXjs2SktoPNKCtflfVMc75njaDHOYXcrsA==}
-    peerDependencies:
-      embla-carousel: 8.6.0
-
-  embla-carousel-fade@8.6.0:
-    resolution: {integrity: sha512-qaYsx5mwCz72ZrjlsXgs1nKejSrW+UhkbOMwLgfRT7w2LtdEB03nPRI06GHuHv5ac2USvbEiX2/nAHctcDwvpg==}
-    peerDependencies:
-      embla-carousel: 8.6.0
-
   embla-carousel-reactive-utils@8.6.0:
     resolution: {integrity: sha512-fMVUDUEx0/uIEDM0Mz3dHznDhfX+znCCDCeIophYb1QGVM7YThSWX+wz11zlYwWFOr74b4QLGg0hrGPJeG2s4A==}
     peerDependencies:
@@ -5680,6 +5664,10 @@ packages:
     resolution: {integrity: sha512-bkxnTg1kSU0guhIBmibA6UUhrQmPVA1XsQLN+ylCd+UWzbnLkySOcXpyk1mrl05f+pcaCx2eHb+sp6BgMZWX+Q==}
     engines: {node: '>=16'}
     hasBin: true
+
+  swiper@12.2.0:
+    resolution: {integrity: sha512-K8uXsBZU6ME97Ia3xbBge8IRCnR1lOmIILzvY/jGVic7dSTQ530s3uO8RvXbPUtkkXLWIwmZLRPbtDxRWVAFdg==}
+    engines: {node: '>= 4.7.0'}
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -9584,14 +9572,6 @@ snapshots:
 
   electron-to-chromium@1.5.125: {}
 
-  embla-carousel-autoplay@8.6.0(embla-carousel@8.6.0):
-    dependencies:
-      embla-carousel: 8.6.0
-
-  embla-carousel-fade@8.6.0(embla-carousel@8.6.0):
-    dependencies:
-      embla-carousel: 8.6.0
-
   embla-carousel-reactive-utils@8.6.0(embla-carousel@8.6.0):
     dependencies:
       embla-carousel: 8.6.0
@@ -12413,6 +12393,8 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.1.1
       sax: 1.6.1
+
+  swiper@12.2.0: {}
 
   symbol-tree@3.2.4: {}
 

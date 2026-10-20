@@ -8,6 +8,7 @@ import App from './App.vue'
 
 import './styles/tailwind.css'
 import './styles/main.css'
+import '~/styles/swiper.css'
 
 export const createApp = ViteSSG(
   App,

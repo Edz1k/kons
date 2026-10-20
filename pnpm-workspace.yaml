@@ -56,14 +56,13 @@ catalogs:
     '@vueuse/core': ^13.0.0
     class-variance-authority: ^0.7.1
     clsx: ^2.1.1
-    embla-carousel-autoplay: ^8.6.0
-    embla-carousel-fade: ^8.6.0
     embla-carousel-vue: ^8.6.0
     maska: ^3.2.0
     motion-v: ^2.3.0
     nprogress: ^0.2.0
     pinia: ^3.0.1
     reka-ui: ^2.11.0
+    swiper: ^12.1.2
     tailwind-merge: ^3.7.0
     vue: ^3.5.13
     vue-i18n: ^11.1.2

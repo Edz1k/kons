@@ -115,3 +115,12 @@
     background-color: Canvas;
   }
 }
+
+/* горизонтальные ленты со свайпом на телефоне — без полосы прокрутки */
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
