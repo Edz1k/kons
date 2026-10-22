@@ -467,7 +467,8 @@ async function main() {
       ],
     },
     presets: { user: '$CURRENT_USER', status: 'active' },
-    fields: ['product', 'variant', 'quantity', 'price_at_reserve', 'customer_comment', 'user', 'status'],
+    // expires_at дописывает хук, а Directus проверяет поля уже после него
+    fields: ['product', 'variant', 'quantity', 'price_at_reserve', 'customer_comment', 'user', 'status', 'expires_at'],
   })
 
   await ensurePermission(customerPolicy.id, 'reservations', 'read', {
@@ -486,7 +487,8 @@ async function main() {
     },
     validation: { status: { _in: ['cancelled'] } },
     presets: null,
-    fields: ['status'],
+    // resolved_at / resolved_by при отмене проставляет хук
+    fields: ['status', 'resolved_at', 'resolved_by'],
   })
 
   for (const collection of ['products', 'product_variants', 'Categories']) {
