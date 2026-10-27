@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
+import { ref } from 'vue'
+
 const photos = [
   {
     src: '/pictures/disclo/dtf-print.webp',
@@ -30,6 +33,61 @@ const photos = [
 // На телефоне фото идут лентой со свайпом, а не столбиком: иначе блок занимает 2,5 экрана
 const mobileRotations = [-3, 2, -2, 3, -1]
 
+// Подсказка, что ленту можно листать: точки, «Листайте» до первого свайпа и лёгкий толчок при появлении
+const stripRef = ref<HTMLElement | null>(null)
+const activeIndex = ref(0)
+const swiped = ref(false)
+
+function cardCenters(strip: HTMLElement) {
+  return Array.from(strip.children).map((card) => {
+    const el = card as HTMLElement
+    return el.offsetLeft + el.offsetWidth / 2
+  })
+}
+
+function onStripScroll() {
+  const strip = stripRef.value
+  if (!strip)
+    return
+
+  if (strip.scrollLeft > 8)
+    swiped.value = true
+
+  const center = strip.scrollLeft + strip.clientWidth / 2
+  const centers = cardCenters(strip)
+  activeIndex.value = centers.reduce((best, c, i) => Math.abs(c - center) < Math.abs(centers[best] - center) ? i : best, 0)
+}
+
+function scrollToCard(index: number) {
+  const strip = stripRef.value
+  if (!strip)
+    return
+  strip.scrollTo({ left: cardCenters(strip)[index] - strip.clientWidth / 2, behavior: 'smooth' })
+}
+
+const { stop: stopNudge } = useIntersectionObserver(stripRef, ([entry]) => {
+  if (!entry?.isIntersecting)
+    return
+  stopNudge()
+
+  const strip = stripRef.value
+  if (!strip || swiped.value || window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    return
+
+  // snap-mandatory вернул бы ленту на место мгновенно — на время толчка снап выключаем
+  window.setTimeout(() => {
+    strip.style.scrollSnapType = 'none'
+    strip.scrollTo({ left: 72, behavior: 'smooth' })
+    window.setTimeout(() => {
+      strip.scrollTo({ left: 0, behavior: 'smooth' })
+      window.setTimeout(() => {
+        strip.style.scrollSnapType = ''
+        swiped.value = false
+      }, 500)
+    }, 650)
+  }, 700)
+}, { threshold: 0.6 })
+
 // две строки, порядок как в брифе
 const technologies = [
   ['UV', 'DTF', 'UV DTF', 'Лазер', 'Шелкография'],
@@ -54,7 +112,11 @@ const materials = ['Пластик', 'Металл', 'Текстиль', 'Бум
 
               <!-- Мобильная версия: лента со свайпом -->
               <FadeComponent class="lg:hidden">
-                <div class="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 py-4 -mx-4 sm:px-6 sm:-mx-6">
+                <div
+                  ref="stripRef"
+                  class="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 py-4 -mx-4 sm:px-6 sm:-mx-6"
+                  @scroll.passive="onStripScroll"
+                >
                   <div
                     v-for="(photo, i) in photos"
                     :key="photo.src"
@@ -68,6 +130,29 @@ const materials = ['Пластик', 'Металл', 'Текстиль', 'Бум
                       class="block w-full rounded-xl bg-white p-1.5 shadow-[0_12px_24px_rgba(0,0,0,0.16)]"
                     >
                   </div>
+                </div>
+
+                <div class="mt-1 flex items-center justify-between gap-4">
+                  <div class="flex items-center gap-1.5">
+                    <button
+                      v-for="(photo, i) in photos"
+                      :key="photo.src"
+                      type="button"
+                      class="h-1.5 rounded-full transition-all duration-300"
+                      :class="i === activeIndex ? 'w-6 bg-primary' : 'w-1.5 bg-black/15'"
+                      :aria-label="`Фото ${i + 1} из ${photos.length}`"
+                      @click="scrollToCard(i)"
+                    />
+                  </div>
+
+                  <span
+                    class="flex items-center gap-1.5 text-xs text-neutral-400 font-medium transition-opacity duration-500"
+                    :class="swiped ? 'opacity-0' : 'opacity-100'"
+                    aria-hidden="true"
+                  >
+                    <span class="icon-[mdi--gesture-swipe-left] size-4" />
+                    Листайте
+                  </span>
                 </div>
               </FadeComponent>
 
