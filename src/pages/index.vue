@@ -20,20 +20,15 @@ const titleLines = [
 const calcLink = `${WHATSAPP_LINK}?text=${encodeURIComponent('Здравствуйте! Хочу получить расчёт на мерч.')}`
 
 const heroAssets = {
-  hudi: {
-    initial: { opacity: 0, x: -140, y: 110, rotate: -20, scale: 0.72 },
-    animate: { opacity: 1, x: 0, y: 0, rotate: -8, scale: 1 },
-    transition: { type: 'spring', stiffness: 74, damping: 15, delay: 0.24 },
-  },
   fan: {
     initial: { opacity: 0, x: -90, y: -58, rotate: -14, scale: 0.88 },
     animate: { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 },
     transition: { type: 'spring', stiffness: 62, damping: 17, delay: 0.14 },
   },
-  notebooks: {
-    initial: { opacity: 0, x: 140, y: 100, rotate: 18, scale: 0.72 },
-    animate: { opacity: 1, x: 0, y: 0, rotate: 6, scale: 1 },
-    transition: { type: 'spring', stiffness: 82, damping: 16, delay: 0.32 },
+  set: {
+    initial: { opacity: 0, y: 40, scale: 0.92 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    transition: { type: 'spring', stiffness: 80, damping: 16, delay: 0.7 },
   },
 }
 
@@ -106,15 +101,6 @@ function createParallaxStyle(options: {
   })
 }
 
-const hudiStyle = createParallaxStyle({
-  strengthX: 50,
-  strengthY: 50,
-  invertX: false,
-  invertY: false,
-  mobileScrollX: 0,
-  mobileScrollY: -0.08,
-})
-
 const fanStyle = createParallaxStyle({
   strengthX: 38,
   strengthY: 38,
@@ -124,13 +110,13 @@ const fanStyle = createParallaxStyle({
   mobileScrollY: 0.05,
 })
 
-const notebooksStyle = createParallaxStyle({
-  strengthX: 34,
-  strengthY: 26,
+const setStyle = createParallaxStyle({
+  strengthX: 30,
+  strengthY: 18,
   invertX: true,
   invertY: false,
   mobileScrollX: 0,
-  mobileScrollY: -0.12,
+  mobileScrollY: -0.04,
 })
 
 onMounted(() => {
@@ -154,20 +140,6 @@ onBeforeUnmount(() => {
   <section class="relative min-h-[calc(100svh-113px)] overflow-hidden bg-white lg:min-h-[90vh]">
     <div class="pointer-events-none absolute inset-0">
       <motion.div
-        class="absolute bottom-[-88px] left-[-72px] w-[250px] lg:bottom-[-135px] lg:left-[-80px] md:bottom-[-98px] md:left-[-60px] sm:bottom-[-72px] sm:left-[-42px] lg:w-[390px] md:w-[300px] sm:w-[255px]"
-        :initial="heroAssets.hudi.initial"
-        :animate="heroAssets.hudi.animate"
-        :transition="heroAssets.hudi.transition"
-      >
-        <img
-          src="/pictures/hudi.webp"
-          alt=""
-          :style="hudiStyle"
-          class="parallax-item w-full drop-shadow-[0_32px_54px_rgba(0,0,0,0.2)]"
-        >
-      </motion.div>
-
-      <motion.div
         class="absolute"
         :style="fanBoxStyle"
         :initial="heroAssets.fan.initial"
@@ -182,22 +154,24 @@ onBeforeUnmount(() => {
         >
       </motion.div>
 
+      <!-- набор (термостакан, сумка, блокнот) внизу по центру, над бегущей строкой -->
       <motion.div
-        class="absolute bottom-[-10px] right-[0px] w-[225px] lg:bottom-[-26px] lg:right-[10px] md:bottom-[-20px] md:right-[0px] sm:bottom-[-16px] sm:right-[-4px] lg:w-[380px] md:w-[290px] sm:w-[230px]"
-        :initial="heroAssets.notebooks.initial"
-        :animate="heroAssets.notebooks.animate"
-        :transition="heroAssets.notebooks.transition"
+        class="absolute bottom-2 left-1/2 w-[min(44vw,230px)] -translate-x-1/2 min-[393px]:bottom-3 min-[393px]:w-[min(56vw,230px)] lg:bottom-8 md:bottom-6 lg:w-[min(28vw,380px)] md:w-[min(42vw,340px)]"
+        :initial="heroAssets.set.initial"
+        :animate="heroAssets.set.animate"
+        :transition="heroAssets.set.transition"
       >
         <img
-          src="/pictures/notebooks.webp"
+          src="/pictures/hero-set.webp"
           alt=""
-          :style="notebooksStyle"
-          class="parallax-item w-full drop-shadow-[0_32px_52px_rgba(0,0,0,0.2)]"
+          :style="setStyle"
+          class="parallax-item w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.14)]"
         >
       </motion.div>
     </div>
 
-    <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh]">
+    <!-- с планшета снизу оставляем место под набор, чтобы текст и кнопки центрировались над ним -->
+    <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh] lg:pb-60 md:pb-52">
       <div class="text-left md:text-center">
         <motion.p
           class="mx-auto mb-5 w-fit flex items-center gap-1.5 whitespace-nowrap rounded-full border border-black/10 bg-white/80 px-2.5 py-1 text-[10px] text-neutral-600 font-semibold tracking-[0.03em] uppercase backdrop-blur-xs sm:gap-2 sm:px-4 sm:py-1.5 sm:text-xs sm:tracking-[0.12em] md:mb-7 md:inline-flex md:text-sm"
@@ -209,7 +183,7 @@ onBeforeUnmount(() => {
           <span>Из семейного дела — в новый <span class="text-primary">масштаб</span></span>
         </motion.p>
 
-        <h1 class="text-3xl font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl lg:leading-none md:leading-none sm:leading-10">
+        <h1 class="text-[min(1.875rem,8vw)] font-extrabold leading-tight lg:text-7xl md:text-6xl sm:text-4xl lg:leading-none md:leading-none sm:leading-10">
           <motion.span
             v-for="(line, index) in titleLines"
             :key="line.text"
@@ -236,14 +210,14 @@ onBeforeUnmount(() => {
         </motion.p>
 
         <motion.div
-          class="mt-8 flex flex-wrap items-center justify-start gap-3 md:justify-center"
+          class="mt-8 flex flex-wrap items-center justify-center gap-3 min-[393px]:flex-nowrap min-[393px]:justify-start min-[393px]:gap-2 sm:gap-3 md:justify-center"
           :initial="{ opacity: 0, y: 22, scale: 0.96 }"
           :animate="{ opacity: 1, y: 0, scale: 1 }"
           :transition="{ ...heroCopyTransition, delay: 0.64 }"
         >
           <RouterLink
             to="/market"
-            class="group inline-flex items-center gap-3 rounded-full bg-primary px-6 py-3 text-base text-white font-medium shadow-[0_18px_36px_rgba(230,87,35,0.28)] transition hover:bg-orange-600 md:px-8 md:py-4 md:text-lg"
+            class="group inline-flex shrink-0 items-center gap-3 whitespace-nowrap rounded-full bg-primary px-6 py-3 text-base text-white font-medium shadow-[0_18px_36px_rgba(230,87,35,0.28)] transition min-[393px]:gap-2 min-[393px]:px-3.5 min-[393px]:text-[13px] hover:bg-orange-600 sm:gap-3 sm:px-6 sm:text-base md:px-8 md:py-4 md:text-lg"
           >
             <motion.span
               :while-hover="{ x: -2 }"
@@ -252,7 +226,7 @@ onBeforeUnmount(() => {
               Смотреть товары
             </motion.span>
             <motion.span
-              class="h-8 w-8 inline-flex items-center justify-center rounded-full bg-white/18"
+              class="h-8 w-8 inline-flex items-center justify-center rounded-full bg-white/18 min-[393px]:h-7 min-[393px]:w-7 sm:h-8 sm:w-8"
               :while-hover="{ x: 5, scale: 1.08 }"
               :while-tap="{ scale: 0.94 }"
               :transition="{ type: 'spring', stiffness: 420, damping: 20 }"
@@ -265,7 +239,7 @@ onBeforeUnmount(() => {
             :href="calcLink"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 border border-black/15 rounded-full bg-white/80 px-6 py-3 text-base text-black font-medium backdrop-blur-xs transition md:px-8 md:py-4 md:text-lg hover:border-black hover:bg-white"
+            class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap border border-black/15 rounded-full bg-white/80 px-6 py-3 text-base text-black font-medium backdrop-blur-xs transition min-[393px]:gap-1.5 min-[393px]:px-3.5 min-[393px]:text-[13px] sm:gap-2 sm:px-6 sm:text-base md:px-8 md:py-4 md:text-lg hover:border-black hover:bg-white"
           >
             <span class="icon-[mdi--whatsapp] text-xl text-[#25D366]" aria-hidden="true" />
             Получить расчёт
