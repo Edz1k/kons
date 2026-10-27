@@ -1,27 +1,27 @@
 <script setup lang="ts">
 const photos = [
   {
-    src: '/pictures/disclo/Group1.webp',
+    src: '/pictures/disclo/dtf-print.webp',
     alt: 'card 1',
     desktopClass: 'left-0 top-10 w-[58%] rotate-[-4deg] z-10',
   },
   {
-    src: '/pictures/disclo/Group2.webp',
+    src: '/pictures/disclo/laser-engraving.webp',
     alt: 'card 2',
     desktopClass: 'right-0 top-0 w-[42%] rotate-[6deg] z-20',
   },
   {
-    src: '/pictures/disclo/Group3.webp',
+    src: '/pictures/disclo/silkscreen.webp',
     alt: 'card 3',
     desktopClass: 'left-[18%] top-[420px] w-[60%] rotate-[10deg] z-30',
   },
   {
-    src: '/pictures/disclo/Group4.webp',
+    src: '/pictures/disclo/gold-foil.webp',
     alt: 'card 4',
     desktopClass: 'left-0 top-[980px] w-[46%] rotate-[-8deg] z-10',
   },
   {
-    src: '/pictures/disclo/Group5.webp',
+    src: '/pictures/disclo/uv-print.webp',
     alt: 'card 5',
     desktopClass: 'right-[4%] top-[1180px] w-[52%] rotate-[8deg] z-20',
   },
@@ -29,6 +29,13 @@ const photos = [
 
 // На телефоне фото идут лентой со свайпом, а не столбиком: иначе блок занимает 2,5 экрана
 const mobileRotations = [-3, 2, -2, 3, -1]
+
+// две строки, порядок как в брифе
+const technologies = [
+  ['UV', 'DTF', 'UV DTF', 'Лазер', 'Шелкография'],
+  ['Тиснение', 'Сублимация', 'Термотрансфер'],
+]
+const materials = ['Пластик', 'Металл', 'Текстиль', 'Бумага']
 </script>
 
 <template>
@@ -41,7 +48,7 @@ const mobileRotations = [-3, 2, -2, 3, -1]
             <div class="flex flex-col gap-4 lg:gap-10">
               <FadeComponent>
                 <h2 class="max-w-[520px] text-2xl font-semibold leading-tight lg:text-5xl sm:text-3xl lg:leading-none sm:leading-9">
-                  Бренд одежды внутри компании
+                  Собственное производство в&nbsp;Алматы
                 </h2>
               </FadeComponent>
 
@@ -91,9 +98,32 @@ const mobileRotations = [-3, 2, -2, 3, -1]
                 Brillex
               </span>
               <p class="mt-5 text-xl font-bold leading-tight uppercase lg:text-4xl sm:text-3xl lg:leading-10 sm:leading-9">
-                Если вещь не хочется носить —
-                <span class="text-primary">она не работает на ваш бренд.</span>
+                <!-- цифры иначе берутся из DM Sans и выглядят тоньше кириллицы рядом -->
+                <span class="[font-family:system-ui]">10+</span> печатных станков.
+                <span class="text-primary">Ваша идея не&nbsp;обязана быть простой.</span>
               </p>
+
+              <span class="mt-6 block text-xs text-white/40 font-semibold tracking-[0.2em] uppercase lg:mt-8">
+                Технологии
+              </span>
+              <p class="mt-3 text-[min(1rem,3.6vw)] font-semibold leading-7 min-[360px]:whitespace-nowrap lg:text-[min(1.25rem,1.8vw)] sm:text-lg lg:leading-9 sm:leading-8">
+                <span v-for="line in technologies" :key="line[0]" class="block">
+                  <template v-for="(tech, i) in line" :key="tech">
+                    <span v-if="i" class="mx-1 text-primary sm:mx-1.5">/</span>{{ tech }}
+                  </template>
+                </span>
+              </p>
+
+              <div class="mt-6 border-t border-white/10 pt-6 lg:mt-8 lg:pt-8">
+                <p class="text-base font-semibold lg:text-2xl sm:text-xl">
+                  <template v-for="(material, i) in materials" :key="material">
+                    <span v-if="i" class="mx-1 text-primary sm:mx-1.5">/</span>{{ material }}
+                  </template>
+                </p>
+                <p class="mt-3 text-sm text-white/60 leading-6 lg:text-base lg:leading-7">
+                  У каждого материала свои правила, но&nbsp;мы научились договариваться с&nbsp;каждым из&nbsp;них.
+                </p>
+              </div>
             </div>
           </div>
         </div>

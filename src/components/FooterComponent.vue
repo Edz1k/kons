@@ -50,17 +50,12 @@ const socialBtn
           </p>
 
           <h2 class="mt-3 text-2xl font-bold leading-tight tracking-tight md:mt-4 md:text-5xl md:leading-none">
-            Создаём мерч,
+            Результат,
             <span class="text-primary">
-              который выглядит
+              выше ваших
             </span>
-            стильно и современно
+            ожиданий
           </h2>
-
-          <p class="mt-3 max-w-xl text-sm text-white/75 leading-6 md:mt-4 md:text-base md:leading-6">
-            Помогаем брендам, командам и проектам создавать качественный мерч с
-            характером — от идеи до готового результата.
-          </p>
         </div>
 
         <div class="shrink-0">

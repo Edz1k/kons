@@ -13,8 +13,7 @@ const scrollY = ref(0)
 const isMobile = ref(false)
 
 const titleLines = [
-  { text: 'МЕРЧ ДЛЯ' },
-  { text: 'СИЛЬНЫХ' },
+  { text: 'МЕРЧ ДЛЯ СИЛЬНЫХ' },
   { text: 'БРЕНДОВ', accent: true },
 ]
 
@@ -199,14 +198,14 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh]">
-      <div class="text-center">
+      <div class="text-left md:text-center">
         <motion.p
-          class="mb-5 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-[11px] text-neutral-600 font-semibold tracking-[0.04em] uppercase backdrop-blur-xs sm:px-4 sm:text-xs sm:tracking-[0.12em] md:mb-7 md:text-sm"
+          class="mx-auto mb-5 w-fit flex items-center gap-1.5 whitespace-nowrap rounded-full border border-black/10 bg-white/80 px-2.5 py-1 text-[10px] text-neutral-600 font-semibold tracking-[0.03em] uppercase backdrop-blur-xs sm:gap-2 sm:px-4 sm:py-1.5 sm:text-xs sm:tracking-[0.12em] md:mb-7 md:inline-flex md:text-sm"
           :initial="{ opacity: 0, y: 16 }"
           :animate="{ opacity: 1, y: 0 }"
           :transition="{ duration: 0.5 }"
         >
-          <span class="size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+          <span class="size-1.5 shrink-0 rounded-full bg-primary sm:size-2" aria-hidden="true" />
           <span>Из семейного дела — в новый <span class="text-primary">масштаб</span></span>
         </motion.p>
 
@@ -214,11 +213,11 @@ onBeforeUnmount(() => {
           <motion.span
             v-for="(line, index) in titleLines"
             :key="line.text"
-            class="block overflow-hidden"
+            class="block overflow-hidden whitespace-nowrap"
             :initial="{ opacity: 0, y: 64, rotateX: -20 }"
             :animate="{ opacity: 1, y: 0, rotateX: 0 }"
             :transition="{ ...heroCopyTransition, delay: 0.1 + index * 0.08 }"
-            style="transform-origin: center bottom;"
+            style="transform-origin: left bottom;"
           >
             <span :class="line.accent ? 'text-primary' : 'text-black'">
               {{ line.text }}
@@ -237,7 +236,7 @@ onBeforeUnmount(() => {
         </motion.p>
 
         <motion.div
-          class="mt-8 flex flex-wrap items-center justify-center gap-3"
+          class="mt-8 flex flex-wrap items-center justify-start gap-3 md:justify-center"
           :initial="{ opacity: 0, y: 22, scale: 0.96 }"
           :animate="{ opacity: 1, y: 0, scale: 1 }"
           :transition="{ ...heroCopyTransition, delay: 0.64 }"
@@ -287,7 +286,7 @@ onBeforeUnmount(() => {
 
   <BrandStatementSection />
   <StickyFeatureSection />
-  <CapabilitiesSection />
+  <StepsSection />
 </template>
 
 <route lang="yaml">

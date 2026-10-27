@@ -3,8 +3,6 @@ import { computed, ref } from 'vue'
 import { useAmocrm } from '~/composables/useAmocrm'
 import { EMAIL_PRIMARY } from '~/constants/contacts'
 
-type ContactType = 'invite' | 'video'
-
 const props = withDefaults(defineProps<{
   email?: string
   source?: string
@@ -21,7 +19,6 @@ const { sendForm } = useAmocrm()
 
 const name = ref('')
 const phone = ref('')
-const contactType = ref<ContactType>('invite')
 const agreed = ref(false)
 
 const loading = ref(false)
@@ -56,9 +53,7 @@ async function submitForm() {
       phone: phone.value,
       source: pageSource,
       product_title: props.productTitle || 'Обратная связь',
-      variant_name: contactType.value === 'invite'
-        ? 'Приглашаем Brillex в гости'
-        : 'Созвонимся по видео',
+      variant_name: props.variantName,
       sku: props.sku,
       quantity: props.quantity !== undefined ? String(props.quantity) : undefined,
     })
@@ -66,7 +61,6 @@ async function submitForm() {
     success.value = true
     name.value = ''
     phone.value = ''
-    contactType.value = 'invite'
     agreed.value = false
   }
   catch (e) {
@@ -80,7 +74,7 @@ async function submitForm() {
 </script>
 
 <template>
-  <section class="w-full py-10 md:py-20 xl:py-24">
+  <section id="contact-form" class="w-full scroll-mt-28 py-10 md:py-20 xl:py-24">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <div class="mb-5 md:mb-10 xl:mb-12">
         <p class="text-sm text-primary font-extrabold tracking-[0.22em] uppercase md:text-base">
@@ -168,42 +162,6 @@ async function submitForm() {
                   class="w-full bg-transparent text-base text-slate-900 outline-hidden md:text-lg placeholder:text-slate-400"
                 >
               </div>
-            </div>
-
-            <div class="mt-5 grid grid-cols-2 gap-2 md:mt-8 md:grid-cols-1 md:gap-4">
-              <label class="flex cursor-pointer items-start gap-2 rounded-2xl bg-white px-3 py-3 transition md:gap-3 md:px-4 md:py-4 hover:ring-1 hover:ring-slate-300">
-                <input
-                  v-model="contactType"
-                  type="radio"
-                  value="invite"
-                  class="mt-0.5 h-5 w-5 shrink-0 accent-black md:mt-1"
-                >
-                <div>
-                  <p class="text-sm text-slate-900 font-semibold md:text-base">
-                    Приглашаем Brillex в гости
-                  </p>
-                  <p class="mt-1 hidden text-sm text-slate-500 leading-6 md:block">
-                    Обсудим задачу лично и покажем возможные решения по мерчу.
-                  </p>
-                </div>
-              </label>
-
-              <label class="flex cursor-pointer items-start gap-2 rounded-2xl bg-white px-3 py-3 transition md:gap-3 md:px-4 md:py-4 hover:ring-1 hover:ring-slate-300">
-                <input
-                  v-model="contactType"
-                  type="radio"
-                  value="video"
-                  class="mt-0.5 h-5 w-5 shrink-0 accent-black md:mt-1"
-                >
-                <div>
-                  <p class="text-sm text-slate-900 font-semibold md:text-base">
-                    Созвонимся по видео
-                  </p>
-                  <p class="mt-1 hidden text-sm text-slate-500 leading-6 md:block">
-                    Быстро обсудим проект онлайн в удобное для вас время.
-                  </p>
-                </div>
-              </label>
             </div>
 
             <label class="mt-5 flex items-start gap-3 md:mt-8">

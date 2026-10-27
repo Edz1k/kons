@@ -6,10 +6,11 @@ import { cn } from '~/lib/utils'
 /*
  * Bento-сетка статистики (идея с 21st.dev) + Number Ticker.
  * На десктопе ручки — большая карточка 2×2, остальные вокруг неё.
- * На телефоне все шесть карточек одинаковые (2×3), чтобы блок влезал в экран.
+ * На телефоне все шесть карточек одинаковые (3×2), чтобы блок влезал в экран Safari
+ * вместе с липким навбаром (на iPhone 15 Pro под контент остаётся ~550px).
  */
 const stats = [
-  { value: 250_000, label: 'ручек', span: 'lg:col-span-2 lg:row-span-2' },
+  { value: 300_000, label: 'ручек', span: 'lg:col-span-2 lg:row-span-2' },
   { value: 30_000, label: 'ланьярдов' },
   { value: 22_000, label: 'блокнотов' },
   { value: 12_000, label: 'бутылок' },
@@ -46,7 +47,7 @@ const stockLink = `${WHATSAPP_LINK}?text=${encodeURIComponent('Здравств�
         </FadeComponent>
       </div>
 
-      <dl class="mt-6 grid grid-cols-2 gap-2 md:mt-12 md:gap-3 lg:grid-cols-3 lg:grid-rows-3">
+      <dl class="mt-5 grid grid-cols-3 gap-2 md:mt-12 md:grid-cols-2 md:gap-3 lg:grid-cols-3 lg:grid-rows-3">
         <FadeComponent
           v-for="(stat, index) in stats"
           :key="stat.label"
@@ -55,7 +56,7 @@ const stockLink = `${WHATSAPP_LINK}?text=${encodeURIComponent('Здравств�
         >
           <div
             :class="cn(
-              'relative isolate flex h-full flex-col justify-end overflow-hidden rounded-3xl bg-neutral-100 p-4 transition-transform duration-300 hover:-translate-y-1 md:p-6',
+              'relative isolate flex h-full flex-col justify-end overflow-hidden rounded-2xl bg-neutral-100 px-3 py-3.5 transition-transform duration-300 hover:-translate-y-1 md:rounded-3xl md:p-6',
               index === 0 && 'bg-black text-white',
             )"
           >
@@ -68,10 +69,10 @@ const stockLink = `${WHATSAPP_LINK}?text=${encodeURIComponent('Здравств�
               <div class="absolute -top-24 -right-24 -z-10 hidden size-80 rounded-full bg-primary/40 blur-3xl lg:block" aria-hidden="true" />
             </template>
 
-            <dt class="order-2 mt-1 text-xs font-semibold tracking-[0.15em] uppercase md:text-sm" :class="index === 0 ? 'text-white/60' : 'text-neutral-500'">
+            <dt class="order-2 mt-1 text-[10px] font-semibold tracking-[0.06em] uppercase md:text-sm md:tracking-[0.15em]" :class="index === 0 ? 'text-white/60' : 'text-neutral-500'">
               {{ stat.label }}
             </dt>
-            <dd class="order-1 m-0 font-black tracking-tight" :class="index === 0 ? 'text-3xl md:text-5xl lg:text-8xl' : 'text-3xl md:text-5xl'">
+            <dd class="order-1 m-0 font-black tracking-tight" :class="index === 0 ? 'text-[min(1.125rem,4.6vw)] md:text-5xl lg:text-8xl' : 'text-[min(1.125rem,4.6vw)] md:text-5xl'">
               <NumberTicker :value="stat.value" :delay="index * 0.06" /><span class="text-primary">+</span>
             </dd>
           </div>
