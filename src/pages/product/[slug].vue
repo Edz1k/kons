@@ -35,6 +35,17 @@ const modalRef = ref()
 const reserveModalRef = ref()
 const reservationError = ref('')
 
+// Возвращаемся в каталог с теми же фильтрами (категория, поиск, сортировка),
+// если пришли на товар оттуда.
+// history.state обновляется роутером после setup, поэтому читаем в onMounted.
+const catalogLink = ref('/market')
+
+onMounted(() => {
+  const back = window.history.state?.back
+  if (typeof back === 'string' && back.startsWith('/market'))
+    catalogLink.value = back
+})
+
 const variants = computed<ProductVariant[]>(() => item.value?.product_variants ?? [])
 const isPartnerProduct = computed(() => Boolean(item.value?.is_partner))
 
@@ -419,7 +430,7 @@ watch(slug, (value) => {
     <div class="mx-auto max-w-7xl">
       <div class="mb-8 flex items-center gap-2 text-sm text-black/50">
         <RouterLink
-          to="/market"
+          :to="catalogLink"
           class="transition hover:text-black"
         >
           Каталог
@@ -445,7 +456,7 @@ watch(slug, (value) => {
         </p>
 
         <RouterLink
-          to="/market"
+          :to="catalogLink"
           class="border border-black rounded-full px-6 py-3 text-sm font-medium transition hover:bg-black hover:text-white"
         >
           Вернуться в каталог

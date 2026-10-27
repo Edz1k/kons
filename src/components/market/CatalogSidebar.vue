@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useMarketFilters } from '~/composables/market/useMarketFilters'
 import { useProductsStore } from '~/stores/product'
 
 const productsStore = useProductsStore()
@@ -10,14 +11,16 @@ const {
   loadingCategories,
 } = storeToRefs(productsStore)
 
-async function setCategory(value: string) {
-  productsStore.setCategory(value)
-  await productsStore.resetAndReload()
+// Категория живёт в URL (?category=), иначе при возврате с карточки товара
+// страница каталога перечитывает query и сбрасывает выбор.
+const { selectedCategoryObject } = useMarketFilters()
+
+function setCategory(slug: string) {
+  selectedCategoryObject.value = { slug, title: '' }
 }
 
-async function clearCategory() {
-  productsStore.clearCategory()
-  await productsStore.resetAndReload()
+function clearCategory() {
+  selectedCategoryObject.value = { slug: '', title: '' }
 }
 </script>
 
