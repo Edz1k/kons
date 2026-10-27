@@ -25,10 +25,15 @@ const heroAssets = {
     animate: { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 },
     transition: { type: 'spring', stiffness: 62, damping: 17, delay: 0.14 },
   },
-  set: {
-    initial: { opacity: 0, y: 40, scale: 0.92 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    transition: { type: 'spring', stiffness: 80, damping: 16, delay: 0.7 },
+  shopper: {
+    initial: { opacity: 0, x: -120, y: 90, rotate: -12, scale: 0.8 },
+    animate: { opacity: 1, x: 0, y: 0, rotate: -4, scale: 1 },
+    transition: { type: 'spring', stiffness: 74, damping: 15, delay: 0.24 },
+  },
+  notebook: {
+    initial: { opacity: 0, x: 120, y: 90, rotate: 14, scale: 0.8 },
+    animate: { opacity: 1, x: 0, y: 0, rotate: 4, scale: 1 },
+    transition: { type: 'spring', stiffness: 82, damping: 16, delay: 0.32 },
   },
 }
 
@@ -110,13 +115,22 @@ const fanStyle = createParallaxStyle({
   mobileScrollY: 0.05,
 })
 
-const setStyle = createParallaxStyle({
-  strengthX: 30,
-  strengthY: 18,
+const shopperStyle = createParallaxStyle({
+  strengthX: 44,
+  strengthY: 40,
+  invertX: false,
+  invertY: false,
+  mobileScrollX: 0,
+  mobileScrollY: -0.05,
+})
+
+const notebookStyle = createParallaxStyle({
+  strengthX: 34,
+  strengthY: 26,
   invertX: true,
   invertY: false,
   mobileScrollX: 0,
-  mobileScrollY: -0.04,
+  mobileScrollY: -0.08,
 })
 
 onMounted(() => {
@@ -154,24 +168,38 @@ onBeforeUnmount(() => {
         >
       </motion.div>
 
-      <!-- набор (термостакан, сумка, блокнот) внизу по центру, над бегущей строкой -->
+      <!-- термостакан с шоппером — в левом нижнем углу (там раньше было худи) -->
       <motion.div
-        class="absolute bottom-2 left-1/2 w-[min(44vw,230px)] -translate-x-1/2 min-[393px]:bottom-3 min-[393px]:w-[min(56vw,230px)] lg:bottom-8 md:bottom-6 lg:w-[min(28vw,380px)] md:w-[min(42vw,340px)]"
-        :initial="heroAssets.set.initial"
-        :animate="heroAssets.set.animate"
-        :transition="heroAssets.set.transition"
+        class="absolute bottom-[-6px] left-[10px] w-[88px] min-[393px]:w-[130px] lg:bottom-0 md:bottom-2 lg:left-[-30px] md:left-[-24px] lg:w-[min(22vw,320px)] md:w-[220px]"
+        :initial="heroAssets.shopper.initial"
+        :animate="heroAssets.shopper.animate"
+        :transition="heroAssets.shopper.transition"
       >
         <img
-          src="/pictures/hero-set.webp"
+          src="/pictures/hero-shopper.webp"
           alt=""
-          :style="setStyle"
-          class="parallax-item w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.14)]"
+          :style="shopperStyle"
+          class="parallax-item w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.16)]"
+        >
+      </motion.div>
+
+      <!-- блокнот с ручкой — в правом нижнем углу -->
+      <motion.div
+        class="absolute bottom-[-6px] right-[20px] w-[62px] min-[393px]:w-[88px] lg:bottom-2 md:bottom-3 lg:right-[1%] md:right-[0px] lg:w-[min(14vw,210px)] md:w-[150px]"
+        :initial="heroAssets.notebook.initial"
+        :animate="heroAssets.notebook.animate"
+        :transition="heroAssets.notebook.transition"
+      >
+        <img
+          src="/pictures/hero-notebook-pen.webp"
+          alt=""
+          :style="notebookStyle"
+          class="parallax-item w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.16)]"
         >
       </motion.div>
     </div>
 
-    <!-- с планшета снизу оставляем место под набор, чтобы текст и кнопки центрировались над ним -->
-    <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh] lg:pb-60 md:pb-52">
+    <div class="relative z-10 mx-auto min-h-[calc(100svh-113px)] flex items-center justify-center px-4 container lg:min-h-[90vh]">
       <div class="text-left md:text-center">
         <motion.p
           class="mx-auto mb-5 w-fit flex items-center gap-1.5 whitespace-nowrap rounded-full border border-black/10 bg-white/80 px-2.5 py-1 text-[10px] text-neutral-600 font-semibold tracking-[0.03em] uppercase backdrop-blur-xs sm:gap-2 sm:px-4 sm:py-1.5 sm:text-xs sm:tracking-[0.12em] md:mb-7 md:inline-flex md:text-sm"
