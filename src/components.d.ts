@@ -22,6 +22,7 @@ declare module 'vue' {
     FadeComponent: typeof import('./components/AnimationComponent/FadeComponent.vue')['default']
     FilterComponent: typeof import('./components/market/FilterComponent.vue')['default']
     FooterComponent: typeof import('./components/FooterComponent.vue')['default']
+    HeroCinematic: typeof import('./components/sections/HeroCinematic.vue')['default']
     Input: typeof import('./components/ui/input/Input.vue')['default']
     Label: typeof import('./components/ui/label/Label.vue')['default']
     LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
