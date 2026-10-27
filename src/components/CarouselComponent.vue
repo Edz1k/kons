@@ -4,8 +4,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 
 const slides = [
   // наборы «мерч под ключ» — белый, чёрный, синий
-  '/carousel/set-white.webp',
   '/carousel/set-black.webp',
+  '/carousel/set-white.webp',
   '/carousel/set-blue.webp',
   '/carousel/1.webp',
   '/carousel/7.webp',
