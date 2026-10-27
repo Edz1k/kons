@@ -217,12 +217,16 @@ onBeforeUnmount(() => {
       >
         <div class="hero-tilt relative [transform-style:preserve-3d]" :style="shopperTilt">
           <img src="/pictures/hero-shopper.webp" alt="" class="block w-full drop-shadow-[0_40px_60px_rgba(0,0,0,0.6)]">
-          <div :key="printKey" class="absolute inset-0" :class="{ 'is-printing': printKey > 0 }">
-            <img src="/pictures/print-logo.webp" alt="" class="hero-print-logo absolute left-[11%] top-[52%] w-[42%] opacity-90 mix-blend-multiply">
-            <div class="hero-print-head absolute left-[-6%] right-[28%] h-0">
-              <span class="absolute inset-x-0 top-0 h-[2px] bg-primary shadow-[0_0_18px_4px_rgba(254,72,25,0.75)]" />
-              <span class="absolute inset-x-0 top-0 h-12 bg-gradient-to-t from-primary/0 to-primary/25 -translate-y-full" />
+          <!-- зона печати — гладкий корпус термостакана (на сумке ровной ткани мало: мешают ручки) -->
+          <div :key="printKey" class="absolute left-[69.5%] top-[66.5%] w-[22.5%]" :class="{ 'is-printing': printKey > 0 }">
+            <img src="/pictures/print-logo.webp" alt="" class="hero-ink block w-full opacity-90 mix-blend-multiply">
+            <!-- каретка УФ-принтера -->
+            <div class="hero-carriage absolute -bottom-[30%] -top-[30%] w-[2px] bg-primary shadow-[0_0_14px_3px_rgba(254,72,25,0.8)]">
+              <span class="absolute right-full top-0 h-full w-[260%] bg-gradient-to-l from-primary/35 to-primary/0" />
+              <span class="absolute left-1/2 top-[-6px] h-[6px] w-[10px] rounded-[2px] bg-neutral-900 ring-1 ring-white/30 -translate-x-1/2" />
             </div>
+            <!-- засветка после прохода -->
+            <div class="hero-cure pointer-events-none absolute -inset-[40%] rounded-full bg-[radial-gradient(circle,rgba(255,170,130,0.9),rgba(254,72,25,0.35)_40%,transparent_70%)] mix-blend-screen" />
           </div>
         </div>
       </motion.div>
@@ -339,44 +343,108 @@ onBeforeUnmount(() => {
   transform: none;
 }
 
-/* печать: головка идёт сверху вниз по ткани, логотип проявляется, когда она проходит его строки */
-.hero-print-logo {
-  clip-path: inset(0 0 100% 0);
+/*
+ * Печать как у УФ-принтера: каретка идёт слева направо, за ней логотип проявляется растром —
+ * точки растут и сливаются в сплошной цвет, в конце краска «засвечивается» вспышкой.
+ */
+@property --sweep {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: -12%;
 }
 
-.hero-print-head {
-  top: 8%;
+@property --dot {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.hero-ink {
+  --sweep: -12%;
+  --dot: 0px;
+  -webkit-mask-image: linear-gradient(to right, #000 var(--sweep), transparent calc(var(--sweep) + 8%)),
+    radial-gradient(circle, #000 var(--dot), transparent calc(var(--dot) + 0.6px));
+  mask-image: linear-gradient(to right, #000 var(--sweep), transparent calc(var(--sweep) + 8%)),
+    radial-gradient(circle, #000 var(--dot), transparent calc(var(--dot) + 0.6px));
+  -webkit-mask-size:
+    100% 100%,
+    5px 5px;
+  mask-size:
+    100% 100%,
+    5px 5px;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.hero-carriage,
+.hero-cure {
   opacity: 0;
 }
 
-.is-printing .hero-print-logo {
-  animation: print-logo 0.3s 0.6s linear forwards;
+.hero-carriage {
+  left: -4%;
 }
 
-.is-printing .hero-print-head {
-  animation: print-head 1.2s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+.is-printing .hero-ink {
+  animation:
+    ink-sweep 1.1s cubic-bezier(0.45, 0, 0.55, 1) forwards,
+    ink-dots 1.7s cubic-bezier(0.5, 0, 0.3, 1) forwards;
 }
 
-@keyframes print-head {
+.is-printing .hero-carriage {
+  animation: carriage 1.1s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+.is-printing .hero-cure {
+  animation: cure 0.7s 1.1s ease-out forwards;
+}
+
+@keyframes ink-sweep {
+  to {
+    --sweep: 112%;
+  }
+}
+
+@keyframes ink-dots {
   0% {
-    top: 8%;
+    --dot: 0.7px;
+  }
+  65% {
+    --dot: 1.8px;
+  }
+  100% {
+    --dot: 4px;
+  }
+}
+
+@keyframes carriage {
+  0% {
+    left: -4%;
     opacity: 0;
   }
-  8% {
+  10% {
     opacity: 1;
   }
-  92% {
+  90% {
     opacity: 1;
   }
   100% {
-    top: 96%;
+    left: 104%;
     opacity: 0;
   }
 }
 
-@keyframes print-logo {
-  to {
-    clip-path: inset(0 0 0 0);
+@keyframes cure {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
   }
 }
 
@@ -425,8 +493,9 @@ onBeforeUnmount(() => {
     transition: none;
   }
 
-  .hero-print-logo {
-    clip-path: none;
+  .hero-ink {
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .hero-beam-pulse {
