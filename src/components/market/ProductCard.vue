@@ -99,6 +99,9 @@ const activeVariant = computed(() => {
   return defaultVariant ?? variants.value[0] ?? null
 })
 
+// артикул выбранного цвета — меняется вместе с фото при наведении на кружок цвета
+const activeSku = computed(() => (activeVariant.value?.sku || activeVariant.value?.external_sku || '').trim())
+
 const imageUrl = computed(() => {
   const variantImage = sortImages(activeVariant.value?.images)?.[0]?.directus_files_id
 
@@ -368,7 +371,14 @@ function resetVariantPreview() {
       </div>
 
       <div class="mt-4 flex items-center justify-between">
-        <div class="text-xs opacity-60">
+        <div v-if="activeSku" class="min-w-0 truncate text-xs">
+          <span class="opacity-60">Арт.</span>
+          <Transition name="sku" mode="out-in">
+            <span :key="activeSku" class="ml-1 inline-block font-mono font-semibold tabular-nums opacity-90">{{ activeSku }}</span>
+          </Transition>
+        </div>
+
+        <div v-else class="text-xs opacity-60">
           Нажмите, чтобы открыть
         </div>
 
@@ -384,3 +394,22 @@ function resetVariantPreview() {
     </div>
   </RouterLink>
 </template>
+
+<style scoped>
+.sku-enter-active,
+.sku-leave-active {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.sku-enter-from {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.sku-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>
