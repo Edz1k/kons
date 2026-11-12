@@ -1,0 +1,17 @@
+{
+  "name": "directus-extension-search",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "GET /search — поиск по каталогу с морфологией и опечатками",
+  "directus:extension": {
+    "type": "endpoint",
+    "path": "index.js",
+    "source": "index.js",
+    "host": "^11.0.0"
+  },
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-custom-endpoint"
+  ]
+}

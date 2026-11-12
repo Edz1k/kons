@@ -198,6 +198,46 @@ async function getJSON<T>(path: string, signal?: AbortSignal): Promise<T> {
   return directusRequest<T>(path, { signal })
 }
 
+interface SearchResponse {
+  ids: number[]
+  total: number
+}
+
+/**
+ * Серверный поиск (расширение Directus `directus-extension-search`):
+ * слова в любом порядке, окончания и опечатки не мешают. Отдаёт id по релевантности.
+ * Если сервер поиска недоступен — null, и каталог ищет по-старому.
+ */
+async function searchCatalog(params: {
+  q: string
+  type: CatalogType
+  category?: string
+  page?: number
+  limit?: number
+  signal?: AbortSignal
+}): Promise<SearchResponse | null> {
+  const query = new URLSearchParams({ q: params.q, type: params.type })
+
+  if (params.category)
+    query.set('category', params.category)
+  if (params.page)
+    query.set('page', String(params.page))
+  if (params.limit)
+    query.set('limit', String(params.limit))
+
+  try {
+    const result = await getJSON<SearchResponse>(`/search?${query.toString()}`, params.signal)
+    return Array.isArray(result?.ids) ? result : null
+  }
+  catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError')
+      throw error
+
+    console.warn('Серверный поиск недоступен, ищем по-старому', error)
+    return null
+  }
+}
+
 function mapSort(sortBy: FetchProductsParams['sortBy']) {
   switch (sortBy) {
     case 'price-asc':
@@ -321,6 +361,11 @@ async function fetchPartnerProductsPage(params: {
   const term = search.trim()
 
   if (term) {
+    const found = await searchCatalog({ q: term, type: 'partner', category, page, limit, signal })
+
+    if (found)
+      return fetchPartnerProductsByIds(found, page, limit, signal)
+
     conditions.push({
       _or: [
         { title: { _icontains: term } },
@@ -350,6 +395,42 @@ async function fetchPartnerProductsPage(params: {
     items,
     total,
     hasMore: page * limit < total,
+    page,
+    limit,
+  }
+}
+
+/** Подтягивает найденные партнёрские товары и раскладывает их в порядке релевантности. */
+async function fetchPartnerProductsByIds(
+  found: SearchResponse,
+  page: number,
+  limit: number,
+  signal?: AbortSignal,
+): Promise<FetchProductsResult> {
+  let items: Product[] = []
+
+  if (found.ids.length) {
+    const query = new URLSearchParams({
+      fields: PARTNER_PRODUCT_FIELDS,
+      filter: JSON.stringify({ id: { _in: found.ids } }),
+      limit: String(found.ids.length),
+    })
+
+    const json = await getJSON<DirectusListResponse<PartnerProductRaw[]>>(
+      `/items/partner_products?${query.toString()}`,
+      signal,
+    )
+
+    const order = new Map(found.ids.map((id, index) => [id, index]))
+    items = (json.data ?? [])
+      .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0))
+      .map(normalizePartnerProduct)
+  }
+
+  return {
+    items,
+    total: found.total,
+    hasMore: page * limit < found.total,
     page,
     limit,
   }
@@ -389,14 +470,32 @@ export async function fetchProducts(
   )
 
   let items: Product[] = ownJson.data ?? []
+  let relevance: Map<number, number> | null = null
 
-  if (search.trim())
-    items = items.filter(product => matchesSearch(product, search))
+  if (search.trim()) {
+    const found = await searchCatalog({ q: search.trim(), type: 'own', category, signal })
+
+    if (found) {
+      const rank = new Map(found.ids.map((id, index) => [id, index]))
+      relevance = rank
+      items = items.filter(product => rank.has(Number(product.id)))
+    }
+    else {
+      items = items.filter(product => matchesSearch(product, search))
+    }
+  }
 
   if (inStockOnly && catalogType === 'own')
     items = items.filter(product => hasStock(product))
 
-  items = sortProducts(items, sortBy)
+  // при поиске без явной сортировки по цене — самые подходящие сверху
+  if (relevance && sortBy === 'default') {
+    const rank = relevance
+    items = [...items].sort((a, b) => (rank.get(Number(a.id)) ?? 0) - (rank.get(Number(b.id)) ?? 0))
+  }
+  else {
+    items = sortProducts(items, sortBy)
+  }
 
   const total = items.length
   const start = (page - 1) * limit

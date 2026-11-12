@@ -130,3 +130,26 @@ ssh brillex-cms 'sudo docker exec brillex_directus rm -rf /directus/extensions/d
 
 Поля и коллекция останутся (пустые и безвредные). Бэкап базы перед установкой:
 `/home/ubuntu/brillex-directus-before-newsletter-20261005132024.sql.gz`.
+
+# Поиск по каталогу — серверная часть
+
+Два расширения в `directus/extensions`:
+
+- `directus-extension-search-index` (hook) — при старте создаёт в Postgres расширения `pg_trgm`, `fuzzystrmatch`,
+  схему `search` и индекс `search.docs_v1` (материализованное представление; Directus схему `search` не видит).
+  Пересобирает индекс через 3 секунды после правок товаров/вариантов/цветов/категорий и раз в 10 минут.
+- `directus-extension-search` (endpoint) — `GET /search?q=&type=own|partner&category=&page=&limit=`,
+  отдаёт `{ ids, total }` по релевантности: слова в любом порядке, русские окончания, недописанные слова,
+  опечатки (1 буква от 4 букв, 2 — от 7), артикул целиком как подстрока.
+
+Если эндпоинт недоступен, сайт сам откатывается на старый поиск (`src/services/directus.ts`, `searchCatalog`).
+
+Выкатка (Directus перезапустится, 10–20 секунд каталог недоступен):
+
+```bash
+cd directus/extensions && scp -r directus-extension-search directus-extension-search-index brillex-cms:/home/ubuntu/
+ssh brillex-cms 'for e in directus-extension-search directus-extension-search-index; do sudo docker cp /home/ubuntu/$e brillex_directus:/directus/extensions/; done && sudo docker restart brillex_directus'
+```
+
+Если поменяли запрос индекса в `search-index/index.js` — переименуйте `docs_v1` → `docs_v2` в обоих расширениях
+(старое представление можно удалить: `DROP MATERIALIZED VIEW search.docs_v1`).

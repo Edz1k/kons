@@ -165,7 +165,9 @@ export const useProductsStore = defineStore('products', () => {
   }
 
   async function loadProducts(reset = false) {
-    if (loading.value || loadingMore.value)
+    // Новый запрос (сменился поиск/фильтр) не ждёт старый: старый ответ отбросится по requestId.
+    // Иначе при живом поиске запрос, пришедший во время загрузки, терялся.
+    if (!reset && (loading.value || loadingMore.value))
       return
 
     if (reset)

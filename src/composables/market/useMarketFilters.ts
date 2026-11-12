@@ -2,6 +2,7 @@ import type {
   LocationQueryValue,
   LocationQueryValueRaw,
 } from 'vue-router'
+import { watchDebounced } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -118,11 +119,18 @@ export function useMarketFilters() {
   }
 
   const localSearch = ref(normalizeQueryValue(route.query.search))
+  // что мы сами последним отправили в адрес — чтобы не затереть то, что человек допечатал после
+  let lastSubmittedSearch = localSearch.value.trim()
 
   watch(
     () => route.query.search,
     (value) => {
       const normalized = normalizeQueryValue(value)
+
+      if (normalized === lastSubmittedSearch)
+        return
+
+      lastSubmittedSearch = normalized
 
       if (localSearch.value !== normalized)
         localSearch.value = normalized
@@ -130,10 +138,24 @@ export function useMarketFilters() {
   )
 
   function submitSearch() {
+    lastSubmittedSearch = localSearch.value.trim()
+
     replaceQuery({
-      search: localSearch.value.trim() || undefined,
+      search: lastSubmittedSearch || undefined,
     })
   }
+
+  // Живой поиск: каталог обновляется сам, когда человек перестал печатать.
+  // Стёр запрос — фильтр сбрасывается сразу, без кнопки «Найти».
+  watch(localSearch, (value) => {
+    if (!value.trim())
+      submitSearch()
+  })
+
+  watchDebounced(localSearch, (value) => {
+    if (value.trim())
+      submitSearch()
+  }, { debounce: 350, maxWait: 1500 })
 
   const inStockOnlyModel = computed<boolean>({
     get() {
