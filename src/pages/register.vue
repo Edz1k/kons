@@ -4,6 +4,8 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
 
+usePageSeo({ title: 'Регистрация', noindex: true })
+
 const router = useRouter()
 const authStore = useAuthStore()
 const { loading, error, isAuthenticated } = storeToRefs(authStore)

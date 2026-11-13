@@ -6,7 +6,12 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const DEFAULT_DESCRIPTION: typeof import('./composables/usePageSeo')['DEFAULT_DESCRIPTION']
+  const DEFAULT_OG_IMAGE: typeof import('./composables/usePageSeo')['DEFAULT_OG_IMAGE']
   const EffectScope: typeof import('vue')['EffectScope']
+  const ORGANIZATION_LD: typeof import('./composables/usePageSeo')['ORGANIZATION_LD']
+  const SITE_NAME: typeof import('./composables/usePageSeo')['SITE_NAME']
+  const SITE_URL: typeof import('./composables/usePageSeo')['SITE_URL']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']
@@ -108,6 +113,7 @@ declare global {
   const toReactive: typeof import('@vueuse/core')['toReactive']
   const toRef: typeof import('vue')['toRef']
   const toRefs: typeof import('vue')['toRefs']
+  const toSnippet: typeof import('./composables/usePageSeo')['toSnippet']
   const toValue: typeof import('vue')['toValue']
   const toggleDark: typeof import('./composables/dark')['toggleDark']
   const triggerRef: typeof import('vue')['triggerRef']
@@ -199,6 +205,7 @@ declare global {
   const useIntersectionObserver: typeof import('@vueuse/core')['useIntersectionObserver']
   const useInterval: typeof import('@vueuse/core')['useInterval']
   const useIntervalFn: typeof import('@vueuse/core')['useIntervalFn']
+  const useJsonLd: typeof import('./composables/usePageSeo')['useJsonLd']
   const useKeyModifier: typeof import('@vueuse/core')['useKeyModifier']
   const useLastChanged: typeof import('@vueuse/core')['useLastChanged']
   const useLink: typeof import('vue-router/auto')['useLink']
@@ -222,6 +229,7 @@ declare global {
   const useOffsetPagination: typeof import('@vueuse/core')['useOffsetPagination']
   const useOnline: typeof import('@vueuse/core')['useOnline']
   const usePageLeave: typeof import('@vueuse/core')['usePageLeave']
+  const usePageSeo: typeof import('./composables/usePageSeo')['usePageSeo']
   const useParallax: typeof import('@vueuse/core')['useParallax']
   const useParentElement: typeof import('@vueuse/core')['useParentElement']
   const usePerformanceObserver: typeof import('@vueuse/core')['usePerformanceObserver']
@@ -236,6 +244,7 @@ declare global {
   const usePreferredReducedMotion: typeof import('@vueuse/core')['usePreferredReducedMotion']
   const usePreferredReducedTransparency: typeof import('@vueuse/core')['usePreferredReducedTransparency']
   const usePrevious: typeof import('@vueuse/core')['usePrevious']
+  const useProductPageStore: typeof import('./stores/productPage')['useProductPageStore']
   const useProductsStore: typeof import('./stores/product')['useProductsStore']
   const useRafFn: typeof import('@vueuse/core')['useRafFn']
   const useRefHistory: typeof import('@vueuse/core')['useRefHistory']
@@ -323,6 +332,9 @@ declare global {
   // @ts-ignore
   export type { AmoFormPayload } from './composables/useAmocrm'
   import('./composables/useAmocrm')
+  // @ts-ignore
+  export type { PageSeo } from './composables/usePageSeo'
+  import('./composables/usePageSeo')
 }
 
 // for vue template auto import
@@ -330,7 +342,12 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
+    readonly DEFAULT_DESCRIPTION: UnwrapRef<typeof import('./composables/usePageSeo')['DEFAULT_DESCRIPTION']>
+    readonly DEFAULT_OG_IMAGE: UnwrapRef<typeof import('./composables/usePageSeo')['DEFAULT_OG_IMAGE']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly ORGANIZATION_LD: UnwrapRef<typeof import('./composables/usePageSeo')['ORGANIZATION_LD']>
+    readonly SITE_NAME: UnwrapRef<typeof import('./composables/usePageSeo')['SITE_NAME']>
+    readonly SITE_URL: UnwrapRef<typeof import('./composables/usePageSeo')['SITE_URL']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
@@ -427,6 +444,7 @@ declare module 'vue' {
     readonly toReactive: UnwrapRef<typeof import('@vueuse/core')['toReactive']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
+    readonly toSnippet: UnwrapRef<typeof import('./composables/usePageSeo')['toSnippet']>
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly tryOnBeforeMount: UnwrapRef<typeof import('@vueuse/core')['tryOnBeforeMount']>
@@ -517,6 +535,7 @@ declare module 'vue' {
     readonly useIntersectionObserver: UnwrapRef<typeof import('@vueuse/core')['useIntersectionObserver']>
     readonly useInterval: UnwrapRef<typeof import('@vueuse/core')['useInterval']>
     readonly useIntervalFn: UnwrapRef<typeof import('@vueuse/core')['useIntervalFn']>
+    readonly useJsonLd: UnwrapRef<typeof import('./composables/usePageSeo')['useJsonLd']>
     readonly useKeyModifier: UnwrapRef<typeof import('@vueuse/core')['useKeyModifier']>
     readonly useLastChanged: UnwrapRef<typeof import('@vueuse/core')['useLastChanged']>
     readonly useLink: UnwrapRef<typeof import('vue-router/auto')['useLink']>
@@ -540,6 +559,7 @@ declare module 'vue' {
     readonly useOffsetPagination: UnwrapRef<typeof import('@vueuse/core')['useOffsetPagination']>
     readonly useOnline: UnwrapRef<typeof import('@vueuse/core')['useOnline']>
     readonly usePageLeave: UnwrapRef<typeof import('@vueuse/core')['usePageLeave']>
+    readonly usePageSeo: UnwrapRef<typeof import('./composables/usePageSeo')['usePageSeo']>
     readonly useParallax: UnwrapRef<typeof import('@vueuse/core')['useParallax']>
     readonly useParentElement: UnwrapRef<typeof import('@vueuse/core')['useParentElement']>
     readonly usePerformanceObserver: UnwrapRef<typeof import('@vueuse/core')['usePerformanceObserver']>
@@ -554,6 +574,7 @@ declare module 'vue' {
     readonly usePreferredReducedMotion: UnwrapRef<typeof import('@vueuse/core')['usePreferredReducedMotion']>
     readonly usePreferredReducedTransparency: UnwrapRef<typeof import('@vueuse/core')['usePreferredReducedTransparency']>
     readonly usePrevious: UnwrapRef<typeof import('@vueuse/core')['usePrevious']>
+    readonly useProductPageStore: UnwrapRef<typeof import('./stores/productPage')['useProductPageStore']>
     readonly useProductsStore: UnwrapRef<typeof import('./stores/product')['useProductsStore']>
     readonly useRafFn: UnwrapRef<typeof import('@vueuse/core')['useRafFn']>
     readonly useRefHistory: UnwrapRef<typeof import('@vueuse/core')['useRefHistory']>

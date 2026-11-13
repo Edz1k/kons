@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
 import { useReservationsStore } from '~/stores/reservations'
 
+usePageSeo({ title: 'Личный кабинет', noindex: true })
+
 const router = useRouter()
 const authStore = useAuthStore()
 const reservationsStore = useReservationsStore()

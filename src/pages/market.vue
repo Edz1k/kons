@@ -5,6 +5,11 @@ import { useInfiniteScrollTrigger } from '~/composables/market/useInfiniteScroll
 import { useMarketCatalog } from '~/composables/market/useMarketProducts'
 import { useProductsStore } from '~/stores/product'
 
+usePageSeo({
+  title: 'Каталог мерча и сувенирной продукции с логотипом',
+  description: 'Каталог Brillex: ручки, термокружки, ежедневники, шоперы, бейджи и другие товары для нанесения логотипа. Наличие на складе в Алматы и товары под заказ.',
+})
+
 const productsStore = useProductsStore()
 
 const {

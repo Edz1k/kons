@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Product, ProductVariant } from '~/types/product'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onServerPrefetch, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { fetchProductBySlug, fileUrl, IMAGE_WIDTH, resizeAssetUrl } from '~/services/directus'
+import { SITE_NAME, SITE_URL, toSnippet, useJsonLd, usePageSeo } from '~/composables/usePageSeo'
+import { fetchProductBySlug, fileUrl, IMAGE_WIDTH, resizeAssetUrl, SHARE_IMAGE, shareImageUrl } from '~/services/directus'
 import { useAuthStore } from '~/stores/auth'
+import { useProductPageStore } from '~/stores/productPage'
 import { useReservationsStore } from '~/stores/reservations'
 import { formatReservedUntil, formatTimeLeft, variantAvailableStock, variantReservedQty } from '~/utils/stock'
 
@@ -14,6 +16,10 @@ defineOptions({
 const route = useRoute()
 const authStore = useAuthStore()
 const reservationsStore = useReservationsStore()
+const productPageStore = useProductPageStore()
+
+/** Заготовка для товаров, добавленных после сборки сайта (см. netlify.toml). */
+const SHELL_SLUG = '__shell'
 
 const slug = computed(() => {
   const params = route.params
@@ -329,38 +335,60 @@ function formatPrice(value?: number | string) {
   return new Intl.NumberFormat('ru-RU').format(numericValue)
 }
 
-async function load() {
-  loading.value = true
+function applyProduct(product: Product, keepSelection = false) {
+  const previousVariantId = keepSelection ? selectedVariant.value?.id : null
+  const previousImage = keepSelection ? selectedImage.value : null
+
+  item.value = product
   error.value = ''
-  item.value = null
-  selectedVariant.value = null
-  selectedImage.value = null
+
+  const variantsList = product.product_variants ?? []
+  selectedVariant.value = (previousVariantId !== null && previousVariantId !== undefined
+    ? variantsList.find(variant => variant.id === previousVariantId)
+    : null) ?? getInitialVariant(variantsList)
+
+  const images = getVariantImages(selectedVariant.value)
+  const fallbackImage = images[0] ?? getProductImages(product)[0] ?? null
+  selectedImage.value = previousImage && [...images, ...getProductImages(product)].includes(previousImage)
+    ? previousImage
+    : fallbackImage
+}
+
+/**
+ * silent — обновить данные (остатки, резервы) без крутилки, оставив выбранный цвет и фото.
+ * Так обновляется страница, которая пришла уже готовой из сборки.
+ */
+async function load(options: { silent?: boolean } = {}) {
+  const silent = options.silent && Boolean(item.value)
+
+  if (!silent) {
+    loading.value = true
+    error.value = ''
+    item.value = null
+    selectedVariant.value = null
+    selectedImage.value = null
+  }
 
   try {
-    if (!slug.value) {
+    if (!slug.value || slug.value === SHELL_SLUG) {
       loading.value = false
       return
     }
 
     const product = await fetchProductBySlug(slug.value)
+    productPageStore.set(slug.value, product)
 
     if (!product) {
+      item.value = null
       error.value = 'Товар не найден'
       return
     }
 
-    item.value = product
-    selectedVariant.value = getInitialVariant(product.product_variants ?? [])
-
-    const initialVariantImages = getVariantImages(selectedVariant.value)
-
-    if (initialVariantImages.length)
-      selectedImage.value = initialVariantImages[0]
-    else
-      selectedImage.value = getProductImages(product)[0] ?? null
+    applyProduct(product, silent)
   }
   catch (e: any) {
-    error.value = e?.message ?? 'Ошибка загрузки товара'
+    if (!silent)
+      error.value = e?.message ?? 'Ошибка загрузки товара'
   }
   finally {
     loading.value = false
@@ -412,11 +440,137 @@ watch(currentVariant, () => {
     setInitialImage()
 })
 
+// Товар, уже загруженный при сборке страницы: показываем сразу, без крутилки.
+const prefetched = productPageStore.bySlug[slug.value]
+
+if (prefetched) {
+  applyProduct(prefetched)
+  loading.value = false
+}
+else if (prefetched === null) {
+  error.value = 'Товар не найден'
+  loading.value = false
+}
+
+// Сборка (SSG): грузим товар на сервере — он попадёт в готовый HTML и в состояние для браузера.
+onServerPrefetch(async () => {
+  if (slug.value && slug.value !== SHELL_SLUG && !(slug.value in productPageStore.bySlug))
+    await load()
+})
+
 onMounted(() => {
-  if (slug.value)
+  // готовую страницу только освежаем (остатки и резервы меняются после сборки)
+  if (item.value)
+    load({ silent: true })
+  else if (slug.value)
     load()
 
   reservationsStore.load()
+})
+
+// --- SEO ---
+
+const seoDescription = computed(() => {
+  const product = item.value
+
+  if (!product)
+    return ''
+
+  const price = currentPrice.value
+  const parts = [
+    product.description
+      ? toSnippet(product.description, 110).replace(/([^.!?…])$/, '$1.')
+      : `${product.title.trim()} с нанесением логотипа.`,
+    price ? `Цена от ${formatPrice(price)} ₸.` : '',
+    isPartnerProduct.value ? 'Под заказ.' : (isInStock.value ? 'В наличии в Алматы.' : ''),
+  ]
+
+  return parts.filter(Boolean).join(' ')
+})
+
+/**
+ * Картинка для превью ссылки: первое фото варианта, который открывается по умолчанию
+ * (иначе фото товара). Своё фото — JPG 1200×630 из Directus, у партнёров — их JPG как есть.
+ */
+const shareImage = computed(() => {
+  const product = item.value
+
+  if (!product)
+    return null
+
+  const variant = getInitialVariant(variants.value)
+  const fileId = sortImages(variant?.images ?? [])[0]?.directus_files_id
+    ?? sortImages(product.images ?? [])[0]?.directus_files_id
+
+  if (fileId)
+    return { url: shareImageUrl(fileId), ...SHARE_IMAGE }
+
+  const external = variant?.external_images_urls?.find(Boolean) ?? product.preview_image
+
+  return external ? { url: external } : null
+})
+
+usePageSeo(() => {
+  if (slug.value === SHELL_SLUG)
+    return { title: 'Товар', noindex: true }
+
+  if (!item.value)
+    return { title: error.value ? 'Товар не найден' : 'Товар', noindex: Boolean(error.value) }
+
+  return {
+    title: `${item.value.title.trim()} с логотипом — купить в Алматы`,
+    description: seoDescription.value,
+    image: shareImage.value?.url ?? null,
+    imageWidth: shareImage.value && 'width' in shareImage.value ? shareImage.value.width : undefined,
+    imageHeight: shareImage.value && 'height' in shareImage.value ? shareImage.value.height : undefined,
+    imageType: shareImage.value && 'type' in shareImage.value ? shareImage.value.type : undefined,
+    type: 'product',
+  }
+})
+
+useJsonLd('product', () => {
+  const product = item.value
+
+  if (!product)
+    return null
+
+  const url = `${SITE_URL}/product/${product.slug}`
+  const images = [...new Set([
+    ...getProductImages(product),
+    ...variants.value.flatMap(variant => getVariantImages(variant)),
+  ])].slice(0, 6)
+
+  // У партнёрских товаров цену на сайте не показываем (в данных — цена поставщика),
+  // поэтому и в разметку её не отдаём: только свои товары с нашей ценой в тенге.
+  const offers = variants.value.length && !isPartnerProduct.value
+    ? variants.value.map((variant) => {
+        const price = Number(variant.price ?? product.price ?? 0)
+        const stock = variantAvailableStock(variant)
+
+        return {
+          '@type': 'Offer',
+          'sku': variant.sku || undefined,
+          'name': variant.color?.name ? `${product.title.trim()} (${variant.color.name})` : undefined,
+          'price': price || undefined,
+          'priceCurrency': 'KZT',
+          'availability': stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+          url,
+        }
+      }).filter(offer => offer.price)
+    : []
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    'name': product.title.trim(),
+    'description': toSnippet(product.description || seoDescription.value, 500),
+    'image': images,
+    'sku': currentSku.value || undefined,
+    'category': product.category?.title,
+    'brand': { '@type': 'Brand', 'name': SITE_NAME },
+    url,
+    ...(offers.length ? { offers } : {}),
+  }
 })
 
 watch(slug, (value) => {

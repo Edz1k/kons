@@ -5,9 +5,79 @@ command = "pnpm run build"
 [build.environment]
 NODE_VERSION = "20"
 
+# Каждая страница, включая товары, собрана заранее (vite-ssg) — Netlify отдаёт её как файл.
+# Несуществующий адрес → dist/404.html с кодом 404 (Netlify делает это сам, правило не нужно).
+# Раньше здесь было «/* → /index.html 200»: любой адрес, в том числе товар, отдавал копию главной.
+
+# Старые адреса товаров (13.11.2026 убраны пробелы, подчёркивания и заглавные) → новые, 301.
+# Стоят выше правила /product/*: Netlify применяет первое совпавшее. Без force: срабатывают,
+# только если файла по адресу нет (у Velvet-box старый и новый адрес отличаются лишь регистром —
+# с force при регистронезависимом сравнении получилась бы петля).
 [[redirects]]
-from = "/*"
-to = "/index.html"
+from = "/product/beydzh_zhestkiy"
+to = "/product/beydzh-zhestkiy"
+status = 301
+
+[[redirects]]
+from = "/product/lanyard_beliy"
+to = "/product/lanyard-beliy"
+status = 301
+
+[[redirects]]
+from = "/product/lanyard_oranjeviy"
+to = "/product/lanyard-oranjeviy"
+status = 301
+
+[[redirects]]
+from = "/product/beydzh_gibkiy"
+to = "/product/beydzh-gibkiy"
+status = 301
+
+[[redirects]]
+from = "/product/fytlyar-dlya-ruchek-Velvet-box"
+to = "/product/fytlyar-dlya-ruchek-velvet-box"
+status = 301
+
+[[redirects]]
+from = "/product/ruchka%20mettal%20soft%20tuch"
+to = "/product/ruchka-mettal-soft-tuch"
+status = 301
+
+[[redirects]]
+from = "/product/ruchka%20metall%20VIP"
+to = "/product/ruchka-metall-vip"
+status = 301
+
+[[redirects]]
+from = "/product/blocnot-tverdaya-oblozhka-soft%20tuch"
+to = "/product/blocnot-tverdaya-oblozhka-soft-tuch"
+status = 301
+
+[[redirects]]
+from = "/product/blocnot%20A5%20myagkaya%20oblozhka%20soft%20tuch"
+to = "/product/blocnot-a5-myagkaya-oblozhka-soft-tuch"
+status = 301
+
+[[redirects]]
+from = "/product/ruchka_plastic_soft_tuch"
+to = "/product/ruchka-plastic-soft-tuch"
+status = 301
+
+[[redirects]]
+from = "/product/ruchka_metall_soft%20tuch"
+to = "/product/ruchka-metall-soft-tuch"
+status = 301
+
+[[redirects]]
+from = "/product/plastic_pen_black"
+to = "/product/plastic-pen-black"
+status = 301
+
+# Товар, добавленный после последней сборки: отдаём заготовку страницы товара (noindex),
+# она догрузит его в браузере. Срабатывает, только если готового файла товара нет.
+[[redirects]]
+from = "/product/*"
+to = "/product/__shell.html"
 status = 200
 
 [[headers]]

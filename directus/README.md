@@ -153,3 +153,19 @@ ssh brillex-cms 'for e in directus-extension-search directus-extension-search-in
 
 Если поменяли запрос индекса в `search-index/index.js` — переименуйте `docs_v1` → `docs_v2` в обоих расширениях
 (старое представление можно удалить: `DROP MATERIALIZED VIEW search.docs_v1`).
+
+# Автопересборка сайта (SEO)
+
+Сайт собирается заранее: у каждого товара свой готовый HTML (заголовок, описание, картинка для превью ссылки
+в WhatsApp/Telegram, микроразметка Product). Новый товар получает такую страницу после следующей сборки,
+до тех пор он открывается через заготовку `/product/__shell` (работает, но не индексируется).
+
+Расширение `directus-extension-site-rebuild` запускает сборку на Netlify через 10 минут после правок каталога
+и каждую ночь в 05:00. Включение:
+
+1. Netlify → Site configuration → Build & deploy → Build hooks → Add build hook (ветка `main`), скопировать URL.
+2. На сервере в `.env` рядом с `docker-compose.yml` (`/home/eduard/directus`) добавить
+   `NETLIFY_BUILD_HOOK=<url>` и пересоздать контейнер: `sudo docker compose up -d`.
+3. Скопировать расширение и перезапустить Directus (как для поиска выше).
+
+В логах Directus: `[site-rebuild] запущена пересборка сайта (...)`.

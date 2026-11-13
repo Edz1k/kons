@@ -7,6 +7,11 @@ import {
   PHONE_DIGITS,
   WHATSAPP_LINK,
 } from '~/constants/contacts'
+
+usePageSeo({
+  title: 'Контакты — офис в Алматы',
+  description: `Контакты Brillex: ${ADDRESS_FULL}, телефон и WhatsApp ${PHONE}. Оставьте заявку — подберём мерч под ваш бренд.`,
+})
 </script>
 
 <template>

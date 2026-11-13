@@ -149,6 +149,30 @@ export function fileUrl(fileId: string, options: AssetOptions = {}) {
   return `${BASE}/assets/${fileId}?${params.toString()}`
 }
 
+/**
+ * Картинка для превью ссылки (WhatsApp, Telegram, соцсети): JPG 1200×630, белый фон,
+ * поля вокруг товара обрезаны. Весит 10–60 КБ — WhatsApp не показывает превью тяжелее ~300 КБ
+ * и не везде понимает WebP, поэтому только JPG.
+ */
+export const SHARE_IMAGE = { width: 1200, height: 630, type: 'image/jpeg' } as const
+
+export function shareImageUrl(fileId: string) {
+  const transforms = [
+    ['flatten', { background: '#ffffff' }],
+    ['trim', { threshold: 12 }],
+    ['resize', { width: 1100, height: 570, fit: 'contain', background: '#ffffff' }],
+    ['extend', { top: 30, bottom: 30, left: 50, right: 50, background: '#ffffff' }],
+  ]
+
+  const params = new URLSearchParams({
+    format: 'jpg',
+    quality: '82',
+    transforms: JSON.stringify(transforms),
+  })
+
+  return `${BASE}/assets/${fileId}?${params.toString()}`
+}
+
 /** Та же картинка Directus другой ширины. Внешние ссылки (партнёры) возвращаем как есть. */
 export function resizeAssetUrl(url: string, width: number) {
   if (!url.startsWith(`${BASE}/assets/`))

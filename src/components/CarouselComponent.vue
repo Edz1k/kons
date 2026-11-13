@@ -32,6 +32,8 @@ const slides = [
       >
         <img
           :src="slide"
+          :alt="`Мерч с логотипом Brillex — пример ${index + 1}`"
+          :loading="index === 0 ? 'eager' : 'lazy'"
           class="h-full w-full object-cover"
         >
       </SwiperSlide>

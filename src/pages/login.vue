@@ -4,6 +4,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
 
+usePageSeo({ title: 'Вход', noindex: true })
+
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
