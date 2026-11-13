@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useAmocrm } from '~/composables/useAmocrm'
+import { trackGoal } from '~/utils/analytics'
 
 const { sendForm } = useAmocrm()
 
@@ -91,6 +92,7 @@ async function submitForm() {
     })
 
     success.value = true
+    trackGoal('lead_product', { sku: sku.value || undefined })
     name.value = ''
     phone.value = ''
     quantity.value = 1

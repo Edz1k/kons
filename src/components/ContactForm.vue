@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useAmocrm } from '~/composables/useAmocrm'
 import { EMAIL_PRIMARY } from '~/constants/contacts'
+import { trackGoal } from '~/utils/analytics'
 
 const props = withDefaults(defineProps<{
   email?: string
@@ -59,6 +60,7 @@ async function submitForm() {
     })
 
     success.value = true
+    trackGoal('lead_form')
     name.value = ''
     phone.value = ''
     agreed.value = false

@@ -1,3 +1,6 @@
+import { getMetrikaClientId } from '~/utils/analytics'
+import { getAttributionFields } from '~/utils/attribution'
+
 export interface AmoFormPayload {
   name: string
   phone: string
@@ -12,7 +15,14 @@ export function useAmocrm() {
   async function sendForm(data: AmoFormPayload) {
     const formData = new FormData()
 
-    Object.entries(data).forEach(([key, value]) => {
+    // Источник визита (utm_*, gclid, yclid, страница входа, реферер) и ClientID Метрики —
+    // чтобы в сделке было видно, какая реклама её принесла. Поля нужно сопоставить в виджете biz-crm.
+    const tracking = {
+      ...getAttributionFields(),
+      ym_client_id: await getMetrikaClientId(),
+    }
+
+    Object.entries({ ...tracking, ...data }).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '')
         formData.append(key, String(value))
     })

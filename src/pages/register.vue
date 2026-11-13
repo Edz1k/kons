@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
+import { trackGoal } from '~/utils/analytics'
 
 usePageSeo({ title: 'Регистрация', noindex: true })
 
@@ -42,6 +43,7 @@ async function submit() {
 
   try {
     await authStore.register(email.value.trim(), password.value)
+    trackGoal('sign_up')
     await router.replace('/profile')
   }
   catch {

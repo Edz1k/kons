@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { RESERVATION_DAYS } from '~/services/reservations'
 import { useAuthStore } from '~/stores/auth'
 import { useReservationsStore } from '~/stores/reservations'
+import { trackGoal } from '~/utils/analytics'
 
 interface OpenPayload {
   productId: number | string
@@ -134,6 +135,7 @@ async function submit() {
     })
 
     createdReservation.value = reservation
+    trackGoal('reserve', { quantity: quantity.value })
     emit('reserved', reservation)
   }
   catch (e) {
