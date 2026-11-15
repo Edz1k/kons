@@ -97,7 +97,7 @@ const materials = ['Пластик', 'Металл', 'Текстиль', 'Бум
 </script>
 
 <template>
-  <section class="w-full py-10 lg:py-20">
+  <section id="services" class="w-full py-10 lg:py-20">
     <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
       <div class="flex flex-col lg:flex-row lg:gap-10">
         <!-- Левая колонка -->

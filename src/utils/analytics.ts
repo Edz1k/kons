@@ -1,10 +1,10 @@
 /**
  * Аналитика: Яндекс Метрика, Google Analytics 4, тег Google Ads.
  *
- * Метрика brillex.kz — счётчик 114234732 (номер не секрет: он виден в коде любой страницы).
+ * Метрика brillex.kz — счётчик 114234732, GA4 — поток G-5Y8BPFHFLP (номера не секрет: они видны в коде любой страницы).
  * Остальное включается переменными окружения сборки (Netlify → Environment variables):
  *   VITE_YM_ID     — другой счётчик Метрики вместо основного (например, для теста)
- *   VITE_GA_ID     — идентификатор потока GA4, например G-XXXXXXXXXX
+ *   VITE_GA_ID     — другой поток GA4 вместо основного
  *   VITE_GADS_ID   — тег Google Ads, например AW-123456789 (ремаркетинг; конверсии берём из GA4)
  * Нет номера — соответствующий счётчик просто не грузится. В dev-режиме ничего не грузится.
  *
@@ -14,7 +14,7 @@
 import type { Router } from 'vue-router'
 
 const YM_ID = Number(import.meta.env.VITE_YM_ID || 114234732)
-const GA_ID = String(import.meta.env.VITE_GA_ID || '')
+const GA_ID = String(import.meta.env.VITE_GA_ID || 'G-5Y8BPFHFLP')
 const GADS_ID = String(import.meta.env.VITE_GADS_ID || '')
 
 declare global {

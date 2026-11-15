@@ -9,7 +9,7 @@ const linksLeft = [
 ] as const
 
 const linksRight = [
-  { label: 'Услуги', to: '/services' },
+  { label: 'Услуги', to: { path: '/', hash: '#services' } },
   { label: 'О нас', to: '/about' },
   { label: 'Контакты', to: '/contacts' },
 ] as const
@@ -114,7 +114,7 @@ const socialBtn
           </ul>
 
           <ul class="grid mt-2.5 gap-2.5 md:mt-6 md:gap-3">
-            <li v-for="link in linksRight" :key="link.to">
+            <li v-for="link in linksRight" :key="link.label">
               <RouterLink :to="link.to" :class="navLink">
                 <span class="h-1.5 w-1.5 rounded-full bg-white/30 transition group-hover:bg-white" />
                 {{ link.label }}
