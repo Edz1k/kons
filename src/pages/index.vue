@@ -24,6 +24,7 @@ usePageSeo({
 
   <BrandStatementSection />
   <StickyFeatureSection />
+  <PriceCalculatorSection />
   <StepsSection />
 </template>
 

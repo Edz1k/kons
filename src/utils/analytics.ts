@@ -32,6 +32,7 @@ declare global {
 export const GOALS = {
   lead_form: { ga: 'generate_lead', params: { lead_source: 'contact_form' }, title: 'Заявка: общая форма' },
   lead_product: { ga: 'generate_lead', params: { lead_source: 'product' }, title: 'Заявка: товар' },
+  lead_calculator: { ga: 'generate_lead', params: { lead_source: 'calculator' }, title: 'Заявка: калькулятор нанесения' },
   reserve: { ga: 'reserve_product', params: {}, title: 'Резерв товара' },
   sign_up: { ga: 'sign_up', params: {}, title: 'Регистрация' },
   click_whatsapp: { ga: 'contact', params: { method: 'whatsapp' }, title: 'Клик: WhatsApp' },

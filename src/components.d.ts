@@ -29,6 +29,7 @@ declare module 'vue' {
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
     NumberTicker: typeof import('./components/AnimationComponent/NumberTicker.vue')['default']
     PartnerProductCard: typeof import('./components/market/PartnerProductCard.vue')['default']
+    PriceCalculatorSection: typeof import('./components/sections/PriceCalculatorSection.vue')['default']
     ProductCard: typeof import('./components/market/ProductCard.vue')['default']
     ProductSkeleton: typeof import('./components/market/ProductSkeleton.vue')['default']
     ReservationCard: typeof import('./components/market/ReservationCard.vue')['default']
