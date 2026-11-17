@@ -18,6 +18,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import generateSitemap from 'vite-ssg-sitemap'
 import 'vitest/config'
+import { CATALOG_SECTIONS } from './src/data/catalogSections'
 
 /** Страницы, которые не нужны в поиске: служебные, 404 и заготовка товара. */
 const NOINDEX_ROUTES = ['/login', '/register', '/profile', '/404', '/product/__shell']
@@ -214,6 +215,8 @@ export default defineConfig(({ mode }) => {
           '/404',
           // заготовка для товаров, добавленных после сборки (см. netlify.toml)
           '/product/__shell',
+          // подборки каталога /katalog/<slug> (src/data/catalogSections.ts)
+          ...CATALOG_SECTIONS.map(section => `/katalog/${section.slug}`),
           ...productRoutes,
         ]
       },
@@ -222,7 +225,20 @@ export default defineConfig(({ mode }) => {
           hostname: 'https://brillex.kz/',
           exclude: [...NOINDEX_ROUTES, '/README'],
           changefreq: { '*': 'weekly', '/': 'daily', '/market': 'daily' },
-          priority: { '*': 0.6, '/': 1, '/market': 0.9 },
+          priority: {
+            '*': 0.6,
+            '/': 1,
+            '/market': 0.9,
+            '/novogodnie-podarki': 0.8,
+            '/korporativnye-podarki': 0.8,
+            '/merch': 0.8,
+            '/welcome-pack': 0.8,
+            '/odezhda-s-logotipom': 0.8,
+            '/suvenirnaya-produkciya': 0.8,
+            '/nanesenie-logotipa': 0.8,
+            '/katalog': 0.8,
+            ...Object.fromEntries(CATALOG_SECTIONS.map(section => [`/katalog/${section.slug}`, 0.7])),
+          },
           robots: indexable
             ? [{ userAgent: '*', allow: '/', disallow: NOINDEX_ROUTES }]
             : [{ userAgent: '*', disallow: '/' }],

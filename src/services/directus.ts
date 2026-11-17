@@ -610,3 +610,96 @@ export async function fetchCategoriesByType(
 
   return fetchOwnCategories(signal)
 }
+
+/**
+ * Облегчённый товар для карточки в списке: без описания, по одному варианту на цвет,
+ * по одной картинке на вариант. Нужен для подборок /katalog: их товары сериализуются в HTML,
+ * и у одежды с десятками размеров страница иначе весила бы больше мегабайта.
+ */
+function slimForCard(product: Product): Product {
+  const seenColors = new Set<string>()
+  const variants = (product.product_variants ?? []).filter((variant) => {
+    const key = String(variant.color?.id ?? variant.color?.slug ?? variant.color?.name ?? variant.id)
+    if (seenColors.has(key))
+      return false
+    seenColors.add(key)
+    return true
+  }).slice(0, 12).map(variant => ({
+    ...variant,
+    images: variant.images?.slice(0, 1),
+    external_images_urls: variant.external_images_urls?.slice(0, 1),
+    variation_description: undefined,
+  }))
+
+  return {
+    ...product,
+    description: '',
+    images: product.images?.slice(0, 1),
+    product_variants: variants,
+  }
+}
+
+export interface CatalogSectionPage {
+  /** Свой склад — все товары подборки. */
+  own: Product[]
+  /** Партнёрский каталог — одна страница. */
+  partner: Product[]
+  partnerTotal: number
+}
+
+/**
+ * Товары подборки /katalog/<slug>: свой склад целиком (его немного) и страница партнёрского каталога.
+ * Категории передаются слагами из src/data/catalogSections.ts.
+ */
+export async function fetchCatalogSectionPage(params: {
+  own: string[]
+  partner: string[]
+  partnerPage?: number
+  partnerLimit?: number
+  signal?: AbortSignal
+}): Promise<CatalogSectionPage> {
+  const { own, partner, partnerPage = 1, partnerLimit = 24, signal } = params
+
+  const loadOwn = async (): Promise<Product[]> => {
+    // свой склад нужен только на первой странице
+    if (!own.length || partnerPage > 1)
+      return []
+
+    const query = new URLSearchParams({
+      fields: PRODUCT_FIELDS,
+      filter: JSON.stringify({ category: { slug: { _in: own } } }),
+      limit: '-1',
+    })
+    query.set('deep[images][_sort]', 'sort')
+    query.set('deep[product_variants][images][_sort]', 'sort')
+
+    const json = await getJSON<DirectusListResponse<Product[]>>(`/items/products?${query.toString()}`, signal)
+    const items = sortProducts(json.data ?? [], 'default')
+
+    // товары в наличии — первыми
+    return [...items.filter(hasStock), ...items.filter(item => !hasStock(item))].map(slimForCard)
+  }
+
+  const loadPartner = async (): Promise<{ items: Product[], total: number }> => {
+    if (!partner.length)
+      return { items: [], total: 0 }
+
+    const query = new URLSearchParams({
+      fields: PARTNER_PRODUCT_FIELDS,
+      filter: JSON.stringify({ _and: [{ is_active: { _eq: true } }, { category: { slug: { _in: partner } } }] }),
+      sort: '-id',
+      limit: String(partnerLimit),
+      page: String(partnerPage),
+      meta: 'filter_count',
+    })
+
+    const json = await getJSON<DirectusListResponse<PartnerProductRaw[]>>(`/items/partner_products?${query.toString()}`, signal)
+    const items = (json.data ?? []).map(normalizePartnerProduct).map(slimForCard)
+
+    return { items, total: Number(json.meta?.filter_count ?? items.length) }
+  }
+
+  const [ownItems, partnerResult] = await Promise.all([loadOwn(), loadPartner()])
+
+  return { own: ownItems, partner: partnerResult.items, partnerTotal: partnerResult.total }
+}
