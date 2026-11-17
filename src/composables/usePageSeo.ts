@@ -4,6 +4,8 @@ import { toValue } from 'vue'
 import { ADDRESS, EMAIL_PRIMARY, PHONE } from '~/constants/contacts'
 
 export const SITE_URL = 'https://brillex.kz'
+/** false — тестовая сборка (предпросмотр Netlify): все страницы закрыты от индексации. См. vite.config.ts. */
+const SITE_INDEXABLE = import.meta.env.VITE_SITE_INDEXABLE !== 'false'
 export const SITE_NAME = 'Brillex'
 /** JPG 1200×630 — WebP превью ссылок понимают не все мессенджеры. */
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.jpg`
@@ -61,7 +63,7 @@ export function usePageSeo(seo: MaybeRefOrGetter<PageSeo>) {
     title: fullTitle,
     meta: [
       { key: 'description', name: 'description', content: description },
-      { key: 'robots', name: 'robots', content: () => (value().noindex ? 'noindex, follow' : 'index, follow') },
+      { key: 'robots', name: 'robots', content: () => (!SITE_INDEXABLE ? 'noindex, nofollow' : value().noindex ? 'noindex, follow' : 'index, follow') },
       { key: 'og:title', property: 'og:title', content: fullTitle },
       { key: 'og:description', property: 'og:description', content: description },
       { key: 'og:image', property: 'og:image', content: image },

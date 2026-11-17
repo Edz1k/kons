@@ -53,12 +53,35 @@ async function fetchProductRoutes(directusUrl: string): Promise<string[]> {
   return slugs.map(slug => `/product/${slug}`)
 }
 
+/**
+ * Можно ли индексировать эту сборку.
+ * Netlify при сборке задаёт CONTEXT: production — боевой сайт, deploy-preview — предпросмотр pull request'а,
+ * branch-deploy — ветка. Предпросмотры и ветки закрываем от индексации, иначе Google увидит дубли.
+ * Отдельный тестовый сайт на Netlify (у него свой production) закрывается переменной SITE_NOINDEX=true.
+ * Локальная сборка (CONTEXT не задан) ведёт себя как боевая.
+ */
+function isIndexableBuild(): boolean {
+  if (process.env.SITE_NOINDEX === 'true')
+    return false
+
+  const context = process.env.CONTEXT
+  return !context || context === 'production'
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const directusUrl = (env.VITE_DIRECTUS_URL ?? '').replace(/\/+$/, '')
+  const indexable = isIndexableBuild()
   let productRoutes: string[] = []
 
+  if (!indexable)
+    console.log(`[ssg] тестовая сборка (CONTEXT=${process.env.CONTEXT}, SITE_NOINDEX=${process.env.SITE_NOINDEX}) — закрыта от индексации`)
+
   return {
+    define: {
+      'import.meta.env.VITE_SITE_INDEXABLE': JSON.stringify(indexable ? 'true' : 'false'),
+    },
+
     resolve: {
       alias: {
         '~/': `${path.resolve(__dirname, 'src')}/`,
@@ -200,7 +223,9 @@ export default defineConfig(({ mode }) => {
           exclude: [...NOINDEX_ROUTES, '/README'],
           changefreq: { '*': 'weekly', '/': 'daily', '/market': 'daily' },
           priority: { '*': 0.6, '/': 1, '/market': 0.9 },
-          robots: [{ userAgent: '*', allow: '/', disallow: NOINDEX_ROUTES }],
+          robots: indexable
+            ? [{ userAgent: '*', allow: '/', disallow: NOINDEX_ROUTES }]
+            : [{ userAgent: '*', disallow: '/' }],
         })
       },
     },

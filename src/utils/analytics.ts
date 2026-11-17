@@ -106,9 +106,22 @@ function trackContactClicks() {
   }, { capture: true })
 }
 
+/**
+ * Счётчики работают только на боевом адресе. Тестовые копии сайта (предпросмотры Netlify, ветки)
+ * иначе слали бы визиты и заявки в общую статистику и в Google Ads.
+ * Чтобы проверить аналитику на тестовой копии, задайте при сборке VITE_ANALYTICS_ANY_HOST=true.
+ */
+const PRODUCTION_HOSTS = ['brillex.kz', 'www.brillex.kz']
+const ANALYTICS_ANY_HOST = import.meta.env.VITE_ANALYTICS_ANY_HOST === 'true'
+
 export function initAnalytics(router: Router) {
   if (!import.meta.env.PROD || (!YM_ID && !GA_ID && !GADS_ID))
     return
+
+  if (!ANALYTICS_ANY_HOST && !PRODUCTION_HOSTS.includes(window.location.hostname)) {
+    console.info(`[analytics] ${window.location.hostname} — не боевой адрес, счётчики выключены`)
+    return
+  }
 
   enabled = true
 
