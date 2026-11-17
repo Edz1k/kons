@@ -628,7 +628,6 @@ function slimForCard(product: Product): Product {
     ...variant,
     images: variant.images?.slice(0, 1),
     external_images_urls: variant.external_images_urls?.slice(0, 1),
-    variation_description: undefined,
   }))
 
   return {

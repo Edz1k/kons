@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
       <FadeComponent :delay="120">
         <p class="mt-6 max-w-2xl text-base text-neutral-600 leading-7 md:mt-8 md:text-xl sm:text-lg md:leading-8 sm:leading-7">
           Соберём мерч в едином стиле: от текстиля и корпоративных подарков
-          до полиграфии. Цвета, материалы и нанесение. Ни один предмет
+          до полиграфии. Подберём цвета, материалы и нанесение так, что ни один предмет
           не будет выглядеть случайным.
         </p>
       </FadeComponent>

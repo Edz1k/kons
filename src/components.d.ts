@@ -26,6 +26,7 @@ declare module 'vue' {
     HeroCinematic: typeof import('./components/sections/HeroCinematic.vue')['default']
     Input: typeof import('./components/ui/input/Input.vue')['default']
     Label: typeof import('./components/ui/label/Label.vue')['default']
+    LandingPage: typeof import('./components/landing/LandingPage.vue')['default']
     LeadsComponent: typeof import('./components/LeadsComponent.vue')['default']
     NavbarComponent: typeof import('./components/NavbarComponent.vue')['default']
     NumberTicker: typeof import('./components/AnimationComponent/NumberTicker.vue')['default']
