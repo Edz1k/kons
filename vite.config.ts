@@ -222,7 +222,7 @@ export default defineConfig(({ mode }) => {
           hostname: 'https://brillex.kz/',
           exclude: [...NOINDEX_ROUTES, '/README'],
           changefreq: { '*': 'weekly', '/': 'daily', '/market': 'daily' },
-          priority: { '*': 0.6, '/': 1, '/market': 0.9 },
+          priority: { '*': 0.6, '/': 1, '/market': 0.9, '/novogodnie-podarki': 0.8, '/korporativnye-podarki': 0.8, '/merch': 0.8, '/welcome-pack': 0.8 },
           robots: indexable
             ? [{ userAgent: '*', allow: '/', disallow: NOINDEX_ROUTES }]
             : [{ userAgent: '*', disallow: '/' }],

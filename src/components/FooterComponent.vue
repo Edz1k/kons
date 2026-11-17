@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ADDRESS_FULL, EMAILS, PHONE, PHONE_DIGITS, WHATSAPP_LINK } from '~/constants/contacts'
+import { LANDING_LINKS } from '~/data/landings'
 
 const year = new Date().getFullYear()
 
@@ -69,7 +70,7 @@ const socialBtn
       </div>
 
       <!-- main content -->
-      <div class="grid grid-cols-2 gap-x-5 gap-y-5 py-5 md:grid-cols-[1.2fr_1fr_1fr] md:gap-12 md:py-12">
+      <div class="grid grid-cols-2 gap-x-5 gap-y-5 py-5 md:grid-cols-[1.2fr_1fr_1fr] md:gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] md:py-12">
         <!-- brand / socials: на телефоне — одна строка во всю ширину -->
         <div class="col-span-2 flex items-center justify-between md:col-span-1 md:block">
           <RouterLink
@@ -115,6 +116,22 @@ const socialBtn
 
           <ul class="grid mt-2.5 gap-2.5 md:mt-6 md:gap-3">
             <li v-for="link in linksRight" :key="link.label">
+              <RouterLink :to="link.to" :class="navLink">
+                <span class="h-1.5 w-1.5 rounded-full bg-white/30 transition group-hover:bg-white" />
+                {{ link.label }}
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- решения: посадочные страницы -->
+        <nav aria-label="Решения">
+          <p class="text-sm text-white/55 font-semibold tracking-[0.18em] uppercase">
+            Решения
+          </p>
+
+          <ul class="grid mt-4 gap-2.5 md:mt-5 md:gap-3">
+            <li v-for="link in LANDING_LINKS" :key="link.to">
               <RouterLink :to="link.to" :class="navLink">
                 <span class="h-1.5 w-1.5 rounded-full bg-white/30 transition group-hover:bg-white" />
                 {{ link.label }}
