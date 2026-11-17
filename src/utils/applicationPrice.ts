@@ -350,7 +350,7 @@ export function calculate(input: CalcInput): CalcResult {
     lines,
     tip,
     warn,
-    summary: `${method.name}: ${desc} — ${qty} шт.\nПредварительно: ${formatTenge(total)} (${formatTenge(total / qty)}/шт.)`,
+    summary: `${method.name}: ${desc}, ${qty} шт.\nПредварительно: ${formatTenge(total)} (${formatTenge(total / qty)}/шт.)`,
   }
 }
 

@@ -250,7 +250,7 @@ onBeforeUnmount(() => {
           style="transition-delay: 0.15s"
         >
           <span class="size-1.5 shrink-0 rounded-full bg-primary sm:size-2" aria-hidden="true" />
-          <span>Из семейного дела — в новый <span class="text-primary">масштаб</span></span>
+          <span>Из семейного дела в новый <span class="text-primary">масштаб</span></span>
         </p>
 
         <h1
@@ -272,7 +272,7 @@ onBeforeUnmount(() => {
           style="transition-delay: 0.9s"
         >
           Корпоративный мерч с нанесением логотипа. Свой склад
-          и производство в Алматы — тысячи товаров уже в наличии.
+          и производство в Алматы. Тысячи товаров уже в наличии.
         </p>
 
         <div
