@@ -611,6 +611,34 @@ export async function fetchCategoriesByType(
   return fetchOwnCategories(signal)
 }
 
+/**
+ * Облегчённый товар для карточки в списке: без описания, по одному варианту на цвет,
+ * по одной картинке на вариант. Нужен для подборок /katalog: их товары сериализуются в HTML,
+ * и у одежды с десятками размеров страница иначе весила бы больше мегабайта.
+ */
+function slimForCard(product: Product): Product {
+  const seenColors = new Set<string>()
+  const variants = (product.product_variants ?? []).filter((variant) => {
+    const key = String(variant.color?.id ?? variant.color?.slug ?? variant.color?.name ?? variant.id)
+    if (seenColors.has(key))
+      return false
+    seenColors.add(key)
+    return true
+  }).slice(0, 12).map(variant => ({
+    ...variant,
+    images: variant.images?.slice(0, 1),
+    external_images_urls: variant.external_images_urls?.slice(0, 1),
+    variation_description: undefined,
+  }))
+
+  return {
+    ...product,
+    description: '',
+    images: product.images?.slice(0, 1),
+    product_variants: variants,
+  }
+}
+
 export interface CatalogSectionPage {
   /** Свой склад — все товары подборки. */
   own: Product[]
@@ -649,7 +677,7 @@ export async function fetchCatalogSectionPage(params: {
     const items = sortProducts(json.data ?? [], 'default')
 
     // товары в наличии — первыми
-    return [...items.filter(hasStock), ...items.filter(item => !hasStock(item))]
+    return [...items.filter(hasStock), ...items.filter(item => !hasStock(item))].map(slimForCard)
   }
 
   const loadPartner = async (): Promise<{ items: Product[], total: number }> => {
@@ -666,7 +694,7 @@ export async function fetchCatalogSectionPage(params: {
     })
 
     const json = await getJSON<DirectusListResponse<PartnerProductRaw[]>>(`/items/partner_products?${query.toString()}`, signal)
-    const items = (json.data ?? []).map(normalizePartnerProduct)
+    const items = (json.data ?? []).map(normalizePartnerProduct).map(slimForCard)
 
     return { items, total: Number(json.meta?.filter_count ?? items.length) }
   }
