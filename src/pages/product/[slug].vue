@@ -830,7 +830,7 @@ watch(slug, (value) => {
               Товар зарезервирован другим клиентом<template v-if="reservedUntilText">
                 до {{ reservedUntilText }}
               </template>.
-              Оставьте заявку, сообщим, если резерв снимут.
+              Оставьте заявку, и мы сообщим, если резерв снимут.
             </div>
 
             <div

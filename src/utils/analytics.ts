@@ -119,7 +119,7 @@ export function initAnalytics(router: Router) {
     return
 
   if (!ANALYTICS_ANY_HOST && !PRODUCTION_HOSTS.includes(window.location.hostname)) {
-    console.info(`[analytics] ${window.location.hostname} — не боевой адрес, счётчики выключены`)
+    console.warn(`[analytics] ${window.location.hostname}: не боевой адрес, счётчики выключены`)
     return
   }
 

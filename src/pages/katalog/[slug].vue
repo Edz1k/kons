@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onServerPrefetch, ref } from 'vue'
+import { computed, onMounted, onServerPrefetch, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Button } from '~/components/ui/button'
 import { usePageSeo } from '~/composables/usePageSeo'
@@ -71,6 +71,11 @@ async function loadMore() {
 
 onServerPrefetch(load)
 onMounted(load)
+// переход между подборками (/katalog/ruchki → /katalog/termosy) не пересоздаёт компонент
+watch(slug, () => {
+  error.value = ''
+  load()
+})
 
 const products = computed(() => [...(data.value?.own ?? []), ...(data.value?.partner ?? [])])
 const total = computed(() => (data.value?.own.length ?? 0) + (data.value?.partnerTotal ?? 0))

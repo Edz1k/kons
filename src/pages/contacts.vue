@@ -10,7 +10,7 @@ import {
 
 usePageSeo({
   title: 'Контакты: офис в Алматы',
-  description: `Контакты Brillex: ${ADDRESS_FULL}, телефон и WhatsApp ${PHONE}. Оставьте заявку, подберём мерч под ваш бренд.`,
+  description: `Контакты Brillex: ${ADDRESS_FULL}, телефон и WhatsApp ${PHONE}. Оставьте заявку, и мы подберём мерч под ваш бренд.`,
 })
 </script>
 

@@ -61,14 +61,36 @@ function onKeydown(event: KeyboardEvent) {
     return
   }
   switch (event.key) {
-    case 'Escape': event.preventDefault(); close(); break
-    case 'ArrowDown': event.preventDefault(); move(1); break
-    case 'ArrowUp': event.preventDefault(); move(-1); break
-    case 'Home': event.preventDefault(); active.value = 0; scrollToActive(); break
-    case 'End': event.preventDefault(); active.value = props.options.length - 1; scrollToActive(); break
+    case 'Escape':
+      event.preventDefault()
+      close()
+      break
+    case 'ArrowDown':
+      event.preventDefault()
+      move(1)
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      move(-1)
+      break
+    case 'Home':
+      event.preventDefault()
+      active.value = 0
+      scrollToActive()
+      break
+    case 'End':
+      event.preventDefault()
+      active.value = props.options.length - 1
+      scrollToActive()
+      break
     case 'Enter':
-    case ' ': event.preventDefault(); choose(active.value); break
-    case 'Tab': close(); break
+    case ' ':
+      event.preventDefault()
+      choose(active.value)
+      break
+    case 'Tab':
+      close()
+      break
   }
 }
 
@@ -90,13 +112,12 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onOutside))
       aria-haspopup="listbox"
       :aria-expanded="open"
       :aria-label="ariaLabel"
-      class="h-12 w-full flex items-center justify-between gap-3 rounded-xl border py-0 pl-3.5 pr-4 text-left text-base text-neutral-900 outline-none transition"
+      class="h-12 w-full flex items-center justify-between gap-3 rounded-xl border py-0 pl-3.5 pr-4 text-left text-base text-neutral-900 outline-none transition focus-visible:border-neutral-900"
       :class="[
         highlight
           ? 'border-primary/40 bg-primary/10 font-medium hover:bg-primary/15'
           : 'border-transparent bg-neutral-100 hover:bg-neutral-200/70',
         open ? (highlight ? '!border-primary bg-primary/15' : '!border-neutral-900 !bg-white') : '',
-        'focus-visible:border-neutral-900',
       ]"
       @click="open ? close() : openList()"
       @keydown="onKeydown"
