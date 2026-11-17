@@ -518,7 +518,7 @@ usePageSeo(() => {
     return { title: error.value ? 'Товар не найден' : 'Товар', noindex: Boolean(error.value) }
 
   return {
-    title: `${item.value.title.trim()} с логотипом — купить в Алматы`,
+    title: `${item.value.title.trim()} с логотипом, купить в Алматы`,
     description: seoDescription.value,
     image: shareImage.value?.url ?? null,
     imageWidth: shareImage.value && 'width' in shareImage.value ? shareImage.value.width : undefined,
@@ -809,7 +809,7 @@ watch(slug, (value) => {
               <p class="mt-2 text-sm text-black/60 leading-6">
                 Резерв действует до {{ myReservationUntilText }}
                 <template v-if="myReservationTimeLeft">
-                  — осталось {{ myReservationTimeLeft }}
+                  · осталось {{ myReservationTimeLeft }}
                 </template>
               </p>
 
@@ -830,7 +830,7 @@ watch(slug, (value) => {
               Товар зарезервирован другим клиентом<template v-if="reservedUntilText">
                 до {{ reservedUntilText }}
               </template>.
-              Оставьте заявку — сообщим, если резерв снимут.
+              Оставьте заявку, сообщим, если резерв снимут.
             </div>
 
             <div

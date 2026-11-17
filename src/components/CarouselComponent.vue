@@ -15,7 +15,7 @@ const slides = [
 </script>
 
 <template>
-  <div class="w-full overflow-hidden rounded-lg">
+  <div class="w-full overflow-hidden rounded-3xl shadow-[0_28px_60px_rgba(0,0,0,0.14)]">
     <Swiper
       :modules="[Navigation, Pagination, Autoplay]"
       :slides-per-view="1"
@@ -32,7 +32,7 @@ const slides = [
       >
         <img
           :src="slide"
-          :alt="`Мерч с логотипом Brillex — пример ${index + 1}`"
+          :alt="`Мерч с логотипом Brillex, пример ${index + 1}`"
           :loading="index === 0 ? 'eager' : 'lazy'"
           class="h-full w-full object-cover"
         >

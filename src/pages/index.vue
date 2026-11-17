@@ -5,7 +5,7 @@ defineOptions({
 
 usePageSeo({
   title: 'Мерч и корпоративные подарки с логотипом в Алматы',
-  description: 'Brillex — мерч для брендов в Алматы: ручки, термокружки, ежедневники, шоперы и бейджи с нанесением логотипа. Товары в наличии, под заказ, доставка по Казахстану.',
+  description: 'Brillex. Мерч для брендов в Алматы: ручки, термокружки, ежедневники, шоперы и бейджи с нанесением логотипа. Товары в наличии, под заказ, доставка по Казахстану.',
 })
 </script>
 
@@ -15,12 +15,6 @@ usePageSeo({
 
   <TickerSection />
   <StockSection />
-
-  <section class="pt-12">
-    <div class="mx-auto max-w-7xl px-4 lg:px-8 sm:px-6">
-      <CarouselComponent />
-    </div>
-  </section>
 
   <BrandStatementSection />
   <StickyFeatureSection />

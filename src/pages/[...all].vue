@@ -13,7 +13,7 @@ usePageSeo({ title: 'Страница не найдена', noindex: true })
         Такой страницы нет
       </h1>
       <p class="mx-auto mt-5 max-w-xl text-base text-slate-600 leading-7 md:text-lg">
-        Возможно, товар сняли с продажи или в адресе опечатка. Загляните в каталог — там всё, что есть сейчас.
+        Возможно, товар сняли с продажи или в адресе опечатка. Загляните в каталог: там всё, что есть сейчас.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">
         <RouterLink

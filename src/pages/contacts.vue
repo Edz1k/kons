@@ -9,8 +9,8 @@ import {
 } from '~/constants/contacts'
 
 usePageSeo({
-  title: 'Контакты — офис в Алматы',
-  description: `Контакты Brillex: ${ADDRESS_FULL}, телефон и WhatsApp ${PHONE}. Оставьте заявку — подберём мерч под ваш бренд.`,
+  title: 'Контакты: офис в Алматы',
+  description: `Контакты Brillex: ${ADDRESS_FULL}, телефон и WhatsApp ${PHONE}. Оставьте заявку, подберём мерч под ваш бренд.`,
 })
 </script>
 
@@ -28,7 +28,7 @@ usePageSeo({
         </h1>
 
         <p class="mt-5 max-w-2xl text-base text-slate-600 leading-7 md:text-lg md:leading-7">
-          Мы всегда на связи — напишите нам в WhatsApp, на почту или приезжайте к нам.
+          Мы всегда на связи: напишите нам в WhatsApp, на почту или приезжайте к нам.
         </p>
       </div>
 

@@ -11,6 +11,7 @@ declare module 'vue' {
     Badge: typeof import('./components/ui/badge/Badge.vue')['default']
     BrandStatementSection: typeof import('./components/sections/BrandStatementSection.vue')['default']
     Button: typeof import('./components/ui/button/Button.vue')['default']
+    CalculatorSelect: typeof import('./components/sections/CalculatorSelect.vue')['default']
     Carousel: typeof import('./components/ui/carousel/Carousel.vue')['default']
     CarouselComponent: typeof import('./components/CarouselComponent.vue')['default']
     CarouselContent: typeof import('./components/ui/carousel/CarouselContent.vue')['default']

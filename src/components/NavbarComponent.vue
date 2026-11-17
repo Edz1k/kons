@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
-import { EMAIL_PRIMARY, PHONE } from '~/constants/contacts'
+import { EMAIL_PRIMARY, PHONE, PHONE_DIGITS } from '~/constants/contacts'
 import { useAuthStore } from '~/stores/auth'
 import { useProductsStore } from '~/stores/product'
 
@@ -17,6 +17,7 @@ const accountLink = computed(() => isAuthenticated.value ? '/profile' : '/login'
 const accountLabel = computed(() => isAuthenticated.value ? 'Кабинет' : 'Войти')
 
 const links = [
+  { label: 'Калькулятор', to: { path: '/', hash: '#calculator' }, wideOnly: true },
   { label: 'Портфолио', to: '/portfolio' },
   { label: 'Услуги', to: { path: '/', hash: '#services' } },
   { label: 'О нас', to: '/about' },
@@ -70,7 +71,7 @@ onMounted(() => {
       </RouterLink>
 
       <!-- Desktop menu -->
-      <div class="hidden items-center gap-8 md:flex">
+      <div class="hidden items-center gap-5 md:flex xl:gap-8">
         <RouterLink
           to="/market"
           class="group relative inline-flex items-center text-base font-semibold opacity-90 transition lg:text-lg hover:opacity-100"
@@ -81,8 +82,8 @@ onMounted(() => {
           />
         </RouterLink>
 
-        <ul class="flex items-center gap-6 text-base font-medium lg:gap-8 lg:text-lg">
-          <li v-for="link in links" :key="link.label">
+        <ul class="flex items-center gap-4 whitespace-nowrap text-base font-medium lg:gap-5 lg:text-lg xl:gap-8">
+          <li v-for="link in links" :key="link.label" :class="'wideOnly' in link ? 'hidden lg:block' : ''">
             <RouterLink
               :to="link.to"
               class="group relative inline-flex items-center opacity-90 transition hover:opacity-100"
@@ -112,9 +113,9 @@ onMounted(() => {
           </span>
         </RouterLink>
 
-        <div class="hidden flex-col text-right text-sm opacity-80 lg:flex">
-          <span class="transition hover:opacity-100">{{ EMAIL_PRIMARY }}</span>
-          <span class="transition hover:opacity-100">{{ PHONE }}</span>
+        <div class="hidden flex-col whitespace-nowrap text-right text-sm opacity-80 xl:flex">
+          <a :href="`mailto:${EMAIL_PRIMARY}`" class="transition hover:text-primary hover:opacity-100">{{ EMAIL_PRIMARY }}</a>
+          <a :href="`tel:+${PHONE_DIGITS}`" class="transition hover:text-primary hover:opacity-100">{{ PHONE }}</a>
         </div>
 
         <button
@@ -244,12 +245,12 @@ onMounted(() => {
 
           <!-- Contacts mobile -->
           <div class="mt-6 border-t border-white/10 pt-4 text-base opacity-80">
-            <div class="transition hover:opacity-100">
+            <a :href="`tel:+${PHONE_DIGITS}`" class="block py-1 transition hover:opacity-100">
               {{ PHONE }}
-            </div>
-            <div class="transition hover:opacity-100">
+            </a>
+            <a :href="`mailto:${EMAIL_PRIMARY}`" class="block py-1 transition hover:opacity-100">
               {{ EMAIL_PRIMARY }}
-            </div>
+            </a>
           </div>
         </div>
       </div>

@@ -35,14 +35,14 @@ const stockLink = `${WHATSAPP_LINK}?text=${encodeURIComponent('Здравств�
           </span>
           <h2 class="mt-4 text-4xl leading-[0.95] font-black tracking-tight uppercase md:text-6xl">
             В наличии.<br>
-            <span class="text-primary">Здесь и сейчас.</span>
+            <span class="mt-2 inline-block text-primary md:mt-3">Здесь и сейчас.</span>
           </h2>
         </FadeComponent>
 
         <FadeComponent :delay="100">
           <p class="max-w-xl text-sm leading-6 text-neutral-600 md:text-lg md:leading-8">
             Закупаем продукцию напрямую у фабрик и держим самые востребованные позиции в наличии.
-            Не нужно ждать поставку из-за рубежа — ваш мерч уже готов к брендированию.
+            Не нужно ждать поставку из-за рубежа: ваш мерч уже готов к брендированию.
           </p>
         </FadeComponent>
       </div>

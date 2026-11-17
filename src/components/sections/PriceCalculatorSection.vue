@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { WHATSAPP_DIGITS } from '~/constants/contacts'
+import CalculatorSelect from '~/components/sections/CalculatorSelect.vue'
 import { trackGoal } from '~/utils/analytics'
 import { BAG_OPTIONS, calculate, formatTenge, PRICE_METHODS, quickQuantities } from '~/utils/applicationPrice'
 
@@ -76,6 +77,11 @@ function scrollToForm() {
 
 const colorOptions = computed(() => product.value.kind === 'tex' ? [1, 2, 3, 4, 5, 6] : [1, 2])
 
+const productOptions = computed(() => method.value.products.map((item, index) => ({ value: index, label: item.name })))
+const printSizeOptions = [{ value: false, label: 'до 12×12 см' }, { value: true, label: 'от 12 до 40 см' }]
+const embossOptions = [{ value: false, label: 'Слепое' }, { value: true, label: 'Фольгой' }]
+const placeOptions = [{ value: 1, label: 'Одно' }, { value: 2, label: 'Два' }, { value: 3, label: 'Три' }, { value: 4, label: 'Четыре' }]
+
 const fieldClass = 'h-12 w-full rounded-xl border border-transparent bg-neutral-100 px-3.5 text-base text-neutral-900 outline-none transition focus:border-neutral-900 focus:bg-white'
 const labelClass = 'text-sm font-semibold text-neutral-500'
 </script>
@@ -93,7 +99,7 @@ const labelClass = 'text-sm font-semibold text-neutral-500'
           <span class="block text-primary">нанесение</span>
         </h2>
         <p class="mt-4 max-w-2xl text-base text-neutral-600 leading-7 md:text-lg">
-          Выберите способ, изделие и тираж — сумма посчитается сразу. Точную цену менеджер подтвердит после макета.
+          Выберите способ, изделие и тираж, и сумма посчитается сразу. Точную цену менеджер подтвердит после макета.
         </p>
       </FadeComponent>
 
@@ -122,14 +128,10 @@ const labelClass = 'text-sm font-semibold text-neutral-500'
             </p>
           </div>
 
-          <label class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2">
             <span :class="labelClass">Изделие</span>
-            <select v-model.number="productIndex" :class="fieldClass">
-              <option v-for="(item, index) in method.products" :key="item.id" :value="index">
-                {{ item.name }}
-              </option>
-            </select>
-          </label>
+            <CalculatorSelect v-model="productIndex" :options="productOptions" highlight aria-label="Изделие" />
+          </div>
 
           <div class="flex flex-col gap-2">
             <label for="calc-qty" :class="labelClass">Тираж, шт.</label>
@@ -162,37 +164,27 @@ const labelClass = 'text-sm font-semibold text-neutral-500'
           <!-- параметры, которые зависят от изделия -->
           <div v-if="product.kind !== 'plain'" class="grid gap-4 sm:grid-cols-2">
             <template v-if="product.kind === 'tex' || product.kind === 'two' || product.kind === 'bags'">
-              <label class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
                 <span :class="labelClass">Цветов в логотипе</span>
-                <select v-model.number="colors" :class="fieldClass">
-                  <option v-for="n in colorOptions" :key="n" :value="n">{{ n }}</option>
-                </select>
-              </label>
+                <CalculatorSelect v-model="colors" :options="colorOptions.map(n => ({ value: n, label: String(n) }))" aria-label="Цветов в логотипе" />
+              </div>
             </template>
 
-            <label v-if="product.kind === 'tex'" class="flex flex-col gap-2">
+            <div v-if="product.kind === 'tex'" class="flex flex-col gap-2">
               <span :class="labelClass">Размер печати</span>
-              <select v-model="bigPrint" :class="fieldClass">
-                <option :value="false">до 12×12 см</option>
-                <option :value="true">от 12 до 40 см</option>
-              </select>
-            </label>
+              <CalculatorSelect v-model="bigPrint" :options="printSizeOptions" aria-label="Размер печати" />
+            </div>
 
-            <label v-if="product.kind === 'bags'" class="flex flex-col gap-2">
+            <div v-if="product.kind === 'bags'" class="flex flex-col gap-2">
               <span :class="labelClass">Пакеты</span>
-              <select v-model.number="bagPrice" :class="fieldClass">
-                <option v-for="bag in BAG_OPTIONS" :key="bag.value" :value="bag.value">{{ bag.label }}</option>
-              </select>
-            </label>
+              <CalculatorSelect v-model="bagPrice" :options="BAG_OPTIONS" aria-label="Пакеты" />
+            </div>
 
             <template v-if="product.kind === 'emb'">
-              <label class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
                 <span :class="labelClass">Вид тиснения</span>
-                <select v-model="embossFoil" :class="fieldClass">
-                  <option :value="false">Слепое</option>
-                  <option :value="true">Фольгой</option>
-                </select>
-              </label>
+                <CalculatorSelect v-model="embossFoil" :options="embossOptions" aria-label="Вид тиснения" />
+              </div>
               <label class="flex flex-col gap-2">
                 <span :class="labelClass">Размер логотипа, см</span>
                 <input v-model="clicheSize" type="text" inputmode="decimal" placeholder="5×3" :class="fieldClass">
@@ -211,15 +203,10 @@ const labelClass = 'text-sm font-semibold text-neutral-500'
             </template>
           </div>
 
-          <label class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2">
             <span :class="labelClass">Сколько мест нанесения на изделии</span>
-            <select v-model.number="places" :class="fieldClass">
-              <option :value="1">Одно</option>
-              <option :value="2">Два</option>
-              <option :value="3">Три</option>
-              <option :value="4">Четыре</option>
-            </select>
-          </label>
+            <CalculatorSelect v-model="places" :options="placeOptions" highlight aria-label="Сколько мест нанесения" />
+          </div>
         </div>
 
         <!-- итог -->

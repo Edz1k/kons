@@ -94,37 +94,13 @@ async function submitForm() {
 
       <div class="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-stretch">
         <!-- Левая карточка с одной картинкой; на телефоне скрыта — дублирует заголовок, а форма должна влезать в экран -->
-        <div class="relative hidden min-h-[320px] overflow-hidden md:block rounded-[28px] bg-slate-900 sm:min-h-[420px] xl:min-h-full">
+        <div class="relative hidden aspect-[3/2] overflow-hidden md:block rounded-[28px] bg-black xl:self-center">
+          <!-- текст и бейдж уже внутри картинки; карточка держит её пропорции 3:2, поэтому ничего не обрезается -->
           <img
-            src="/image.webp"
-            alt="Brillex contact preview"
+            src="/contact-banner-v4.webp"
+            alt="Brillex: начните с короткой формы, и мы свяжемся с вами удобным способом"
             class="absolute inset-0 h-full w-full object-cover"
           >
-
-          <!-- мягкое затемнение -->
-          <div class="absolute inset-0 bg-black/25" />
-
-          <!-- нижний градиент под текст -->
-          <div class="absolute inset-x-0 bottom-0 h-[60%] from-black/75 via-black/35 to-transparent bg-gradient-to-t" />
-
-          <!-- декоративный blur -->
-          <div class="absolute h-40 w-40 rounded-full bg-white/10 blur-3xl -bottom-10 -left-10" />
-
-          <div class="relative z-10 h-full flex flex-col justify-end p-6 md:p-8 sm:p-7 xl:p-10">
-            <div class="max-w-[32rem]">
-              <div class="mb-4 inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-xs text-white/90 font-medium tracking-[0.18em] uppercase backdrop-blur-xs md:text-sm">
-                Brillex
-              </div>
-
-              <h3 class="text-2xl text-white font-black leading-tight md:text-[38px] sm:text-3xl md:leading-[1.05] sm:leading-9">
-                Начните с короткой формы — и мы свяжемся с вами удобным способом
-              </h3>
-
-              <p class="mt-4 max-w-[28rem] text-sm text-white/80 leading-7 md:text-lg sm:text-base md:leading-7 sm:leading-6">
-                Расскажите немного о себе, и мы предложим лучший вариант сотрудничества для вашего бренда, компании или мероприятия.
-              </p>
-            </div>
-          </div>
         </div>
 
         <!-- Правая часть -->
