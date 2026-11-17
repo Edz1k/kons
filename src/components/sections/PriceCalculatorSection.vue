@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { WHATSAPP_DIGITS } from '~/constants/contacts'
 import CalculatorSelect from '~/components/sections/CalculatorSelect.vue'
+import { WHATSAPP_DIGITS } from '~/constants/contacts'
 import { trackGoal } from '~/utils/analytics'
 import { BAG_OPTIONS, calculate, formatTenge, PRICE_METHODS, quickQuantities } from '~/utils/applicationPrice'
 

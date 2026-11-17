@@ -102,26 +102,26 @@ onBeforeUnmount(() => {
 
     <div class="relative z-20 mx-auto max-w-7xl gap-x-12 px-4 text-left lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:px-8 sm:px-6 xl:gap-x-16">
       <div class="lg:col-start-1 lg:row-start-1">
-      <FadeComponent>
-        <h2 class="whitespace-nowrap text-[min(2.25rem,6.8vw)] font-bold leading-[0.95] tracking-tight uppercase sm:text-[min(3rem,6.8vw)] md:text-[min(4.5rem,7vw)] lg:text-[min(4.5rem,4.8vw)]">
-          Мерч <span class="text-primary">под ключ</span>
-        </h2>
-      </FadeComponent>
+        <FadeComponent>
+          <h2 class="whitespace-nowrap text-[min(2.25rem,6.8vw)] font-bold leading-[0.95] tracking-tight uppercase sm:text-[min(3rem,6.8vw)] md:text-[min(4.5rem,7vw)] lg:text-[min(4.5rem,4.8vw)]">
+            Мерч <span class="text-primary">под ключ</span>
+          </h2>
+        </FadeComponent>
 
-      <FadeComponent :delay="120">
-        <p class="mt-6 max-w-2xl text-base text-neutral-600 leading-7 md:mt-8 md:text-xl sm:text-lg md:leading-8 sm:leading-7">
-          Соберём мерч в едином стиле: от текстиля и корпоративных подарков
-          до полиграфии. Подберём цвета, материалы и нанесение так, что ни один предмет
-          не будет выглядеть случайным.
-        </p>
-      </FadeComponent>
+        <FadeComponent :delay="120">
+          <p class="mt-6 max-w-2xl text-base text-neutral-600 leading-7 md:mt-8 md:text-xl sm:text-lg md:leading-8 sm:leading-7">
+            Соберём мерч в едином стиле: от текстиля и корпоративных подарков
+            до полиграфии. Подберём цвета, материалы и нанесение так, что ни один предмет
+            не будет выглядеть случайным.
+          </p>
+        </FadeComponent>
 
-      <FadeComponent :delay="200">
-        <p class="mt-6 text-base font-bold leading-snug tracking-tight uppercase md:mt-8 md:text-2xl sm:text-xl lg:text-3xl">
-          <span class="block text-black">По отдельности: просто вещи.</span>
-          <span class="block text-primary">Вместе: коллекция бренда.</span>
-        </p>
-      </FadeComponent>
+        <FadeComponent :delay="200">
+          <p class="mt-6 text-base font-bold leading-snug tracking-tight uppercase md:mt-8 md:text-2xl sm:text-xl lg:text-3xl">
+            <span class="block text-black">По отдельности: просто вещи.</span>
+            <span class="block text-primary">Вместе: коллекция бренда.</span>
+          </p>
+        </FadeComponent>
       </div>
 
       <!-- слайдер: справа по центру раздела, на узких экранах — под текстом -->

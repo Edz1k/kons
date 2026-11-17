@@ -17,8 +17,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import generateSitemap from 'vite-ssg-sitemap'
-import 'vitest/config'
 import { CATALOG_SECTIONS } from './src/data/catalogSections'
+import 'vitest/config'
 
 /** Страницы, которые не нужны в поиске: служебные, 404 и заготовка товара. */
 const NOINDEX_ROUTES = ['/login', '/register', '/profile', '/404', '/product/__shell']
