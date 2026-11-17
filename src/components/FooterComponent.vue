@@ -6,6 +6,7 @@ const year = new Date().getFullYear()
 
 const linksLeft = [
   { label: 'Каталог', to: '/market' },
+  { label: 'Категории', to: '/katalog' },
   { label: 'Портфолио', to: '/portfolio' },
 ] as const
 

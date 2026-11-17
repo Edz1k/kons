@@ -11,6 +11,8 @@ export interface LandingIdea {
   text: string
   image: string
   alt: string
+  /** Ссылка на подборку каталога, например /katalog/ruchki. */
+  to?: string
 }
 
 export interface LandingWork {
@@ -112,10 +114,10 @@ export const LANDINGS = {
     note: 'Декабрь у всех самый загруженный. Чем раньше согласуем макет, тем спокойнее пройдёт тираж.',
     ideasTitle: 'Что подарить',
     ideas: [
-      { title: 'Наборы для команды', text: 'Шопер, блокнот, бутылка и ручка в одном стиле. Собираем и упаковываем на нашем складе.', image: '/carousel/set-black.webp', alt: 'Чёрный набор: шопер, блокнот, бутылка' },
+      { title: 'Наборы для команды', text: 'Шопер, блокнот, бутылка и ручка в одном стиле. Собираем и упаковываем на нашем складе.', image: '/carousel/set-black.webp', alt: 'Чёрный набор: шопер, блокнот, бутылка', to: '/katalog/podarochnye-nabory' },
       { title: 'Клиентам и партнёрам', text: 'Термос, ежедневник, зонт. Вещи, которыми пользуются весь год, а не убирают в ящик после праздников.', image: '/carousel/set-blue.webp', alt: 'Синий набор: зонт, ежедневник, термос' },
-      { title: 'Тёплый текстиль', text: 'Худи и свитшоты с вышивкой или печатью. Носят и зимой, и после.', image: '/pictures/hudi.webp', alt: 'Худи с логотипом' },
-      { title: 'Ежедневники и блокноты', text: 'Тиснение, гравировка или печать. На складе больше 22 000 блокнотов.', image: '/pictures/notebooks.webp', alt: 'Ежедневники с логотипом' },
+      { title: 'Тёплый текстиль', text: 'Худи и свитшоты с вышивкой или печатью. Носят и зимой, и после.', image: '/pictures/hudi.webp', alt: 'Худи с логотипом', to: '/katalog/hudi' },
+      { title: 'Ежедневники и блокноты', text: 'Тиснение, гравировка или печать. На складе больше 22 000 блокнотов.', image: '/pictures/notebooks.webp', alt: 'Ежедневники с логотипом', to: '/katalog/ezhednevniki' },
     ],
     // TODO: 2–3 реальных набора с составом и ценой «от» — блок появится сам
     offers: [],
@@ -141,10 +143,10 @@ export const LANDINGS = {
     whatsappText: 'Здравствуйте! Нужны корпоративные подарки с логотипом. Для кого: , количество: ',
     ideasTitle: 'Что можно сделать',
     ideas: [
-      { title: 'Готовые наборы', text: 'Несколько вещей в одном стиле: шопер, термос, блокнот, ручка. Комплектуем и упаковываем сами.', image: '/carousel/set-white.webp', alt: 'Белый набор с логотипом' },
-      { title: 'Термосы и кружки', text: 'Печать или гравировка логотипа. Подарок, который каждый день стоит на столе.', image: '/pictures/portfolio/bosch.webp', alt: 'Термокружка и кружка Bosch' },
-      { title: 'Ежедневники', text: 'Тиснение фольгой, слепое тиснение, гравировка, печать.', image: '/pictures/notebooks.webp', alt: 'Ежедневники с логотипом' },
-      { title: 'Ручки', text: 'Больше 300 000 ручек на складе. Пластик, металл, soft-touch.', image: '/pictures/pens-fan.webp', alt: 'Ручки с логотипом' },
+      { title: 'Готовые наборы', text: 'Несколько вещей в одном стиле: шопер, термос, блокнот, ручка. Комплектуем и упаковываем сами.', image: '/carousel/set-white.webp', alt: 'Белый набор с логотипом', to: '/katalog/podarochnye-nabory' },
+      { title: 'Термосы и кружки', text: 'Печать или гравировка логотипа. Подарок, который каждый день стоит на столе.', image: '/pictures/portfolio/bosch.webp', alt: 'Термокружка и кружка Bosch', to: '/katalog/termosy' },
+      { title: 'Ежедневники', text: 'Тиснение фольгой, слепое тиснение, гравировка, печать.', image: '/pictures/notebooks.webp', alt: 'Ежедневники с логотипом', to: '/katalog/ezhednevniki' },
+      { title: 'Ручки', text: 'Больше 300 000 ручек на складе. Пластик, металл, soft-touch.', image: '/pictures/pens-fan.webp', alt: 'Ручки с логотипом', to: '/katalog/ruchki' },
     ],
     offers: [],
     terms: {},
@@ -168,10 +170,10 @@ export const LANDINGS = {
     whatsappText: 'Здравствуйте! Хотим корпоративный мерч. Что нужно: , количество: ',
     ideasTitle: 'Из чего собираем',
     ideas: [
-      { title: 'Одежда', text: 'Худи, свитшоты, футболки, поло. Вышивка, DTF, шелкография.', image: '/pictures/hudi.webp', alt: 'Худи с логотипом' },
-      { title: 'Сумки и рюкзаки', text: 'Шоперы, рюкзаки и сумки с печатью или вышивкой.', image: '/pictures/sumka.webp', alt: 'Сумка с логотипом' },
-      { title: 'Посуда', text: 'Термосы, термокружки, бутылки, кружки.', image: '/pictures/portfolio/bosch.webp', alt: 'Посуда с логотипом Bosch' },
-      { title: 'Для мероприятий', text: 'Ланьярды, бейджи, блокноты, ручки. На складе больше 30 000 ланьярдов.', image: '/pictures/works/disney-pandora.webp', alt: 'Ланьярды Disney × Pandora' },
+      { title: 'Одежда', text: 'Худи, свитшоты, футболки, поло. Вышивка, DTF, шелкография.', image: '/pictures/hudi.webp', alt: 'Худи с логотипом', to: '/katalog/hudi' },
+      { title: 'Сумки и рюкзаки', text: 'Шоперы, рюкзаки и сумки с печатью или вышивкой.', image: '/pictures/sumka.webp', alt: 'Сумка с логотипом', to: '/katalog/shoppery' },
+      { title: 'Посуда', text: 'Термосы, термокружки, бутылки, кружки.', image: '/pictures/portfolio/bosch.webp', alt: 'Посуда с логотипом Bosch', to: '/katalog/termokruzhki' },
+      { title: 'Для мероприятий', text: 'Ланьярды, бейджи, блокноты, ручки. На складе больше 30 000 ланьярдов.', image: '/pictures/works/disney-pandora.webp', alt: 'Ланьярды Disney × Pandora', to: '/katalog/lanyardy-i-beydzhi' },
     ],
     offers: [],
     terms: {},
@@ -198,11 +200,92 @@ export const LANDINGS = {
       { title: 'Базовый набор', text: 'Шопер, термос, блокнот, ручка. Всё, что пригодится с первого дня.', image: '/carousel/set-white.webp', alt: 'Белый базовый набор' },
       { title: 'Одежда команды', text: 'Худи или футболка с логотипом. Самое заметное в наборе.', image: '/pictures/hudi.webp', alt: 'Худи с логотипом' },
       { title: 'Для рабочего стола', text: 'Блокнот, ручка, кружка или термокружка.', image: '/pictures/notebook-black.webp', alt: 'Чёрный блокнот с логотипом' },
-      { title: 'Пропуск и бейдж', text: 'Ланьярд с логотипом и бейдж. На складе больше 10 000 бейджей.', image: '/pictures/works/disney-pandora.webp', alt: 'Ланьярды с логотипом' },
+      { title: 'Пропуск и бейдж', text: 'Ланьярд с логотипом и бейдж. На складе больше 10 000 бейджей.', image: '/pictures/works/disney-pandora.webp', alt: 'Ланьярды с логотипом', to: '/katalog/lanyardy-i-beydzhi' },
     ],
     offers: [],
     terms: {},
     works: [WORKS.sds, WORKS.laska, WORKS.russkiyDom],
+    faq: FAQ_COMMON,
+  },
+  clothing: {
+    path: '/odezhda-s-logotipom',
+    source: 'landing-odezhda-s-logotipom',
+    seo: {
+      title: 'Одежда с логотипом компании в Алматы: футболки, худи, поло',
+      description: 'Корпоративная одежда с логотипом: футболки, поло, худи, свитшоты, кепки. Вышивка, DTF-печать, шелкография на своём производстве в Алматы.',
+    },
+    eyebrow: 'Одежда с логотипом',
+    title: 'Одежда с логотипом,',
+    titleAccent: 'которую носят',
+    lead: 'Футболки, поло, худи, свитшоты и кепки для команды, мероприятий и промо. Вышивка, DTF-печать или шелкография на собственном производстве в Алматы.',
+    heroImage: '/pictures/hudi.webp',
+    heroAlt: 'Худи с логотипом',
+    whatsappText: 'Здравствуйте! Нужна одежда с логотипом. Что именно: , количество и размеры: ',
+    ideasTitle: 'Что делаем',
+    ideas: [
+      { title: 'Футболки и поло', text: 'Для команды, промоутеров и мероприятий.', image: '/pictures/portfolio/sds.webp', alt: 'Поло и мерч SDS', to: '/katalog/futbolki' },
+      { title: 'Худи и свитшоты', text: 'Самая носимая часть мерча. Вышивка смотрится дороже всего.', image: '/pictures/hudi.webp', alt: 'Худи с логотипом', to: '/katalog/hudi' },
+      { title: 'Кепки и шапки', text: 'Бейсболки, панамы, шапки. Вышивка или печать.', image: '/pictures/disclo/dtf-print.webp', alt: 'DTF-печать на текстиле', to: '/katalog/kepki' },
+      { title: 'Шелкография', text: 'Для больших тиражей: яркий, стойкий отпечаток.', image: '/pictures/disclo/silkscreen.webp', alt: 'Шелкография на текстиле' },
+    ],
+    offers: [],
+    terms: {},
+    works: [WORKS.sds, WORKS.bosch, WORKS.russkiyDom],
+    faq: FAQ_COMMON,
+  },
+
+  souvenirs: {
+    path: '/suvenirnaya-produkciya',
+    source: 'landing-suvenirnaya-produkciya',
+    seo: {
+      title: 'Сувенирная продукция с логотипом в Алматы',
+      description: 'Сувенирная и промо продукция с логотипом: ручки, термосы, блокноты, бутылки, ланьярды, наборы. Тысячи позиций на складе в Алматы, нанесение на своём производстве.',
+    },
+    eyebrow: 'Сувенирная продукция',
+    title: 'Сувенирка с логотипом,',
+    titleAccent: 'которую не выбрасывают',
+    lead: 'Ручки, термосы, блокноты, бутылки, ланьярды и наборы. Тысячи позиций на складе в Алматы, нанесение на собственном производстве, отправка по всему Казахстану.',
+    heroImage: '/carousel/set-blue.webp',
+    heroAlt: 'Набор с логотипом: зонт, ежедневник, термос и ручка',
+    whatsappText: 'Здравствуйте! Нужна сувенирная продукция с логотипом. Что именно: , количество: ',
+    ideasTitle: 'Самое востребованное',
+    ideas: [
+      { title: 'Ручки', text: 'Больше 300 000 на складе. Пластик, металл, soft-touch.', image: '/pictures/pens-fan.webp', alt: 'Ручки с логотипом', to: '/katalog/ruchki' },
+      { title: 'Термосы и термокружки', text: 'Печать или гравировка.', image: '/pictures/portfolio/bosch.webp', alt: 'Термокружка Bosch', to: '/katalog/termosy' },
+      { title: 'Блокноты', text: 'Больше 22 000 на складе. Тиснение или печать.', image: '/pictures/notebooks.webp', alt: 'Блокноты с логотипом', to: '/katalog/bloknoty' },
+      { title: 'Наборы', text: 'Собираем из нескольких вещей и упаковываем.', image: '/carousel/set-white.webp', alt: 'Набор с логотипом', to: '/katalog/podarochnye-nabory' },
+    ],
+    offers: [],
+    terms: {},
+    works: [WORKS.bosch, WORKS.laska, WORKS.russkiyDom],
+    faq: FAQ_COMMON,
+  },
+
+  printing: {
+    path: '/nanesenie-logotipa',
+    source: 'landing-nanesenie-logotipa',
+    seo: {
+      title: 'Нанесение логотипа в Алматы: УФ-печать, гравировка, DTF, шелкография',
+      description: 'Нанесение логотипа на сувениры и одежду на своём производстве в Алматы: УФ-печать, лазерная гравировка, DTF, шелкография, тиснение. Больше 10 станков, УФ и DTF от 1 дня.',
+    },
+    eyebrow: 'Нанесение логотипа',
+    title: 'Нанесение логотипа',
+    titleAccent: 'на своём производстве',
+    lead: 'Больше 10 печатных станков в Алматы. УФ-печать, DTF, лазерная гравировка, шелкография, тиснение, сублимация, термотрансфер. Пластик, металл, текстиль, бумага. УФ и DTF от 1 дня.',
+    heroImage: '/pictures/disclo/laser-engraving.webp',
+    heroAlt: 'Лазерная гравировка логотипа на металле',
+    whatsappText: 'Здравствуйте! Нужно нанести логотип. На что: , количество: ',
+    note: 'Стоимость нанесения можно примерно посчитать в калькуляторе на главной.',
+    ideasTitle: 'Технологии',
+    ideas: [
+      { title: 'УФ-печать', text: 'Полноцветная печать на пластике, металле и бумаге. От 1 дня.', image: '/pictures/disclo/uv-print.webp', alt: 'УФ-печать логотипа' },
+      { title: 'Лазерная гравировка', text: 'Вечный логотип на металле: ручки, термосы, флешки.', image: '/pictures/disclo/laser-engraving.webp', alt: 'Лазерная гравировка' },
+      { title: 'DTF-печать', text: 'Яркая печать на текстиле любого цвета. От 1 дня.', image: '/pictures/disclo/dtf-print.webp', alt: 'DTF-печать' },
+      { title: 'Шелкография и тиснение', text: 'Шелкография для тиражей на текстиле, тиснение фольгой и слепое на ежедневниках.', image: '/pictures/disclo/gold-foil.webp', alt: 'Тиснение фольгой' },
+    ],
+    offers: [],
+    terms: {},
+    works: [WORKS.bosch, WORKS.sds, WORKS.laska],
     faq: FAQ_COMMON,
   },
 } satisfies Record<string, Landing>
@@ -213,4 +296,7 @@ export const LANDING_LINKS = [
   { to: LANDINGS.corporateGifts.path, label: 'Корпоративные подарки' },
   { to: LANDINGS.merch.path, label: 'Мерч под ключ' },
   { to: LANDINGS.welcomePack.path, label: 'Welcome pack' },
+  { to: LANDINGS.clothing.path, label: 'Одежда с логотипом' },
+  { to: LANDINGS.souvenirs.path, label: 'Сувенирная продукция' },
+  { to: LANDINGS.printing.path, label: 'Нанесение логотипа' },
 ]

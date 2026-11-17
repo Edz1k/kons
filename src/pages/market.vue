@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useInfiniteScrollTrigger } from '~/composables/market/useInfiniteScrollTrigger'
 import { useMarketCatalog } from '~/composables/market/useMarketProducts'
+import { CATALOG_SECTIONS } from '~/data/catalogSections'
 import { useProductsStore } from '~/stores/product'
 
 usePageSeo({
@@ -99,6 +100,18 @@ useInfiniteScrollTrigger({
           </span>
         </div>
       </div>
+
+      <!-- подборки под запросы: /katalog/<slug> -->
+      <nav aria-label="Подборки" class="mb-6 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] md:flex-wrap md:overflow-visible">
+        <RouterLink
+          v-for="section in CATALOG_SECTIONS"
+          :key="section.slug"
+          :to="`/katalog/${section.slug}`"
+          class="shrink-0 border border-black/10 rounded-full px-4 py-2 text-sm font-medium transition hover:border-primary hover:text-primary"
+        >
+          {{ section.name }}
+        </RouterLink>
+      </nav>
 
       <div class="mb-6 flex flex-wrap gap-3">
         <button

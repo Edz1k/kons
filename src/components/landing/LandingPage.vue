@@ -138,6 +138,10 @@ const h2Class = 'mt-4 text-3xl font-black leading-[0.95] tracking-tight uppercas
                 <p class="mt-2 text-sm text-neutral-600 leading-6">
                   {{ idea.text }}
                 </p>
+                <RouterLink v-if="idea.to" :to="idea.to" class="mt-3 inline-flex items-center gap-1.5 text-sm text-primary font-semibold hover:underline">
+                  Смотреть в каталоге
+                  <span class="icon-[mdi--arrow-right] size-4" aria-hidden="true" />
+                </RouterLink>
               </div>
             </article>
           </FadeComponent>
@@ -145,8 +149,8 @@ const h2Class = 'mt-4 text-3xl font-black leading-[0.95] tracking-tight uppercas
       </ul>
 
       <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <RouterLink to="/market" class="inline-flex items-center gap-2 text-sm text-primary font-semibold hover:underline md:text-base">
-          Смотреть весь каталог
+        <RouterLink to="/katalog" class="inline-flex items-center gap-2 text-sm text-primary font-semibold hover:underline md:text-base">
+          Смотреть каталог по категориям
           <span class="icon-[mdi--arrow-right] size-4" aria-hidden="true" />
         </RouterLink>
       </div>

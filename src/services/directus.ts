@@ -610,3 +610,68 @@ export async function fetchCategoriesByType(
 
   return fetchOwnCategories(signal)
 }
+
+export interface CatalogSectionPage {
+  /** Свой склад — все товары подборки. */
+  own: Product[]
+  /** Партнёрский каталог — одна страница. */
+  partner: Product[]
+  partnerTotal: number
+}
+
+/**
+ * Товары подборки /katalog/<slug>: свой склад целиком (его немного) и страница партнёрского каталога.
+ * Категории передаются слагами из src/data/catalogSections.ts.
+ */
+export async function fetchCatalogSectionPage(params: {
+  own: string[]
+  partner: string[]
+  partnerPage?: number
+  partnerLimit?: number
+  signal?: AbortSignal
+}): Promise<CatalogSectionPage> {
+  const { own, partner, partnerPage = 1, partnerLimit = 24, signal } = params
+
+  const loadOwn = async (): Promise<Product[]> => {
+    // свой склад нужен только на первой странице
+    if (!own.length || partnerPage > 1)
+      return []
+
+    const query = new URLSearchParams({
+      fields: PRODUCT_FIELDS,
+      filter: JSON.stringify({ category: { slug: { _in: own } } }),
+      limit: '-1',
+    })
+    query.set('deep[images][_sort]', 'sort')
+    query.set('deep[product_variants][images][_sort]', 'sort')
+
+    const json = await getJSON<DirectusListResponse<Product[]>>(`/items/products?${query.toString()}`, signal)
+    const items = sortProducts(json.data ?? [], 'default')
+
+    // товары в наличии — первыми
+    return [...items.filter(hasStock), ...items.filter(item => !hasStock(item))]
+  }
+
+  const loadPartner = async (): Promise<{ items: Product[], total: number }> => {
+    if (!partner.length)
+      return { items: [], total: 0 }
+
+    const query = new URLSearchParams({
+      fields: PARTNER_PRODUCT_FIELDS,
+      filter: JSON.stringify({ _and: [{ is_active: { _eq: true } }, { category: { slug: { _in: partner } } }] }),
+      sort: '-id',
+      limit: String(partnerLimit),
+      page: String(partnerPage),
+      meta: 'filter_count',
+    })
+
+    const json = await getJSON<DirectusListResponse<PartnerProductRaw[]>>(`/items/partner_products?${query.toString()}`, signal)
+    const items = (json.data ?? []).map(normalizePartnerProduct)
+
+    return { items, total: Number(json.meta?.filter_count ?? items.length) }
+  }
+
+  const [ownItems, partnerResult] = await Promise.all([loadOwn(), loadPartner()])
+
+  return { own: ownItems, partner: partnerResult.items, partnerTotal: partnerResult.total }
+}
