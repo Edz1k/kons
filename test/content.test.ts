@@ -1,3 +1,4 @@
+import type { Landing } from '../src/data/landings'
 import { describe, expect, it } from 'vitest'
 import { CATALOG_SECTIONS, findCatalogSection } from '../src/data/catalogSections'
 import { LANDING_LINKS, LANDINGS } from '../src/data/landings'
@@ -26,7 +27,7 @@ describe('подборки каталога /katalog', () => {
 })
 
 describe('посадочные страницы', () => {
-  const landings = Object.values(LANDINGS)
+  const landings: Landing[] = Object.values(LANDINGS)
 
   it('адреса и источники заявок уникальны', () => {
     expect(new Set(landings.map(l => l.path)).size).toBe(landings.length)

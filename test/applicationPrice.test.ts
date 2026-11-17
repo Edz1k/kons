@@ -29,7 +29,7 @@ function input(qty: number, overrides: Partial<CalcInput> = {}): CalcInput {
 }
 
 describe('калькулятор нанесения', () => {
-  it('УФ-печать на 100 ручках: 160 ₸ за штуку, 16 000 ₸ всего (пример на сайте и в FAQ посадочных)', () => {
+  it('ручки с УФ-печатью, 100 шт.: 160 ₸ за штуку, 16 000 ₸ всего (пример на сайте и в FAQ посадочных)', () => {
     const result = calculate(input(100))
     expect(result.perItem).toBe(160)
     expect(result.total).toBe(16000)
