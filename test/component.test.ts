@@ -1,28 +1,59 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
-import TheCounter from '../src/components/TheCounter.vue'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
+import CalculatorSelect from '../src/components/sections/CalculatorSelect.vue'
 
-describe('component TheCounter.vue', () => {
-  it('should render', () => {
-    const wrapper = mount(TheCounter, { props: { initial: 10 } })
-    expect(wrapper.text()).toContain('10')
-    expect(wrapper.html()).toMatchSnapshot()
+// в jsdom нет scrollIntoView, а список прокручивает к активному пункту
+beforeAll(() => {
+  Element.prototype.scrollIntoView = vi.fn()
+})
+
+const options = [
+  { value: 1, label: 'Одно' },
+  { value: 2, label: 'Два' },
+  { value: 3, label: 'Три' },
+]
+
+describe('component CalculatorSelect.vue', () => {
+  it('показывает выбранный вариант и закрыт по умолчанию', () => {
+    const wrapper = mount(CalculatorSelect, { props: { modelValue: 2, options, ariaLabel: 'Мест' } })
+
+    expect(wrapper.get('[role="combobox"]').text()).toContain('Два')
+    expect(wrapper.get('[role="combobox"]').attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('[role="listbox"]').exists()).toBe(false)
   })
 
-  it('should be interactive', async () => {
-    const wrapper = mount(TheCounter, { props: { initial: 0 } })
-    expect(wrapper.text()).toContain('0')
+  it('открывается по клику и выбирает вариант', async () => {
+    const wrapper = mount(CalculatorSelect, { props: { modelValue: 1, options } })
 
-    expect(wrapper.find('.inc').exists()).toBe(true)
+    await wrapper.get('[role="combobox"]').trigger('click')
+    const items = wrapper.findAll('[role="option"]')
+    expect(items).toHaveLength(3)
+    expect(items[0].attributes('aria-selected')).toBe('true')
 
-    expect(wrapper.find('.dec').exists()).toBe(true)
+    await items[2].trigger('click')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([3])
+    expect(wrapper.find('[role="listbox"]').exists()).toBe(false)
+  })
 
-    await wrapper.get('.inc').trigger('click')
+  it('работает с клавиатуры: стрелка вниз и Enter', async () => {
+    const wrapper = mount(CalculatorSelect, { props: { modelValue: 1, options } })
+    const combobox = wrapper.get('[role="combobox"]')
 
-    expect(wrapper.text()).toContain('1')
+    await combobox.trigger('keydown', { key: 'ArrowDown' })
+    expect(wrapper.find('[role="listbox"]').exists()).toBe(true)
 
-    await wrapper.get('.dec').trigger('click')
+    await combobox.trigger('keydown', { key: 'ArrowDown' })
+    await combobox.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([2])
+  })
 
-    expect(wrapper.text()).toContain('0')
+  it('закрывается по Escape без выбора', async () => {
+    const wrapper = mount(CalculatorSelect, { props: { modelValue: 1, options } })
+    const combobox = wrapper.get('[role="combobox"]')
+
+    await combobox.trigger('click')
+    await combobox.trigger('keydown', { key: 'Escape' })
+    expect(wrapper.find('[role="listbox"]').exists()).toBe(false)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 })
