@@ -38,6 +38,13 @@ const terms = computed(() => [
   { label: 'Заказать до', value: landing.value.terms.deadline },
 ].filter(item => item.value))
 
+/** Короткая строка условий на первом экране: «Тираж от 50 шт · Заказ до 25 декабря». */
+const heroTerms = computed(() => [
+  landing.value.terms.minQty && `Тираж ${landing.value.terms.minQty}`,
+  landing.value.terms.leadTime && `Сроки ${landing.value.terms.leadTime}`,
+  landing.value.terms.deadline && `Заказ до ${landing.value.terms.deadline}`,
+].filter(Boolean).join(' · '))
+
 const otherLandings = computed(() => LANDING_LINKS.filter(link => link.to !== landing.value.path))
 
 function scrollToForm() {
@@ -79,6 +86,10 @@ const h2Class = 'mt-4 text-3xl font-black leading-[0.95] tracking-tight uppercas
             Оставить заявку
           </Button>
         </div>
+
+        <p v-if="heroTerms" class="mt-4 text-sm text-neutral-800 font-semibold">
+          {{ heroTerms }}
+        </p>
 
         <p v-if="landing.note" class="mt-5 max-w-xl text-sm text-neutral-500 leading-6">
           {{ landing.note }}
