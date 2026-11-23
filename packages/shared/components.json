@@ -1,0 +1,20 @@
+{
+  "$schema": "https://shadcn-vue.com/schema.json",
+  "style": "new-york",
+  "typescript": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/tailwind.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@brillex/shared/components",
+    "composables": "@brillex/shared/composables",
+    "utils": "@brillex/shared/lib/utils",
+    "ui": "@brillex/shared/components/ui",
+    "lib": "@brillex/shared/lib"
+  },
+  "iconLibrary": "lucide"
+}

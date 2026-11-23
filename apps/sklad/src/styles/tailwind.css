@@ -1,0 +1,41 @@
+/* Общая тема brillex (цвета, shadcn-vue, шрифты) — из packages/shared. Здесь только то, что нужно складу. */
+@import '@brillex/shared/styles/tailwind.css';
+
+/* что сканирует Tailwind у склада: его src и index.html */
+@source '../';
+@source '../../index.html';
+
+@layer base {
+  html,
+  body {
+    @apply bg-muted text-foreground antialiased;
+    -webkit-tap-highlight-color: transparent;
+    /* в приложении на телефоне страница не «тянется» за край и не выделяется долгим нажатием */
+    overscroll-behavior-y: none;
+  }
+  button,
+  a {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+}
+
+/* повторяющиеся элементы интерфейса склада */
+@layer components {
+  .panel {
+    @apply rounded-2xl border bg-background;
+  }
+  .chip {
+    @apply inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border bg-background px-3.5 text-sm font-medium whitespace-nowrap transition hover:border-foreground/30 active:scale-[0.97];
+  }
+  .chip i {
+    @apply text-xs text-muted-foreground not-italic;
+  }
+  .chip[data-active='true'] {
+    @apply border-foreground bg-foreground text-background;
+  }
+  .chip[data-active='true'] i {
+    @apply text-background/70;
+  }
+}
