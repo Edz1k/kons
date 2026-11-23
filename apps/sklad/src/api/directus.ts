@@ -1,6 +1,6 @@
 /**
  * Клиент Directus для склада: вход, обновление токена, понятные ошибки.
- * Токены лежат в localStorage этого поддомена (sklad.brillex.kz), с сайтом не пересекаются.
+ * Токены лежат в localStorage этого поддомена (warehouse.brillex.kz), с сайтом не пересекаются.
  */
 
 const DIRECTUS_URL = ((import.meta.env.VITE_DIRECTUS_URL as string | undefined) ?? 'https://cms.brillex.kz').replace(/\/+$/, '')
@@ -167,10 +167,10 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
   return json.data as T
 }
 
-/** Логин без @ — это сотрудник склада: ivan → ivan@sklad.brillex.kz. Почта — как есть. */
+/** Логин без @ — это сотрудник склада: ivan → ivan@warehouse.brillex.kz. Почта — как есть. */
 export function loginToEmail(login: string) {
   const value = login.trim().toLowerCase()
-  return value.includes('@') ? value : `${value}@sklad.brillex.kz`
+  return value.includes('@') ? value : `${value}@warehouse.brillex.kz`
 }
 
 export async function login(loginOrEmail: string, password: string) {

@@ -1,5 +1,5 @@
 /**
- * Склад brillex — SPA на sklad.brillex.kz. Те же правила, что у сайта (apps/web):
+ * Склад brillex — SPA на warehouse.brillex.kz. Те же правила, что у сайта (apps/web):
  * роутинг по файлам src/pages, layouts, автоимпорты, автокомпоненты, Pinia; общий код — @brillex/shared.
  *
  *   pnpm dev:sklad   → http://localhost:3335 (запросы к Directus идут через прокси /directus)

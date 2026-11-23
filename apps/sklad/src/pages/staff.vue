@@ -27,7 +27,7 @@ async function load() {
 }
 onMounted(load)
 
-const loginOf = (u: StaffUser) => u.email.replace(/@sklad\.brillex\.kz$/, '')
+const loginOf = (u: StaffUser) => u.email.replace(/@warehouse\.brillex\.kz$/, '')
 
 async function patch(u: StaffUser, body: Record<string, unknown>, done: string) {
   try {

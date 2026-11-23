@@ -1,4 +1,4 @@
-# Склад sklad.brillex.kz — приложение apps/sklad монорепо.
+# Склад warehouse.brillex.kz — приложение apps/sklad монорепо.
 # В Netlify (по документации для монорепо): Base directory — пусто (корень репозитория),
 # Package directory — apps/sklad. Установка и сборка идут из корня, где pnpm-lock.yaml и pnpm-workspace.yaml;
 # все пути ниже — от корня репозитория.

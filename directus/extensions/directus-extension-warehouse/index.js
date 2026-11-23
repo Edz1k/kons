@@ -27,7 +27,7 @@ const MOVEMENT_TYPES = ['receipt', 'issue', 'return']
 const PLUS = ['receipt', 'return', 'cancel_in', 'adjust_in']
 const MINUS = ['issue', 'cancel_out', 'adjust_out']
 const MAX_QTY = 1_000_000
-const STAFF_EMAIL_DOMAIN = 'sklad.brillex.kz'
+const STAFF_EMAIL_DOMAIN = 'warehouse.brillex.kz'
 
 class WarehouseError extends Error {
   constructor(status, code, message, details) {
