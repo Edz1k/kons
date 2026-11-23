@@ -5,7 +5,7 @@
 ```
 apps/
   web/      сайт brillex.kz — Vue 3 + vite-ssg, Netlify
-  sklad/    склад sklad.brillex.kz — Vue 3 SPA, Netlify
+  sklad/    склад warehouse.brillex.kz — Vue 3 SPA, Netlify
 packages/
   shared/   @brillex/shared: shadcn-vue компоненты, cn, тема Tailwind и шрифты, резолвер компонентов
 directus/   исходники расширений Directus (на сервер копируются вручную)
@@ -44,10 +44,10 @@ pnpm test:unit
 Два сайта из одного репозитория, у каждого свой `netlify.toml` в папке приложения.
 Настройка в Netlify (Build settings) по их документации для монорепо:
 
-| Сайт  | Base directory | Package directory | Домен            |
-| ----- | -------------- | ----------------- | ---------------- |
-| сайт  | пусто (корень) | `apps/web`        | brillex.kz       |
-| склад | пусто (корень) | `apps/sklad`      | sklad.brillex.kz |
+| Сайт  | Base directory | Package directory | Домен                |
+| ----- | -------------- | ----------------- | -------------------- |
+| сайт  | пусто (корень) | `apps/web`        | brillex.kz           |
+| склад | пусто (корень) | `apps/sklad`      | warehouse.brillex.kz |
 
 Команда сборки и папка публикации берутся из `netlify.toml`; пути в нём — от корня репозитория.
 

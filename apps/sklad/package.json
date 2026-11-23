@@ -2,7 +2,7 @@
   "name": "@brillex/sklad",
   "type": "module",
   "private": true,
-  "description": "Склад brillex: sklad.brillex.kz (SPA, Netlify), данные в Directus",
+  "description": "Склад brillex: warehouse.brillex.kz (SPA, Netlify), данные в Directus",
   "scripts": {
     "build": "vite build",
     "dev": "vite --port 3335",
