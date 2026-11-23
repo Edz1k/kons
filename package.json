@@ -18,7 +18,6 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",
     "eslint": "catalog:dev",
-    "eslint-plugin-cypress": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",
     "lint-staged": "catalog:dev",
     "simple-git-hooks": "catalog:dev",

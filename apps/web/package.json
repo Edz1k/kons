@@ -10,7 +10,6 @@
     "preview-https": "serve dist",
     "test": "vitest",
     "test:unit": "vitest run",
-    "test:e2e": "cypress open",
     "typecheck": "vue-tsc --noEmit",
     "sizecheck": "npx vite-bundle-visualizer"
   },
@@ -46,8 +45,6 @@
     "@vue-macros/volar": "catalog:dev",
     "@vue/test-utils": "catalog:dev",
     "beasties": "catalog:build",
-    "cypress": "catalog:dev",
-    "cypress-vite": "catalog:dev",
     "https-localhost": "catalog:dev",
     "markdown-it-link-attributes": "catalog:build",
     "rollup": "catalog:build",
