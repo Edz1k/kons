@@ -91,6 +91,7 @@ jobs:
       - name: Cypress
         uses: cypress-io/github-action@v6
         with:
+          working-directory: apps/web
           install-command: echo
-          build: pnpm run build
-          start: npx vite preview --port 3333
+          build: pnpm build
+          start: pnpm exec vite preview --port 3333

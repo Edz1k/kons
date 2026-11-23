@@ -1,0 +1,33 @@
+{
+  "name": "@brillex/shared",
+  "type": "module",
+  "private": true,
+  "description": "Общее для приложений brillex: shadcn-vue компоненты, cn, тема Tailwind и шрифты, резолвер компонентов",
+  "exports": {
+    "./components/ui/*": "./src/components/ui/*",
+    "./lib/*": "./src/lib/*.ts",
+    "./styles/*": "./src/styles/*",
+    "./resolvers/*": "./src/resolvers/*.ts"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@lucide/vue": "catalog:frontend",
+    "@vueuse/core": "catalog:frontend",
+    "class-variance-authority": "catalog:frontend",
+    "clsx": "catalog:frontend",
+    "embla-carousel-vue": "catalog:frontend",
+    "reka-ui": "catalog:frontend",
+    "tailwind-merge": "catalog:frontend",
+    "tw-animate-css": "catalog:build",
+    "vue": "catalog:frontend",
+    "vue-sonner": "catalog:frontend"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:types",
+    "tailwindcss": "catalog:build",
+    "typescript": "catalog:dev",
+    "vue-tsc": "catalog:dev"
+  }
+}

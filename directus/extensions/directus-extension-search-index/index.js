@@ -49,7 +49,8 @@ WITH own AS (
     'own'::text AS kind,
     p.id,
     c.slug AS category_slug,
-    true AS active,
+    -- черновики (товар заведён складом, менеджер ещё не опубликовал) в поиск сайта не попадают
+    (p.status = 'published') AS active,
     ${norm('p.title')} AS title,
     ${norm(`concat_ws(' ', c.title,
       (SELECT string_agg(DISTINCT col.name, ' ') FROM product_variants v JOIN colors col ON col.id = v.color WHERE v.product = p.id),

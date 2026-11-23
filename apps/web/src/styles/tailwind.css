@@ -1,0 +1,27 @@
+/* Общая тема brillex (цвета, shadcn-vue, шрифты) — из packages/shared. Здесь только то, что нужно сайту. */
+@import '@brillex/shared/styles/tailwind.css';
+
+/* что сканирует Tailwind у сайта: его src и index.html */
+@source '../';
+@source '../../index.html';
+/* классы-обёртки страниц из .md (unplugin-vue-markdown в vite.config.ts) */
+@source inline('prose prose-sm m-auto text-left');
+
+@plugin '@tailwindcss/typography';
+/* иконки: icon-[mdi--whatsapp], размер 1.2em — как было в UnoCSS */
+@plugin '@iconify/tailwind4' {
+  scale: 1.2;
+}
+
+@theme {
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+}

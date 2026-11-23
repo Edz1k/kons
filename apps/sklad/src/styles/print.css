@@ -1,0 +1,56 @@
+/* Печать этикеток: на экране область скрыта, при печати видна только она (см. components/PrintArea.vue). */
+.print-area {
+  display: none;
+}
+
+@media print {
+  body > #app > *:not(.print-area) {
+    display: none !important;
+  }
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+  .print-area {
+    display: grid !important;
+    background: #fff;
+    color: #000;
+  }
+  .print-area.a4 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4mm;
+  }
+  .print-area.thermal {
+    grid-template-columns: 1fr;
+  }
+  .print-area .pl {
+    break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2mm;
+    font-family: 'DM Sans', Arial, sans-serif;
+  }
+  .print-area.a4 .pl {
+    border: 0.2mm dashed #bbb;
+    height: 32mm;
+  }
+  .print-area.thermal .pl {
+    width: 58mm;
+    height: 40mm;
+    break-after: page;
+  }
+  .print-area .pl b {
+    font-size: 9pt;
+    line-height: 1.15;
+    max-height: 2.3em;
+    overflow: hidden;
+  }
+  .print-area .pl small {
+    font-size: 7pt;
+  }
+  .print-area svg {
+    max-width: 100%;
+  }
+}

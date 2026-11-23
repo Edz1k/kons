@@ -1,0 +1,52 @@
+# Склад sklad.brillex.kz — приложение apps/sklad монорепо, отдельный сайт на Netlify.
+# В Netlify: Base directory = apps/sklad. Зависимости Netlify ставит из корня (pnpm workspace).
+[build]
+publish = "dist"
+command = "pnpm build"
+# Пересобираем, только если изменился склад, общий пакет или зависимости. Правка сайта склад не трогает.
+ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ../../packages/shared ../../pnpm-lock.yaml ../../pnpm-workspace.yaml"
+
+[build.environment]
+NODE_VERSION = "20"
+VITE_DIRECTUS_URL = "https://cms.brillex.kz"
+
+# одностраничное приложение: любой адрес → index.html (файлы из dist отдаются как есть)
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+# склад закрыт от поисковиков целиком (плюс robots.txt и <meta name="robots">)
+X-Robots-Tag = "noindex, nofollow"
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "same-origin"
+# камера нужна сканеру, остальное выключено
+Permissions-Policy = "camera=(self), microphone=(), geolocation=()"
+Strict-Transport-Security = "max-age=31536000"
+# скрипты и стили только свои; запросы — только в Directus
+Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cms.brillex.kz; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+
+# service worker и манифест не кэшируем: иначе телефоны не увидят новую версию
+[[headers]]
+for = "/sw.js"
+
+[headers.values]
+Cache-Control = "no-cache"
+
+[[headers]]
+for = "/manifest.webmanifest"
+
+[headers.values]
+Cache-Control = "no-cache"
+Content-Type = "application/manifest+json"
+
+[[headers]]
+for = "/assets/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
