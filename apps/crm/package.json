@@ -1,0 +1,38 @@
+{
+  "name": "@brillex/crm",
+  "type": "module",
+  "private": true,
+  "description": "CRM brillex: crm.brillex.kz (PWA, Netlify), данные в Directus",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --port 3336",
+    "preview": "vite preview --port 3336",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@brillex/shared": "workspace:*",
+    "@lucide/vue": "catalog:frontend",
+    "@vueuse/core": "catalog:frontend",
+    "pinia": "catalog:frontend",
+    "vue": "catalog:frontend",
+    "vue-router": "catalog:frontend",
+    "vue-sonner": "catalog:frontend"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "catalog:build",
+    "@types/node": "catalog:types",
+    "@vitejs/plugin-vue": "catalog:build",
+    "@vue-macros/volar": "catalog:dev",
+    "tailwindcss": "catalog:build",
+    "typescript": "catalog:dev",
+    "unplugin-auto-import": "catalog:build",
+    "unplugin-vue-components": "catalog:build",
+    "unplugin-vue-macros": "catalog:build",
+    "unplugin-vue-router": "catalog:build",
+    "vite": "catalog:build",
+    "vite-plugin-pwa": "catalog:build",
+    "vite-plugin-vue-devtools": "catalog:build",
+    "vite-plugin-vue-layouts": "catalog:build",
+    "vue-tsc": "catalog:dev"
+  }
+}

@@ -1,22 +1,33 @@
 <script setup lang="ts">
+/** Профиль сотрудника: смена своего пароля и выход. Общий для склада и CRM. */
+import { Button } from '@brillex/shared/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@brillex/shared/components/ui/dialog'
+import { Input } from '@brillex/shared/components/ui/input'
+import { Label } from '@brillex/shared/components/ui/label'
+import { ref } from 'vue'
 import { toast } from 'vue-sonner'
-import { api } from '~/api/directus'
 
+const props = defineProps<{
+  name: string
+  roleName: string
+  /** минимальная длина пароля */
+  minPassword: number
+  changePassword: (password: string) => Promise<unknown>
+  logout: () => Promise<unknown>
+}>()
 const open = defineModel<boolean>('open', { default: false })
-const session = useSessionStore()
-const router = useRouter()
+
 const password = ref('')
 const error = ref('')
 
-async function changePassword() {
+async function submit() {
   error.value = ''
-  const min = session.isAdmin ? 8 : 6
-  if (password.value.length < min) {
-    error.value = `Пароль: минимум ${min} символов`
+  if (password.value.length < props.minPassword) {
+    error.value = `Пароль: минимум ${props.minPassword} символов`
     return
   }
   try {
-    await api('/users/me', { method: 'PATCH', body: { password: password.value } })
+    await props.changePassword(password.value)
     password.value = ''
     toast.success('Пароль изменён')
   }
@@ -26,9 +37,8 @@ async function changePassword() {
 }
 
 async function exit() {
-  await session.logout()
+  await props.logout()
   open.value = false
-  router.replace('/login')
 }
 </script>
 
@@ -36,10 +46,10 @@ async function exit() {
   <Dialog v-model:open="open">
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>{{ session.name }}</DialogTitle>
-        <DialogDescription>{{ session.roleName }}</DialogDescription>
+        <DialogTitle>{{ name }}</DialogTitle>
+        <DialogDescription>{{ roleName }}</DialogDescription>
       </DialogHeader>
-      <form class="space-y-2" autocomplete="off" @submit.prevent="changePassword">
+      <form class="space-y-2" autocomplete="off" @submit.prevent="submit">
         <Label for="pf-new">Новый пароль</Label>
         <Input id="pf-new" v-model="password" type="password" autocomplete="new-password" maxlength="200" />
         <p v-if="error" class="text-sm font-medium text-destructive">

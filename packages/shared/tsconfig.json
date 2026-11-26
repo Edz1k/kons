@@ -5,7 +5,7 @@
     "paths": {
       "@brillex/shared/*": ["src/*"]
     },
-    "types": ["node", "vite/client"]
+    "types": ["node", "vite/client", "vite-plugin-pwa/vue"]
   },
   "include": ["src/**/*.ts", "src/**/*.vue"]
 }

@@ -5,16 +5,65 @@
       "name": "dev",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
-        "dev",
+        "--filter",
+        "@brillex/web",
+        "exec",
+        "vite",
+        "--port",
+        "3333",
         "--host",
-        "--no-open"
+        "--strictPort"
       ],
       "port": 3333
+    },
+    {
+      "name": "sklad-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@brillex/sklad",
+        "exec",
+        "vite",
+        "--port",
+        "3335",
+        "--strictPort"
+      ],
+      "port": 3335
+    },
+    {
+      "name": "crm-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@brillex/crm",
+        "exec",
+        "vite",
+        "--port",
+        "3336",
+        "--strictPort"
+      ],
+      "port": 3336
+    },
+    {
+      "name": "goldbeton-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--dir",
+        "/Users/eduardshartner/Desktop/goldbeton",
+        "exec",
+        "vite",
+        "--port",
+        "3334",
+        "--strictPort"
+      ],
+      "port": 3334
     },
     {
       "name": "preview",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
+        "--filter",
+        "@brillex/web",
         "exec",
         "vite",
         "preview",
