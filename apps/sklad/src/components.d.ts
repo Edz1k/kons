@@ -8,17 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AlertDialog: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialog.vue')['default']
-    AlertDialogAction: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogAction.vue')['default']
-    AlertDialogCancel: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogCancel.vue')['default']
-    AlertDialogContent: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogContent.vue')['default']
-    AlertDialogDescription: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogDescription.vue')['default']
-    AlertDialogFooter: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogFooter.vue')['default']
-    AlertDialogHeader: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogHeader.vue')['default']
-    AlertDialogTitle: typeof import('@brillex/shared/components/ui/alert-dialog/AlertDialogTitle.vue')['default']
     Badge: typeof import('@brillex/shared/components/ui/badge/Badge.vue')['default']
     Button: typeof import('@brillex/shared/components/ui/button/Button.vue')['default']
-    ConfirmDialog: typeof import('./components/ConfirmDialog.vue')['default']
     Dialog: typeof import('@brillex/shared/components/ui/dialog/Dialog.vue')['default']
     DialogContent: typeof import('@brillex/shared/components/ui/dialog/DialogContent.vue')['default']
     DialogDescription: typeof import('@brillex/shared/components/ui/dialog/DialogDescription.vue')['default']
@@ -29,7 +20,6 @@ declare module 'vue' {
     ItemSheet: typeof import('./components/ItemSheet.vue')['default']
     Label: typeof import('@brillex/shared/components/ui/label/Label.vue')['default']
     PrintArea: typeof import('./components/PrintArea.vue')['default']
-    ProfileDialog: typeof import('./components/ProfileDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScanBox: typeof import('./components/ScanBox.vue')['default']
@@ -44,6 +34,5 @@ declare module 'vue' {
     SheetHeader: typeof import('@brillex/shared/components/ui/sheet/SheetHeader.vue')['default']
     SheetTitle: typeof import('@brillex/shared/components/ui/sheet/SheetTitle.vue')['default']
     Toaster: typeof import('@brillex/shared/components/ui/sonner/Sonner.vue')['default']
-    UpdatePrompt: typeof import('./components/UpdatePrompt.vue')['default']
   }
 }

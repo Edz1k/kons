@@ -1,9 +1,10 @@
 <script setup lang="ts">
 /**
- * Новая версия склада: service worker скачал её в фоне — предлагаем обновить.
- * Без спроса не перезагружаем: кладовщик может быть посреди операции.
+ * Новая версия приложения: service worker скачал её в фоне — предлагаем обновить.
+ * Без спроса не перезагружаем: сотрудник может быть посреди работы.
  */
 import { useRegisterSW } from 'virtual:pwa-register/vue'
+import { watch } from 'vue'
 import { toast } from 'vue-sonner'
 
 const { needRefresh, updateServiceWorker } = useRegisterSW({
@@ -17,7 +18,7 @@ const { needRefresh, updateServiceWorker } = useRegisterSW({
 watch(needRefresh, (value) => {
   if (!value)
     return
-  toast('Вышла новая версия склада', {
+  toast('Вышла новая версия', {
     duration: Infinity,
     action: { label: 'Обновить', onClick: () => updateServiceWorker(true) },
   })

@@ -53,6 +53,8 @@ export default defineConfig({
         '@vueuse/core',
         'pinia',
         VueRouterAutoImports,
+        // общее для приложений сотрудников
+        { '@brillex/shared/composables/useConfirm': ['useConfirm'] },
       ],
       dts: 'src/auto-imports.d.ts',
       dirs: ['src/composables', 'src/stores'],

@@ -7,7 +7,10 @@
     "./components/ui/*": "./src/components/ui/*",
     "./lib/*": "./src/lib/*.ts",
     "./styles/*": "./src/styles/*",
-    "./resolvers/*": "./src/resolvers/*.ts"
+    "./resolvers/*": "./src/resolvers/*.ts",
+    "./directus/*": "./src/directus/*.ts",
+    "./composables/*": "./src/composables/*.ts",
+    "./components/app/*": "./src/components/app/*"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit"
@@ -28,6 +31,7 @@
     "@types/node": "catalog:types",
     "tailwindcss": "catalog:build",
     "typescript": "catalog:dev",
+    "vite-plugin-pwa": "catalog:build",
     "vue-tsc": "catalog:dev"
   }
 }

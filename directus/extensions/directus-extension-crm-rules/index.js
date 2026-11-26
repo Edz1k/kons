@@ -152,7 +152,7 @@ export default ({ filter, action }, { database: rootDb, logger }) => {
     return payload
   })
 
-  action('crm_deals.items.create', async ({ key, payload, accountability }, { database }) => {
+  action('crm_deals.items.create', async ({ key, payload }, { database, accountability }) => {
     const db = database ?? rootDb
     const user = accountability?.user ?? null
     const deal = await db('crm_deals').where({ id: key }).first()
@@ -196,7 +196,7 @@ export default ({ filter, action }, { database: rootDb, logger }) => {
     return payload
   })
 
-  action('crm_deals.items.update', async ({ keys, payload, accountability }, { database }) => {
+  action('crm_deals.items.update', async ({ keys, payload }, { database, accountability }) => {
     const db = database ?? rootDb
     const user = accountability?.user ?? null
     for (const id of keys) {
@@ -263,7 +263,7 @@ export default ({ filter, action }, { database: rootDb, logger }) => {
     })
   }
 
-  action('crm_payments.items.create', async ({ key, accountability }, { database }) => {
+  action('crm_payments.items.create', async ({ key }, { database, accountability }) => {
     const db = database ?? rootDb
     const p = await db('crm_payments').where({ id: key }).first()
     if (p)
@@ -291,7 +291,7 @@ export default ({ filter, action }, { database: rootDb, logger }) => {
     return payload
   })
 
-  action('crm_leads.items.update', async ({ keys, payload, accountability }, { database }) => {
+  action('crm_leads.items.update', async ({ keys, payload }, { database, accountability }) => {
     if (payload.manager === undefined)
       return
     const db = database ?? rootDb

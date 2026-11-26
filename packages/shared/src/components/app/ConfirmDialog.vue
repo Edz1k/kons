@@ -1,5 +1,16 @@
 <script setup lang="ts">
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@brillex/shared/components/ui/alert-dialog'
 import { buttonVariants } from '@brillex/shared/components/ui/button'
+import { useConfirm } from '@brillex/shared/composables/useConfirm'
 
 const { state, answer } = useConfirm()
 </script>

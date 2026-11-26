@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
+import ProfileDialog from '@brillex/shared/components/app/ProfileDialog.vue'
 import { ArrowDownUp, Barcode, ChevronRight, ClipboardCheck, ListOrdered, LogOut, MoreHorizontal, Package, UserRound, Users } from '@lucide/vue'
+import { api } from '~/api/directus'
 import { initials } from '~/utils/format'
 
 /**
@@ -165,6 +167,10 @@ useIntervalFn(warehouse.pollRequests, 20_000)
     </Sheet>
 
     <ItemSheet />
-    <ProfileDialog v-model:open="profileOpen" />
+    <ProfileDialog
+      v-model:open="profileOpen" :name="session.name" :role-name="session.roleName" :min-password="session.isAdmin ? 8 : 6"
+      :change-password="password => api('/users/me', { method: 'PATCH', body: { password } })"
+      :logout="() => session.logout().then(() => router.replace('/login'))"
+    />
   </div>
 </template>

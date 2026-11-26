@@ -1,8 +1,10 @@
 /**
  * Подтверждение опасного действия окном shadcn (AlertDialog) вместо системного confirm():
  *   if (!await confirm({ title: 'Отключить Айгуль?', action: 'Отключить', danger: true })) return
- * Окно одно на приложение — components/ConfirmDialog.vue в App.vue.
+ * Окно одно на приложение — @brillex/shared/components/app/ConfirmDialog.vue в App.vue.
  */
+import { reactive, readonly } from 'vue'
+
 interface ConfirmOptions {
   title: string
   description?: string

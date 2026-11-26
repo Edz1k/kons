@@ -3,6 +3,8 @@ import type { ToasterProps } from 'vue-sonner'
 import { cn } from '@brillex/shared/lib/utils'
 import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon, XIcon } from '@lucide/vue'
 import { Toaster as Sonner } from 'vue-sonner'
+// vue-sonner 2 не подключает стили сам: без них тосты без позиции и прячутся под окнами
+import 'vue-sonner/style.css'
 
 const props = defineProps<ToasterProps>()
 </script>
