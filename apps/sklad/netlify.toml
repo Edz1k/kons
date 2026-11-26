@@ -6,7 +6,8 @@
 command = "pnpm build:sklad"
 publish = "apps/sklad/dist"
 # Пересобираем, только если изменилось само приложение, общий пакет или зависимости.
-ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- apps/sklad packages/shared package.json pnpm-lock.yaml pnpm-workspace.yaml"
+# Первая сборка и ручной «Trigger deploy» приходят с одинаковыми ссылками — тогда собираем всегда.
+ignore = "[ \"$CACHED_COMMIT_REF\" != \"$COMMIT_REF\" ] && git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- apps/sklad packages/shared package.json pnpm-lock.yaml pnpm-workspace.yaml"
 
 [build.environment]
 NODE_VERSION = "20"
